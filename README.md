@@ -34,10 +34,10 @@ npm run dev
 - 기본 주소: http://localhost:3000
 - 변경된 코드는 저장 시 자동 리렌더링됩니다.
 
-
 ## VSCode 설정 가이드
 
 📌 필수 확장 추천
+
 - Prettier – Code formatter
 - EditorConfig for VSCode
 - Tailwind CSS IntelliSense

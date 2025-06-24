@@ -9,6 +9,24 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        mobile: '375px',
+        tablet: '768px',
+        desktop: '1280px',
+      },
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: '24px',
+          tablet: '36px',
+          desktop: '48px',
+        },
+        screens: {
+          mobile: '375px',
+          tablet: '768px',
+          desktop: '1280px',
+        },
+      },
       colors: {
         'primary-100': 'var(--primary-100)',
         'primary-200': 'var(--primary-200)',
