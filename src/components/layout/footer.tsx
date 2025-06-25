@@ -29,7 +29,7 @@ export function Footer() {
 
   return (
     <footer
-      className="bg-bg-100 text-text-300 pb-12 pt-12 text-center"
+      className="bg-bg-100 pb-12 pt-12 text-center text-text-300"
       style={{
         // 모바일/태블릿에서 하단 내비게이션 높이만큼 여유 padding
         paddingBottom: 'max(48px, env(safe-area-inset-bottom, 0px) + 48px)',
@@ -43,12 +43,13 @@ export function Footer() {
             alt="우르르"
             width={180}
             height={40}
-            className="tablet:w-[96px] desktop:w-[128px] h-auto w-[96px]"
+            className="h-auto w-[96px] tablet:w-[96px] desktop:w-[128px]"
+            sizes="(max-width: 768px) 96px, (max-width: 1024px) 96px, 128px"
             priority
           />
           <button
             type="button"
-            className="text-text-200 hover:text-primary-300 tablet:text-sm desktop:text-sm flex items-center gap-1 text-[10px] font-medium transition-colors"
+            className="flex items-center gap-1 text-[10px] font-medium text-text-200 transition-colors hover:text-primary-300 tablet:text-xs desktop:text-sm"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="footer-biz-info"
@@ -66,15 +67,15 @@ export function Footer() {
         {open && (
           <div
             id="footer-biz-info"
-            className="bg-bg-200 mb-8 w-full max-w-[1280px] rounded-xl px-8 py-10 text-left shadow-sm"
+            className="mb-8 w-full max-w-[1280px] rounded-xl bg-bg-200 px-8 py-10 text-left shadow-sm"
           >
-            <div className="tablet:gap-y-2 desktop:gap-y-2 flex flex-col gap-y-1">
+            <div className="flex flex-col gap-y-1 tablet:gap-y-2 desktop:gap-y-2">
               {BIZ_INFO.map((item) => (
                 <div
                   key={item.label}
-                  className="tablet:min-h-[28px] desktop:min-h-[28px] tablet:text-sm desktop:text-sm flex min-h-[20px] text-[10px]"
+                  className="flex min-h-[20px] text-[10px] tablet:min-h-[28px] tablet:text-xs desktop:min-h-[28px] desktop:text-sm"
                 >
-                  <div className="text-text-200 mr-4 w-[120px] min-w-[80px] font-medium">
+                  <div className="mr-4 w-[120px] min-w-[80px] font-medium text-text-200">
                     {item.label}
                   </div>
                   <div className="text-text-100">{item.value}</div>
@@ -85,14 +86,14 @@ export function Footer() {
         )}
 
         {/* 하단 링크 */}
-        <nav className="tablet:text-sm desktop:text-sm text-text-300 mb-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-medium">
+        <nav className="mb-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-medium text-text-300 tablet:text-xs desktop:text-sm">
           {FOOTER_LINKS.map((link) => {
             if (link.isExternal) {
               return (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="hover:text-primary-300 text-text-300 transition-colors"
+                  className="text-text-300 transition-colors hover:text-primary-300"
                 >
                   {link.label}
                 </a>
@@ -102,7 +103,7 @@ export function Footer() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="hover:text-primary-300 text-text-300 transition-colors"
+                className="text-text-300 transition-colors hover:text-primary-300"
               >
                 {link.label}
               </Link>
@@ -111,14 +112,14 @@ export function Footer() {
         </nav>
 
         {/* 안내문구 */}
-        <div className="tablet:text-sm desktop:text-sm text-text-300 mx-auto mb-2 max-w-7xl text-[10px] font-normal leading-relaxed">
+        <div className="mx-auto mb-2 max-w-7xl text-[10px] font-normal leading-relaxed text-text-300 tablet:text-xs desktop:text-sm">
           (주)밤코딩단은 결제정보의 중개서비스 또는 통신판매중개시스템의 제공자로서, 통신판매의
           당사자가 아니며 제공 정보의 오류로 인해 발생하는 모든 손해 및 상품의 주문, 배송 및 환불
           등과 관련한 의무와 책임은 각 판매자에게 있습니다.
         </div>
 
         {/* 저작권 */}
-        <div className="tablet:text-sm desktop:text-sm text-text-300 text-[10px] font-normal">
+        <div className="text-[10px] font-normal text-text-300 tablet:text-xs desktop:text-sm">
           © BamCodingDan Inc. All Rights Reserved.
         </div>
       </div>

@@ -3,50 +3,84 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
+import { categoryItems } from '@/data/categories';
 
 export function MainNav() {
   const pathname = usePathname();
 
+  const navItems = [
+    { href: '/', label: '홈' },
+    { href: '/ranking', label: '랭킹' },
+    { href: '/short', label: '숏구' },
+    { href: '/event', label: '이벤트' },
+  ];
+
+  const isActive = (href: string) => pathname === href;
+
   return (
-    <div className="desktop:block bg-bg-100 hidden">
+    <div className="hidden bg-bg-100 desktop:block">
       <div className="container">
-        <nav className="flex h-12 items-center space-x-8">
-          <Link
-            href="/category"
-            className="text-text-200 hover:text-primary-300 text-sm transition-colors"
-          >
-            카테고리
-          </Link>
-          <Link
-            href="/"
-            className={cn(
-              'text-sm transition-colors',
-              pathname === '/'
-                ? 'text-primary-300 font-medium'
-                : 'text-text-200 hover:text-primary-300',
-            )}
-          >
-            홈
-          </Link>
-          <Link
-            href="/ranking"
-            className="text-text-200 hover:text-primary-300 text-sm transition-colors"
-          >
-            랭킹
-          </Link>
-          <Link
-            href="/short"
-            className="text-text-200 hover:text-primary-300 text-sm transition-colors"
-          >
-            숏구
-          </Link>
-          <Link
-            href="/event"
-            className="text-text-200 hover:text-primary-300 text-sm transition-colors"
-          >
-            이벤트
-          </Link>
-        </nav>
+        <NavigationMenu className="h-12">
+          <NavigationMenuList className="space-x-2">
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className="font-pretendard font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium">
+                카테고리
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className="bg-bg-100">
+                <ul className="grid w-[600px] gap-3 p-4 md:w-[900px] md:grid-cols-3">
+                  {categoryItems?.length > 0 ? (
+                    categoryItems.map((item) => (
+                      <li key={item.href} className="space-y-2">
+                        <div className="font-pretendard px-3 pt-3 text-sm font-medium leading-none text-text-200">
+                          {item.title}
+                        </div>
+                        <div className="space-y-1">
+                          {item.subItems.map((subItem) => (
+                            <NavigationMenuLink key={subItem.href} asChild>
+                              <Link
+                                href={subItem.href}
+                                className="font-pretendard block rounded px-3 py-1 text-xs font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium hover:text-text-200"
+                              >
+                                {subItem.title}
+                              </Link>
+                            </NavigationMenuLink>
+                          ))}
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="p-4 text-sm text-text-200">카테고리를 불러올 수 없습니다.</li>
+                  )}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+
+            {navItems.map((item) => (
+              <NavigationMenuItem key={item.href}>
+                <Link href={item.href} legacyBehavior passHref>
+                  <NavigationMenuLink
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      'font-pretendard font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium',
+                      isActive(item.href) && 'font-medium text-primary-300',
+                    )}
+                  >
+                    {item.label}
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
       </div>
     </div>
   );

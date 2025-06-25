@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { TopBar } from './top-bar';
 import { SearchBar } from './search-bar';
 import { MainNav } from './main-nav';
-import { MobileHeader } from './mobile-header';
+import { Header } from './header';
 import { BottomNavigation } from './bottom-navigation';
 import { Footer } from './footer';
 
@@ -14,12 +14,12 @@ interface BaseLayoutProps {
 // 1. 완전한 레이아웃 (메인홈과 같은)
 export function FullLayout({ children, className = '' }: BaseLayoutProps) {
   return (
-    <div className={`bg-bg-100 min-h-screen ${className}`}>
+    <div className={`min-h-screen bg-bg-100 ${className}`}>
       <TopBar />
       <SearchBar />
       <MainNav />
-      <MobileHeader />
-      <main className="desktop:pb-0 min-h-[calc(100vh-4rem)] pb-16">{children}</main>
+      <Header />
+      <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       <Footer />
       <BottomNavigation />
     </div>
@@ -29,10 +29,10 @@ export function FullLayout({ children, className = '' }: BaseLayoutProps) {
 // 2. 검색창과 상단메뉴, 푸터가 없는 레이아웃
 export function MinimalLayout({ children, className = '' }: BaseLayoutProps) {
   return (
-    <div className={`bg-bg-100 min-h-screen ${className}`}>
+    <div className={`min-h-screen bg-bg-100 ${className}`}>
       <TopBar />
-      <MobileHeader />
-      <main className="desktop:pb-0 min-h-[calc(100vh-4rem)] pb-16">{children}</main>
+      <Header />
+      <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       <BottomNavigation />
     </div>
   );
@@ -41,12 +41,12 @@ export function MinimalLayout({ children, className = '' }: BaseLayoutProps) {
 // 3. 푸터가 없는 레이아웃
 export function NoFooterLayout({ children, className = '' }: BaseLayoutProps) {
   return (
-    <div className={`bg-bg-100 min-h-screen ${className}`}>
+    <div className={`min-h-screen bg-bg-100 ${className}`}>
       <TopBar />
       <SearchBar />
       <MainNav />
-      <MobileHeader />
-      <main className="desktop:pb-0 min-h-[calc(100vh-4rem)] pb-16">{children}</main>
+      <Header />
+      <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       <BottomNavigation />
     </div>
   );
@@ -71,12 +71,12 @@ export function CustomLayout({
   showBottomNav?: boolean;
 }) {
   return (
-    <div className={`bg-bg-100 min-h-screen ${className}`}>
+    <div className={`min-h-screen bg-bg-100 ${className}`}>
       {showTopBar && <TopBar />}
       {showSearchBar && <SearchBar />}
       {showMainNav && <MainNav />}
-      {showMobileHeader && <MobileHeader />}
-      <main className="desktop:pb-0 min-h-[calc(100vh-4rem)] pb-16">{children}</main>
+      {showMobileHeader && <Header />}
+      <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       {showFooter && <Footer />}
       {showBottomNav && <BottomNavigation />}
     </div>

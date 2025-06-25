@@ -10,8 +10,8 @@
 
 - **`TopBar`**: 데스크탑 최상단 메뉴 (로그인, 장바구니, 히스토리, 주문배송, 마이페이지)
 - **`SearchBar`**: 데스크탑 검색창 (우르르 로고 + 검색창)
-- **`MainNav`**: 데스크탑 상단 메뉴 (카테고리, 홈, 랭킹, 숏구, 이벤트)
-- **`MobileHeader`**: 모바일/태블릿 헤더 (로고 + 검색/알림/장바구니 아이콘)
+- **`MainNav`**: 데스크탑 상단 메뉴 (카테고리 드롭다운, 홈, 랭킹, 숏구, 이벤트)
+- **`Header`**: 모바일/태블릿 헤더 (로고 + 검색/알림/장바구니 아이콘)
 - **`BottomNavigation`**: 모바일/태블릿 하단 네비게이션
 - **`Footer`**: 푸터
 
@@ -30,11 +30,11 @@
 
 ### 태블릿 (tablet: 768px 이상)
 
-- MobileHeader + BottomNavigation + Footer
+- Header + BottomNavigation + Footer
 
 ### 모바일 (mobile: 375px 이상)
 
-- MobileHeader + BottomNavigation + Footer
+- Header + BottomNavigation + Footer
 
 ## 🎯 사용 예시
 
@@ -133,7 +133,7 @@ export function SidebarLayout({ children }: BaseLayoutProps) {
   return (
     <div className="bg-bg-100 min-h-screen">
       <TopBar />
-      <MobileHeader />
+      <Header />
       <div className="flex">
         <aside className="desktop:block bg-bg-200 hidden w-64">{/* 사이드바 내용 */}</aside>
         <main className="desktop:pb-0 flex-1 pb-16">{children}</main>
@@ -143,3 +143,16 @@ export function SidebarLayout({ children }: BaseLayoutProps) {
   );
 }
 ```
+
+## 📋 컴포넌트 역할 분담
+
+### 데스크탑 헤더 영역
+
+- **TopBar**: 사용자 계정 관련 메뉴 (로그인, 장바구니, 히스토리 등)
+- **SearchBar**: 브랜드 로고와 검색 기능
+- **MainNav**: 주요 네비게이션 메뉴 (카테고리 드롭다운 포함)
+
+### 모바일/태블릿 헤더 영역
+
+- **Header**: 브랜드 로고와 주요 액션 버튼들 (검색, 알림, 장바구니)
+- **BottomNavigation**: 주요 네비게이션 메뉴
