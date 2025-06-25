@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
@@ -16,11 +17,11 @@ const BIZ_INFO = [
 ];
 
 const FOOTER_LINKS = [
-  { label: '사업자정보확인', href: '#' },
-  { label: '이용약관', href: '/terms' },
-  { label: '개인정보처리방침', href: '/privacy' },
-  { label: '1:1 문의', href: '/contact' },
-  { label: '광고/제휴문의', href: '#' },
+  { label: '사업자정보확인', href: '#', isExternal: true },
+  { label: '이용약관', href: '/terms', isExternal: false },
+  { label: '개인정보처리방침', href: '/privacy', isExternal: false },
+  { label: '1:1 문의', href: '/contact', isExternal: false },
+  { label: '광고/제휴문의', href: '#', isExternal: true },
 ];
 
 export function Footer() {
@@ -47,7 +48,7 @@ export function Footer() {
           />
           <button
             type="button"
-            className="text-text-200 hover:text-primary-300 mobile:text-[10px] tablet:text-sm desktop:text-sm flex items-center gap-1 font-medium transition-colors"
+            className="text-text-200 hover:text-primary-300 tablet:text-sm desktop:text-sm flex items-center gap-1 text-[10px] font-medium transition-colors"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="footer-biz-info"
@@ -67,11 +68,11 @@ export function Footer() {
             id="footer-biz-info"
             className="bg-bg-200 mb-8 w-full max-w-[1280px] rounded-xl px-8 py-10 text-left shadow-sm"
           >
-            <div className="mobile:gap-y-1 tablet:gap-y-2 desktop:gap-y-2 flex flex-col">
+            <div className="tablet:gap-y-2 desktop:gap-y-2 flex flex-col gap-y-1">
               {BIZ_INFO.map((item) => (
                 <div
                   key={item.label}
-                  className="mobile:min-h-[20px] tablet:min-h-[28px] desktop:min-h-[28px] mobile:text-[10px] tablet:text-sm desktop:text-sm flex"
+                  className="tablet:min-h-[28px] desktop:min-h-[28px] tablet:text-sm desktop:text-sm flex min-h-[20px] text-[10px]"
                 >
                   <div className="text-text-200 mr-4 w-[120px] min-w-[80px] font-medium">
                     {item.label}
@@ -84,27 +85,40 @@ export function Footer() {
         )}
 
         {/* 하단 링크 */}
-        <nav className="mobile:text-[10px] tablet:text-sm desktop:text-sm text-text-300 mb-4 flex flex-wrap justify-center gap-x-6 gap-y-2 font-medium">
-          {FOOTER_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="hover:text-primary-300 text-text-300 transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
+        <nav className="tablet:text-sm desktop:text-sm text-text-300 mb-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-medium">
+          {FOOTER_LINKS.map((link) => {
+            if (link.isExternal) {
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="hover:text-primary-300 text-text-300 transition-colors"
+                >
+                  {link.label}
+                </a>
+              );
+            }
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="hover:text-primary-300 text-text-300 transition-colors"
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* 안내문구 */}
-        <div className="mobile:text-[10px] tablet:text-sm desktop:text-sm text-text-300 mx-auto mb-2 max-w-7xl font-normal leading-relaxed">
+        <div className="tablet:text-sm desktop:text-sm text-text-300 mx-auto mb-2 max-w-7xl text-[10px] font-normal leading-relaxed">
           (주)밤코딩단은 결제정보의 중개서비스 또는 통신판매중개시스템의 제공자로서, 통신판매의
           당사자가 아니며 제공 정보의 오류로 인해 발생하는 모든 손해 및 상품의 주문, 배송 및 환불
           등과 관련한 의무와 책임은 각 판매자에게 있습니다.
         </div>
 
         {/* 저작권 */}
-        <div className="mobile:text-[10px] tablet:text-sm desktop:text-sm text-text-300 font-normal">
+        <div className="tablet:text-sm desktop:text-sm text-text-300 text-[10px] font-normal">
           © BamCodingDan Inc. All Rights Reserved.
         </div>
       </div>
