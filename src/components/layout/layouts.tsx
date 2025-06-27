@@ -5,6 +5,7 @@ import { MainNav } from './main-nav';
 import { Header } from './header';
 import { BottomNavigation } from './bottom-navigation';
 import { Footer } from './footer';
+import ScrollToTopButton from '@/components/common/ScrollToTopButton';
 
 interface BaseLayoutProps {
   children: ReactNode;
@@ -22,6 +23,7 @@ export function FullLayout({ children, className = '' }: BaseLayoutProps) {
       <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       <Footer />
       <BottomNavigation />
+      <ScrollToTopButton />
     </div>
   );
 }
@@ -34,6 +36,7 @@ export function MinimalLayout({ children, className = '' }: BaseLayoutProps) {
       <Header />
       <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       <BottomNavigation />
+      <ScrollToTopButton />
     </div>
   );
 }
@@ -48,6 +51,7 @@ export function NoFooterLayout({ children, className = '' }: BaseLayoutProps) {
       <Header />
       <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       <BottomNavigation />
+      <ScrollToTopButton />
     </div>
   );
 }
@@ -79,6 +83,7 @@ export function CustomLayout({
       <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       {showFooter && <Footer />}
       {showBottomNav && <BottomNavigation />}
+      <ScrollToTopButton />
     </div>
   );
 }
