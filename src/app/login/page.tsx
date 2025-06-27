@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { User, Store } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type LoginType = 'buyer' | 'seller';
 
@@ -16,7 +17,7 @@ export default function LoginPage() {
     <CustomLayout showTopBar={false} showSearchBar={false} showMainNav={false} showFooter={false}>
       <div className="bg-bg-100">
         {/* 로그인 컨테이너 */}
-        <div className="container mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-4">
+        <div className="container mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-4 tablet:max-w-lg desktop:max-w-xl">
           {/* 로고 */}
           <div className="mb-6 flex justify-center">
             <Image
@@ -113,7 +114,7 @@ export default function LoginPage() {
 
           {/* 판매자 로그인 폼 */}
           {loginType === 'seller' && (
-            <div className="min-h-[320px] space-y-4">
+            <div className="min-h-[320px] space-y-5">
               <div>
                 <label htmlFor="email" className="mb-2 block text-sm font-medium text-text-100">
                   이메일
@@ -174,12 +175,12 @@ export default function LoginPage() {
               {/* 회원가입 문구 (판매자 로그인에서만) */}
               <div className="mt-2 text-center">
                 <span className="text-sm text-text-200">아직 회원이 아니신가요? </span>
-                <button
-                  type="button"
+                <Link
+                  href="/seller-signup"
                   className="text-sm font-medium text-primary-300 transition-colors hover:text-primary-200"
                 >
                   회원가입
-                </button>
+                </Link>
               </div>
             </div>
           )}
