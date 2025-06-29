@@ -65,6 +65,45 @@ textarea {
 }
 
 /* ──────────────
+   Custom Checkbox Styles
+   ────────────── */
+input[type='checkbox'].custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--bg-300);
+  border-radius: 4px;
+  background-color: var(--bg-100);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+input[type='checkbox'].custom-checkbox:checked {
+  background-color: var(--primary-300);
+  border-color: var(--primary-300);
+}
+
+input[type='checkbox'].custom-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--text-on);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+input[type='checkbox'].custom-checkbox:focus {
+  @apply ring-2 ring-primary-300;
+  outline: none;
+}
+
+/* ──────────────
       Scrollbar
    ────────────── */
 ::-webkit-scrollbar {

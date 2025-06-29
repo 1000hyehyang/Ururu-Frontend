@@ -1,13 +1,18 @@
 import type { Metadata, Viewport } from 'next';
 
+// 환경변수에서 설정 가져오기
+const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || '우르르';
+const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0';
+
 export const siteConfig = {
-  name: '우르르',
+  name: APP_NAME,
   description: '뷰티 공동구매 커머스 플랫폼',
   url: 'https://ururu-beauty.vercel.app',
   ogImage: 'https://ururu-beauty.vercel.app/og-image.png',
   themeColor: '#ff6986',
   keywords: ['우르르', '뷰티 공동구매', '화장품 공구', '밤코딩단'],
   authors: [{ name: '우르르' }],
+  version: APP_VERSION,
 };
 
 export const metadata: Metadata = {

@@ -1,17 +1,25 @@
 'use client';
 
-import { useState } from 'react';
 import { CustomLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { User, Store } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-
-type LoginType = 'buyer' | 'seller';
+import { useAuthStore } from '@/store';
 
 export default function LoginPage() {
-  const [loginType, setLoginType] = useState<LoginType>('buyer');
+  const { loginType, loginFormData, setLoginType, setLoginFormData } = useAuthStore();
+
+  const handleInputChange = (field: string, value: string) => {
+    setLoginFormData({ [field]: value });
+  };
+
+  const handleSellerLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('판매자 로그인 시도:', loginFormData);
+    // TODO: 실제 로그인 API 연동 예정
+  };
 
   return (
     <CustomLayout showTopBar={false} showSearchBar={false} showMainNav={false} showFooter={false}>
@@ -41,7 +49,11 @@ export default function LoginPage() {
 
           {/* 로그인 타입 선택 */}
           <div className="mb-6">
-            <div className="flex rounded-lg bg-bg-200 p-1">
+            <div
+              className="flex rounded-lg bg-bg-200 p-1"
+              role="tablist"
+              aria-label="로그인 유형 선택"
+            >
               <button
                 type="button"
                 onClick={() => setLoginType('buyer')}
@@ -50,8 +62,11 @@ export default function LoginPage() {
                     ? 'bg-bg-100 text-primary-300 shadow-sm'
                     : 'text-text-200 hover:text-text-100'
                 }`}
+                role="tab"
+                aria-selected={loginType === 'buyer'}
+                aria-label="구매자 로그인"
               >
-                <User className="h-4 w-4" />
+                <User className="h-4 w-4" aria-hidden="true" />
                 구매자 로그인
               </button>
               <button
@@ -62,8 +77,11 @@ export default function LoginPage() {
                     ? 'bg-bg-100 text-primary-300 shadow-sm'
                     : 'text-text-200 hover:text-text-100'
                 }`}
+                role="tab"
+                aria-selected={loginType === 'seller'}
+                aria-label="판매자 로그인"
               >
-                <Store className="h-4 w-4" />
+                <Store className="h-4 w-4" aria-hidden="true" />
                 판매자 로그인
               </button>
             </div>
@@ -71,12 +89,13 @@ export default function LoginPage() {
 
           {/* 소셜 로그인 (구매자 로그인일 때만 표시) */}
           {loginType === 'buyer' && (
-            <div className="min-h-[320px] space-y-4">
+            <div className="min-h-[320px] space-y-4" role="region" aria-label="소셜 로그인">
               <div className="space-y-3">
                 {/* 카카오 로그인 */}
                 <button
                   type="button"
                   className="flex h-12 w-full items-center justify-center gap-3 rounded-lg bg-[#FEE500] text-sm font-medium text-[#3C1E1E] shadow transition hover:brightness-95"
+                  aria-label="카카오 계정으로 로그인"
                 >
                   <Image
                     src="/kakao-talk.svg"
@@ -84,6 +103,7 @@ export default function LoginPage() {
                     width={20}
                     height={20}
                     className="h-5 w-5"
+                    aria-hidden="true"
                   />
                   카카오 계정으로 로그인하기
                 </button>
@@ -91,6 +111,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   className="flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-bg-300 bg-bg-100 text-sm font-medium text-text-200 shadow transition hover:bg-bg-200"
+                  aria-label="구글 계정으로 로그인"
                 >
                   <Image
                     src="/google-logo.svg"
@@ -98,6 +119,7 @@ export default function LoginPage() {
                     width={20}
                     height={20}
                     className="h-5 w-5"
+                    aria-hidden="true"
                   />
                   구글 계정으로 로그인하기
                 </button>
@@ -114,7 +136,12 @@ export default function LoginPage() {
 
           {/* 판매자 로그인 폼 */}
           {loginType === 'seller' && (
-            <div className="min-h-[320px] space-y-5">
+            <form
+              onSubmit={handleSellerLogin}
+              className="min-h-[320px] space-y-5"
+              role="form"
+              aria-label="판매자 로그인 폼"
+            >
               <div>
                 <label htmlFor="email" className="mb-2 block text-sm font-medium text-text-100">
                   이메일
@@ -123,7 +150,10 @@ export default function LoginPage() {
                   id="email"
                   type="email"
                   placeholder="이메일을 입력하세요"
+                  value={loginFormData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
                   className="h-12 rounded-lg border-bg-300 bg-bg-100 px-4 py-3 text-base text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-0"
+                  required
                 />
               </div>
 
@@ -135,7 +165,10 @@ export default function LoginPage() {
                   id="password"
                   type="password"
                   placeholder="비밀번호를 입력하세요"
+                  value={loginFormData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
                   className="h-12 rounded-lg border-bg-300 bg-bg-100 px-4 py-3 text-base text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-0"
+                  required
                 />
               </div>
 
@@ -144,13 +177,15 @@ export default function LoginPage() {
                 <label className="flex items-center">
                   <input
                     type="checkbox"
-                    className="mr-2 h-4 w-4 rounded border-bg-300 text-primary-300 focus:ring-primary-300"
+                    className="custom-checkbox mr-2"
+                    aria-label="로그인 유지"
                   />
                   <span className="text-sm text-text-200">로그인 유지</span>
                 </label>
                 <button
                   type="button"
                   className="text-sm text-text-200 transition-colors hover:text-primary-300"
+                  aria-label="비밀번호 찾기"
                 >
                   비밀번호 찾기
                 </button>
@@ -158,8 +193,10 @@ export default function LoginPage() {
 
               {/* 로그인 버튼 */}
               <Button
+                type="submit"
                 size="lg"
                 className="h-12 w-full rounded-lg border border-primary-300 bg-bg-100 text-primary-300 transition-colors hover:bg-primary-100"
+                aria-label="판매자 센터로 이동"
               >
                 판매자 센터로 이동
               </Button>
@@ -178,11 +215,12 @@ export default function LoginPage() {
                 <Link
                   href="/seller-signup"
                   className="text-sm font-medium text-primary-300 transition-colors hover:text-primary-200"
+                  aria-label="판매자 회원가입 페이지로 이동"
                 >
                   회원가입
                 </Link>
               </div>
-            </div>
+            </form>
           )}
         </div>
       </div>
