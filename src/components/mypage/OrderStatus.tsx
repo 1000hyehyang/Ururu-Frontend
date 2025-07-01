@@ -1,31 +1,39 @@
+import React from 'react';
+import { ChevronRightIcon } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { myPageData } from '@/data/mypage';
-import { ChevronRight } from 'lucide-react';
 
 export function OrderStatus() {
   const { orderStatuses } = myPageData;
-  const statusItems = orderStatuses;
 
   return (
-    <section className="w-full bg-transparent">
-      <div className="mb-2 flex items-center justify-between px-1">
-        <span className="text-base font-semibold text-gray-900">주문/배송 조회</span>
+    <Card className="w-full rounded-2xl border-0 bg-bg-100 py-6 shadow-none">
+      <CardHeader className="mb-4 flex flex-row items-center justify-between p-0">
+        <CardTitle className="text-lg font-semibold text-text-100 md:text-xl">
+          주문/배송 조회
+        </CardTitle>
         <Button
           variant="ghost"
           size="sm"
-          className="h-auto px-2 py-1 text-gray-400 hover:text-pink-500"
+          className="h-auto border-bg-300 px-2 py-1 text-sm text-text-300 hover:text-primary-300"
+          aria-label="주문/배송 전체보기"
         >
-          전체보기 <ChevronRight className="ml-1 h-4 w-4" />
+          전체보기 <ChevronRightIcon className="ml-0 h-4 w-4" />
         </Button>
-      </div>
-      <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-5 shadow-[0_4px_24px_0_rgba(0,0,0,0.06)]">
-        {statusItems.map((item) => (
-          <div key={item.label} className="flex flex-1 flex-col items-center">
-            <span className="mb-1 text-2xl font-bold text-gray-900">{item.count}</span>
-            <span className="text-xs text-gray-500">{item.label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
+      </CardHeader>
+      <CardContent className="p-0 pt-4">
+        <div className="flex items-center justify-between">
+          {orderStatuses.map((item) => (
+            <div key={item.label} className="flex flex-1 flex-col items-center">
+              <span className="mb-1 text-2xl font-bold text-text-100 md:text-3xl">
+                {item.count}
+              </span>
+              <span className="text-xs text-text-300">{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,57 +1,64 @@
-import Image from 'next/image';
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { myPageData } from '@/data/mypage';
 
 export function ProfileCard() {
-  const { profile } = myPageData;
+  const { profile, profileActions } = myPageData;
 
   return (
-    <section className="mx-auto flex w-full max-w-xl flex-col items-center rounded-xl bg-white px-5 py-4 shadow-[0_2px_12px_0_rgba(0,0,0,0.04)]">
-      {/* 상단: 아바타/닉네임/뱃지/포인트 */}
-      <div className="mb-4 flex w-full items-center justify-between">
-        {/* 아바타+닉네임+뱃지 */}
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-black">
-            <Image src={profile.avatar} alt="아바타" width={48} height={48} />
-          </div>
-          <div className="flex flex-col gap-1">
-            <div className="text-lg font-extrabold text-gray-900">{profile.nickname}</div>
-            <div className="flex gap-1">
-              {profile.badges.map((badge) => (
-                <span
-                  key={badge}
-                  className="rounded-full border border-pink-400 bg-white px-2 py-0.5 text-xs font-semibold text-pink-400"
-                >
-                  {badge}
-                </span>
-              ))}
+    <Card className="w-full rounded-2xl border-0 bg-bg-100 px-4 py-6 shadow-sm md:px-8">
+      <CardContent className="p-0">
+        <div className="mb-6 flex items-center justify-between">
+          {/* 아바타/닉네임/뱃지 */}
+          <div className="flex items-center gap-4 md:gap-6">
+            <Avatar className="h-12 w-12 bg-bg-300 md:h-16 md:w-16">
+              <AvatarImage src={profile.avatar} />
+              <AvatarFallback>{profile.nickname[0]}</AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="mb-1 text-lg font-semibold text-text-100 md:text-2xl">
+                {profile.nickname}
+              </div>
+              <div className="flex gap-1 md:gap-2">
+                {profile.badges.map((badge) => (
+                  <Badge
+                    key={badge}
+                    className="rounded-full border border-primary-300 bg-primary-100 px-1.5 py-0.5 text-[10px] font-semibold text-primary-300 md:px-3 md:py-1 md:text-xs"
+                  >
+                    {badge}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        {/* 포인트 */}
-        <div className="flex flex-col items-end">
-          <div className="mb-0.5 flex items-center gap-1">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full border border-pink-300 text-base font-bold text-pink-400">
+          {/* 포인트 */}
+          <div className="flex flex-col items-center">
+            <span className="mb-1 flex h-6 w-6 items-center justify-center rounded-full border border-primary-200 text-base font-bold text-primary-200 md:h-8 md:w-8 md:text-lg">
               P
             </span>
-          </div>
-          <div className="text-xs text-gray-400">우르르 포인트</div>
-          <div className="text-base font-extrabold tracking-tight text-gray-900">
-            {profile.points.toLocaleString()}P
+            <span className="text-xs text-text-300">우르르 포인트</span>
+            <span className="text-base font-bold tracking-tight text-text-100 md:text-xl">
+              {profile.points.toLocaleString()}P
+            </span>
           </div>
         </div>
-      </div>
-      {/* 하단: 3개 버튼 */}
-      <div className="mt-1 flex w-full gap-2">
-        <button className="flex h-10 flex-1 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm font-semibold text-gray-400 transition-colors hover:border-pink-300 hover:text-pink-400">
-          나의 리뷰
-        </button>
-        <button className="flex h-10 flex-1 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm font-semibold text-gray-400 transition-colors hover:border-pink-300 hover:text-pink-400">
-          프로필 수정
-        </button>
-        <button className="flex h-10 flex-1 items-center justify-center rounded-lg border border-gray-200 bg-white text-sm font-semibold text-gray-400 transition-colors hover:border-pink-300 hover:text-pink-400">
-          뷰티 프로필
-        </button>
-      </div>
-    </section>
+        {/* 하단 버튼 */}
+        <div className="flex w-full gap-1 md:gap-4">
+          {profileActions.map((action) => (
+            <Button
+              key={action.label}
+              variant="outline"
+              className="h-8 flex-1 rounded-lg border-bg-300 bg-bg-100 px-1 text-[10px] font-medium text-text-300 hover:border-primary-300 hover:text-primary-300 md:h-12 md:rounded-xl md:px-2 md:text-base"
+              aria-label={`${action.label} 페이지로 이동`}
+            >
+              {action.label}
+            </Button>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
