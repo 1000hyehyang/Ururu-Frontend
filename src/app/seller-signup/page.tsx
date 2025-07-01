@@ -38,14 +38,16 @@ export default function SellerSignUpPage() {
         <div className="container mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-4 tablet:max-w-lg desktop:max-w-xl">
           {/* 로고 */}
           <div className="mb-6 flex justify-center pt-8">
-            <Image
-              src="/ururu-full-logo.png"
-              alt="우르르"
-              width={120}
-              height={32}
-              className="h-12 w-auto"
-              priority
-            />
+            <Link href="/" aria-label="우르르 홈으로 이동">
+              <Image
+                src="/ururu-full-logo.png"
+                alt="우르르"
+                width={120}
+                height={32}
+                className="h-12 w-auto"
+                priority
+              />
+            </Link>
           </div>
 
           {/* 안내 문구 */}

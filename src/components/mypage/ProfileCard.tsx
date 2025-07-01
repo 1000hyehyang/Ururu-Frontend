@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { myPageData, beautyProfileData } from '@/data/mypage';
+import { FORM_STYLES } from '@/constants/form-styles';
 import Link from 'next/link';
 
 export function ProfileCard() {
@@ -51,17 +52,25 @@ export function ProfileCard() {
         {/* 하단 버튼 */}
         <div className="flex w-full gap-1 md:gap-4">
           {profileActions.map((action) =>
-            action.label === '프로필 수정' ? (
+            action.label === '나의 리뷰' ? (
+              <Link
+                key={action.label}
+                href="/mypage/reviews"
+                className="flex-1"
+                aria-label="나의 리뷰 페이지로 이동"
+              >
+                <Button variant="outline" className={FORM_STYLES.button.profileCard}>
+                  {action.label}
+                </Button>
+              </Link>
+            ) : action.label === '프로필 수정' ? (
               <Link
                 key={action.label}
                 href="/mypage/profile-edit"
                 className="flex-1"
                 aria-label="프로필 수정 페이지로 이동"
               >
-                <Button
-                  variant="outline"
-                  className="h-8 w-full rounded-lg border-bg-300 bg-bg-100 px-1 text-[10px] font-medium text-text-300 hover:border-primary-300 hover:text-primary-300 md:h-12 md:rounded-xl md:px-2 md:text-base"
-                >
+                <Button variant="outline" className={FORM_STYLES.button.profileCard}>
                   {action.label}
                 </Button>
               </Link>
@@ -76,10 +85,7 @@ export function ProfileCard() {
                     : '뷰티프로필 작성 페이지로 이동'
                 }
               >
-                <Button
-                  variant="outline"
-                  className="h-8 w-full rounded-lg border-bg-300 bg-bg-100 px-1 text-[10px] font-medium text-text-300 hover:border-primary-300 hover:text-primary-300 md:h-12 md:rounded-xl md:px-2 md:text-base"
-                >
+                <Button variant="outline" className={FORM_STYLES.button.profileCard}>
                   {hasBeautyProfile ? '뷰티 프로필 수정' : '뷰티 프로필 작성'}
                 </Button>
               </Link>
@@ -87,7 +93,7 @@ export function ProfileCard() {
               <Button
                 key={action.label}
                 variant="outline"
-                className="h-8 flex-1 rounded-lg border-bg-300 bg-bg-100 px-1 text-[10px] font-medium text-text-300 hover:border-primary-300 hover:text-primary-300 md:h-12 md:rounded-xl md:px-2 md:text-base"
+                className={FORM_STYLES.button.profileCard}
                 aria-label={`${action.label} 페이지로 이동`}
               >
                 {action.label}

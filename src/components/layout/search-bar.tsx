@@ -3,6 +3,7 @@
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export function SearchBar() {
   return (
@@ -11,15 +12,17 @@ export function SearchBar() {
         <div className="flex h-20 items-center justify-center">
           {/* 로고 */}
           <div className="flex items-center">
-            <Image
-              src="/ururu-full-logo.png"
-              alt="우르르"
-              width={120}
-              height={32}
-              className="h-10 w-auto"
-              sizes="120px"
-              priority
-            />
+            <Link href="/" aria-label="우르르 홈으로 이동">
+              <Image
+                src="/ururu-full-logo.png"
+                alt="우르르"
+                width={120}
+                height={32}
+                className="h-10 w-auto"
+                sizes="120px"
+                priority
+              />
+            </Link>
           </div>
 
           {/* 검색창 */}

@@ -38,7 +38,7 @@ export const myPageData = {
         { icon: 'RefreshCwIcon', label: '취소/반품 내역' },
         { icon: 'PointIcon', label: '우르르 포인트 내역' },
         { icon: 'MessageSquareIcon', label: '나의 리뷰' },
-        { icon: 'TruckIcon', label: '배송지 관리', href: '/mypage/address-register' },
+        { icon: 'TruckIcon', label: '배송지 관리', href: '/mypage/address' },
       ],
     },
     {
