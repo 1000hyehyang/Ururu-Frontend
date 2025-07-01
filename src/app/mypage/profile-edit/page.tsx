@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { FormField } from '@/components/form/FormField';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { SelectableButton } from '@/components/ui/selectable-button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Sidebar } from '@/components/mypage/Sidebar';
@@ -16,7 +17,8 @@ import { Camera } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
-import { GENDER_OPTIONS, DEFAULT_AGREEMENTS, VALIDATION_CONSTANTS } from '@/constants/validation';
+import { VALIDATION_CONSTANTS } from '@/constants/validation';
+import { GENDER_OPTIONS, DEFAULT_AGREEMENTS } from '@/constants/form-options';
 
 export default function ProfileEditPage() {
   const [nickname, setNickname] = useState('');
@@ -107,15 +109,14 @@ export default function ProfileEditPage() {
                 <FormField label="성별" required>
                   <div className="flex gap-2">
                     {GENDER_OPTIONS.map((opt) => (
-                      <Button
+                      <SelectableButton
                         key={opt.value}
-                        type="button"
-                        variant={gender === opt.value ? 'default' : 'outline'}
-                        className={`h-12 min-w-0 flex-1 rounded-lg border text-sm font-medium transition ${gender === opt.value ? 'border-primary-300 bg-primary-300 text-text-on' : 'border-bg-300 bg-bg-100 text-text-300 hover:bg-bg-200'}`}
+                        value={opt.value}
+                        label={opt.label}
+                        isSelected={gender === opt.value}
                         onClick={() => setGender(opt.value)}
-                      >
-                        {opt.label}
-                      </Button>
+                        className="min-w-0 flex-1"
+                      />
                     ))}
                   </div>
                 </FormField>

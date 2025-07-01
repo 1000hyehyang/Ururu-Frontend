@@ -38,6 +38,18 @@ export interface SignupFormData {
   addressDetail: string;
 }
 
+// 뷰티프로필 폼 데이터 타입 정의
+export interface BeautyProfileFormData {
+  skinType: string;
+  skinTone: string;
+  skinConcerns: string[];
+  skinReaction: string;
+  interestCategories: string[];
+  minPrice: string;
+  maxPrice: string;
+  productRequest: string;
+}
+
 // 약관 동의 데이터 타입 정의
 export interface AgreementData {
   all: boolean;

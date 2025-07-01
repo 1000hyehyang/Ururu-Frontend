@@ -19,6 +19,12 @@ export const FORM_STYLES = {
       'h-10 px-4 rounded-lg border border-primary-300 bg-bg-100 text-primary-300 text-sm font-medium hover:bg-primary-100 transition',
     submit:
       'h-12 w-full rounded-lg border border-primary-300 bg-bg-100 text-primary-300 transition-colors hover:bg-primary-100 disabled:border-bg-300 disabled:text-text-300 disabled:hover:bg-bg-100',
+    // 선택형 버튼 스타일
+    selectable: {
+      base: 'h-12 rounded-lg border text-sm font-medium transition',
+      selected: 'border-primary-300 bg-primary-100 text-primary-300',
+      unselected: 'border-bg-300 bg-bg-100 text-text-300 hover:bg-bg-200',
+    },
   },
 
   // 헬퍼 텍스트 스타일
@@ -37,5 +43,12 @@ export const FORM_STYLES = {
   // 체크박스 스타일
   checkbox: {
     base: 'custom-checkbox mr-3 mt-0.5',
+  },
+
+  // textarea 스타일
+  textarea: {
+    base: 'h-12 rounded-lg border border-bg-300 bg-bg-100 px-4 py-3 text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-1 focus:ring-primary-300',
+    focus:
+      'focus:border-primary-300 focus:outline-none focus:ring-1 focus:ring-primary-300 focus:ring-offset-0',
   },
 } as const;

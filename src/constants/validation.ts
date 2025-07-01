@@ -38,18 +38,3 @@ export const VALIDATION_CONSTANTS = {
     MAX_YEAR: new Date().getFullYear(),
   },
 } as const;
-
-// 성별 옵션
-export const GENDER_OPTIONS = [
-  { label: '여성', value: 'female' },
-  { label: '남성', value: 'male' },
-  { label: '선택 안함', value: 'none' },
-] as const;
-
-// 약관 동의 기본값
-export const DEFAULT_AGREEMENTS = {
-  terms: true,
-  privacy: true,
-  marketing: false,
-  location: false,
-};

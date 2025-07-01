@@ -63,6 +63,20 @@ export function ProfileCard() {
                   {action.label}
                 </Button>
               </Link>
+            ) : action.label === '뷰티 프로필' ? (
+              <Link
+                key={action.label}
+                href="/mypage/beauty-profile-edit"
+                className="flex-1"
+                aria-label="뷰티프로필 수정 페이지로 이동"
+              >
+                <Button
+                  variant="outline"
+                  className="h-8 w-full rounded-lg border-bg-300 bg-bg-100 px-1 text-[10px] font-medium text-text-300 hover:border-primary-300 hover:text-primary-300 md:h-12 md:rounded-xl md:px-2 md:text-base"
+                >
+                  {action.label}
+                </Button>
+              </Link>
             ) : (
               <Button
                 key={action.label}
