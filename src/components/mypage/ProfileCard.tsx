@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { myPageData, beautyProfileData } from '@/data/mypage';
 import { FORM_STYLES } from '@/constants/form-styles';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 export function ProfileCard() {
@@ -50,7 +51,7 @@ export function ProfileCard() {
           </div>
         </div>
         {/* 하단 버튼 */}
-        <div className="flex w-full gap-1 md:gap-4">
+        <div className="flex w-full flex-col gap-2 md:flex-row md:gap-4">
           {profileActions.map((action) =>
             action.label === '나의 리뷰' ? (
               <Link
@@ -59,7 +60,7 @@ export function ProfileCard() {
                 className="flex-1"
                 aria-label="나의 리뷰 페이지로 이동"
               >
-                <Button variant="outline" className={FORM_STYLES.button.profileCard}>
+                <Button variant="outline" className={cn(FORM_STYLES.button.profileCard)}>
                   {action.label}
                 </Button>
               </Link>
@@ -70,7 +71,7 @@ export function ProfileCard() {
                 className="flex-1"
                 aria-label="프로필 수정 페이지로 이동"
               >
-                <Button variant="outline" className={FORM_STYLES.button.profileCard}>
+                <Button variant="outline" className={cn(FORM_STYLES.button.profileCard)}>
                   {action.label}
                 </Button>
               </Link>
@@ -85,7 +86,7 @@ export function ProfileCard() {
                     : '뷰티프로필 작성 페이지로 이동'
                 }
               >
-                <Button variant="outline" className={FORM_STYLES.button.profileCard}>
+                <Button variant="outline" className={cn(FORM_STYLES.button.profileCard)}>
                   {hasBeautyProfile ? '뷰티 프로필 수정' : '뷰티 프로필 작성'}
                 </Button>
               </Link>
@@ -93,7 +94,7 @@ export function ProfileCard() {
               <Button
                 key={action.label}
                 variant="outline"
-                className={FORM_STYLES.button.profileCard}
+                className={cn(FORM_STYLES.button.profileCard)}
                 aria-label={`${action.label} 페이지로 이동`}
               >
                 {action.label}

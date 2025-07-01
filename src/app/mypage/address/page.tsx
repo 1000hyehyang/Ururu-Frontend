@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { addressListData } from '@/data/address';
+import { cn } from '@/lib/utils';
 
 export default function AddressListPage() {
   return (
@@ -38,7 +39,12 @@ export default function AddressListPage() {
       {/* 배송지 추가 버튼 */}
       <div className="mb-4">
         <Link href="/mypage/address/register">
-          <Button variant="outline" className={FORM_STYLES.button.addressAdd}>
+          <Button
+            variant="outline"
+            className={cn(
+              'h-12 w-full rounded-lg border-bg-300 bg-bg-100 text-text-300 transition-colors hover:border-primary-300 hover:bg-bg-100 hover:text-primary-300',
+            )}
+          >
             배송지 추가하기
           </Button>
         </Link>
