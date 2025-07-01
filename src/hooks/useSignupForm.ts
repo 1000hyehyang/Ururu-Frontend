@@ -52,7 +52,7 @@ export const useSignupForm = () => {
       // 임시 로직 (API 구현 전)
       setBrandGuide('사용 가능한 브랜드명입니다.', 'success');
     } catch (error) {
-      console.error('브랜드명 중복 확인 실패:', error);
+      // TODO: 에러 로깅 서비스 연동
       setBrandGuide('중복 확인 중 오류가 발생했습니다.', 'error');
     }
   }, [signupFormData.brand, setBrandGuide]);
@@ -80,7 +80,6 @@ export const useSignupForm = () => {
     async (e: React.FormEvent) => {
       e.preventDefault();
       if (isFormValid()) {
-        console.log('회원가입 시도:', signupFormData);
         // TODO: 실제 회원가입 API 연동 예정
       }
     },

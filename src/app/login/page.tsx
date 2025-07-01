@@ -17,7 +17,6 @@ export default function LoginPage() {
 
   const handleSellerLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('판매자 로그인 시도:', loginFormData);
     // TODO: 실제 로그인 API 연동 예정
   };
 

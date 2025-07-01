@@ -25,7 +25,7 @@ export const FORM_STYLES = {
   helperText: {
     base: 'text-xs text-text-300',
     success: 'text-xs text-primary-300',
-    error: 'text-xs text-red-500',
+    error: 'text-xs text-primary-200',
   },
 
   // 우편번호 입력 필드 스타일

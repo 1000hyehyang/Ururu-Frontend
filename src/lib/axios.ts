@@ -16,10 +16,10 @@ const axiosInstance: AxiosInstance = axios.create({
 // 요청 인터셉터 (요청 전에 실행)
 axiosInstance.interceptors.request.use(
   (config) => {
-    // 기본적인 요청 로깅 (개발 환경에서만)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🚀 API Request:', config.method?.toUpperCase(), config.url);
-    }
+    // 개발 환경에서만 로깅 (필요시 주석 해제)
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log('🚀 API Request:', config.method?.toUpperCase(), config.url);
+    // }
     return config;
   },
   (error) => {
@@ -30,17 +30,17 @@ axiosInstance.interceptors.request.use(
 // 응답 인터셉터 (응답 후에 실행)
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    // 기본적인 응답 로깅 (개발 환경에서만)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('API Response:', response.status, response.config.url);
-    }
+    // 개발 환경에서만 로깅 (필요시 주석 해제)
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log('API Response:', response.status, response.config.url);
+    // }
     return response;
   },
   (error) => {
-    // 에러 로깅 (개발 환경에서만)
-    if (process.env.NODE_ENV === 'development') {
-      console.error('API Error:', error.response?.status, error.config?.url, error.message);
-    }
+    // 개발 환경에서만 로깅 (필요시 주석 해제)
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.error('API Error:', error.response?.status, error.config?.url, error.message);
+    // }
     return Promise.reject(error);
   },
 );

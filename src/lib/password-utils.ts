@@ -1,18 +1,20 @@
+import { VALIDATION_CONSTANTS } from '@/constants/validation';
+
 // 비밀번호 조건 체크 함수들
 export const checkPasswordLength = (password: string): boolean => {
-  return Boolean(password && password.length >= 8);
+  return Boolean(password && password.length >= VALIDATION_CONSTANTS.PASSWORD.MIN_LENGTH);
 };
 
 export const checkPasswordHasLetter = (password: string): boolean => {
-  return Boolean(password && /[a-zA-Z]/.test(password));
+  return Boolean(password && VALIDATION_CONSTANTS.PASSWORD.LETTERS.test(password));
 };
 
 export const checkPasswordHasNumber = (password: string): boolean => {
-  return Boolean(password && /[0-9]/.test(password));
+  return Boolean(password && VALIDATION_CONSTANTS.PASSWORD.NUMBERS.test(password));
 };
 
 export const checkPasswordHasSpecial = (password: string): boolean => {
-  return Boolean(password && /[!@#$%^&*(),.?":{}|<>]/.test(password));
+  return Boolean(password && VALIDATION_CONSTANTS.PASSWORD.SPECIAL_CHARS.test(password));
 };
 
 export const isPasswordValid = (password: string): boolean => {

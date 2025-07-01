@@ -29,11 +29,11 @@ export const FormField: React.FC<FormFieldProps> = ({
       {children}
       {(helperText || characterCount) && (
         <div className="mt-1 flex items-center justify-between">
-          <div className="flex-1">
-            {helperText && (
-              <span className={FORM_STYLES.helperText[helperTextType]}>{helperText}</span>
-            )}
-          </div>
+          {helperText ? (
+            <span className={FORM_STYLES.helperText[helperTextType]}>{helperText}</span>
+          ) : (
+            <div className="flex-1" />
+          )}
           {characterCount && (
             <span className={FORM_STYLES.helperText.base}>
               {characterCount.current}/{characterCount.max}자
