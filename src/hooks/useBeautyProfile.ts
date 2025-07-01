@@ -19,10 +19,33 @@ export const useBeautyProfile = () => {
 
   const handleInputChange = useCallback(
     (field: keyof BeautyProfileFormData, value: string | string[]) => {
-      setBeautyProfileData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
+      setBeautyProfileData((prev) => {
+        const newData = {
+          ...prev,
+          [field]: value,
+        };
+
+        // 가격 입력 시 최소값과 최대값 자동 정렬
+        if ((field === 'minPrice' || field === 'maxPrice') && typeof value === 'string') {
+          const minPrice = field === 'minPrice' ? value : prev.minPrice;
+          const maxPrice = field === 'maxPrice' ? value : prev.maxPrice;
+
+          if (minPrice && maxPrice) {
+            const minNum = Number(minPrice);
+            const maxNum = Number(maxPrice);
+
+            if (!isNaN(minNum) && !isNaN(maxNum)) {
+              if (minNum > maxNum) {
+                // 최소값이 최대값보다 크면 자동으로 교체
+                newData.minPrice = maxPrice;
+                newData.maxPrice = minPrice;
+              }
+            }
+          }
+        }
+
+        return newData;
+      });
     },
     [],
   );
@@ -69,14 +92,10 @@ export const useBeautyProfile = () => {
     });
   }, []);
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      // TODO: 실제 뷰티프로필 저장 API 연동 필요
-      console.log('뷰티프로필 저장:', beautyProfileData);
-    },
-    [beautyProfileData],
-  );
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: 실제 뷰티프로필 저장 API 연동 필요
+  }, []);
 
   const resetForm = useCallback(() => {
     setBeautyProfileData(INITIAL_BEAUTY_PROFILE_DATA);

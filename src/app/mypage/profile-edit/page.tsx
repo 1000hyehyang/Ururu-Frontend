@@ -175,7 +175,7 @@ export default function ProfileEditPage() {
                 <Separator className="my-4" />
                 {/* 약관 동의 */}
                 <div className="mt-6 space-y-3">
-                  <label className="flex items-start">
+                  <label className={FORM_STYLES.checkbox.container}>
                     <input
                       type="checkbox"
                       checked={agreements.marketing}
@@ -184,18 +184,18 @@ export default function ProfileEditPage() {
                       }
                       className={FORM_STYLES.checkbox.base}
                     />
-                    <span className="text-sm text-text-200">
+                    <span className={FORM_STYLES.checkbox.label}>
                       마케팅 정보 수신에 동의합니다 (선택)
                     </span>
                   </label>
-                  <label className="flex items-start">
+                  <label className={FORM_STYLES.checkbox.container}>
                     <input
                       type="checkbox"
                       checked={agreements.location}
                       onChange={(e) => setAgreements((a) => ({ ...a, location: e.target.checked }))}
                       className={FORM_STYLES.checkbox.base}
                     />
-                    <span className="text-sm text-text-200">
+                    <span className={FORM_STYLES.checkbox.label}>
                       위치 기반 서비스 이용약관에 동의합니다 (선택)
                     </span>
                   </label>

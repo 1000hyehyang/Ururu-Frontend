@@ -1,0 +1,1 @@
+export { BeautyProfileSummary } from './BeautyProfileSummary';

@@ -16,7 +16,7 @@ export const myPageData = {
   ],
 
   // 프로필 액션 버튼
-  profileActions: [{ label: '나의 리뷰' }, { label: '프로필 수정' }, { label: '뷰티 프로필' }],
+  profileActions: [{ label: '나의 리뷰' }, { label: '프로필 수정' }, { label: '뷰티 프로필 수정' }],
 
   // 사이드바 네비게이션
   navigationSections: [
@@ -44,4 +44,32 @@ export const myPageData = {
       ],
     },
   ],
+};
+
+// 뷰티 프로필 mock 데이터
+export const beautyProfileData = {
+  // 뷰티 프로필이 있는 경우
+  withProfile: {
+    skinType: 'combination',
+    skinTone: 'summer_cool',
+    skinConcerns: ['blemishes', 'pores', 'sensitive'],
+    skinReaction: 'yes',
+    interestCategories: ['skincare', 'mask', 'cleansing'],
+    minPrice: '10000',
+    maxPrice: '50000',
+    productRequest:
+      '건조한 겨울철에 특히 각질이 많이 일어나고, 향이 강한 제품을 피하고 싶어요. 민감성 피부라서 순한 성분의 제품을 선호합니다.',
+  },
+
+  // 뷰티 프로필이 없는 경우
+  empty: {
+    skinType: '',
+    skinTone: '',
+    skinConcerns: [],
+    skinReaction: '',
+    interestCategories: [],
+    minPrice: '',
+    maxPrice: '',
+    productRequest: '',
+  },
 };

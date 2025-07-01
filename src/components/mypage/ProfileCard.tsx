@@ -3,11 +3,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { myPageData } from '@/data/mypage';
+import { myPageData, beautyProfileData } from '@/data/mypage';
 import Link from 'next/link';
 
 export function ProfileCard() {
   const { profile, profileActions } = myPageData;
+  const profileData = beautyProfileData.withProfile;
+  const hasBeautyProfile = profileData.skinType && profileData.skinTone;
 
   return (
     <Card className="w-full rounded-2xl border-0 bg-bg-100 px-4 py-6 shadow-sm md:px-8">
@@ -63,18 +65,22 @@ export function ProfileCard() {
                   {action.label}
                 </Button>
               </Link>
-            ) : action.label === '뷰티 프로필' ? (
+            ) : action.label === '뷰티 프로필 수정' ? (
               <Link
                 key={action.label}
                 href="/mypage/beauty-profile-edit"
                 className="flex-1"
-                aria-label="뷰티프로필 수정 페이지로 이동"
+                aria-label={
+                  hasBeautyProfile
+                    ? '뷰티프로필 수정 페이지로 이동'
+                    : '뷰티프로필 작성 페이지로 이동'
+                }
               >
                 <Button
                   variant="outline"
                   className="h-8 w-full rounded-lg border-bg-300 bg-bg-100 px-1 text-[10px] font-medium text-text-300 hover:border-primary-300 hover:text-primary-300 md:h-12 md:rounded-xl md:px-2 md:text-base"
                 >
-                  {action.label}
+                  {hasBeautyProfile ? '뷰티 프로필 수정' : '뷰티 프로필 작성'}
                 </Button>
               </Link>
             ) : (

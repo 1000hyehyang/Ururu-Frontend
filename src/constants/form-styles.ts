@@ -42,7 +42,11 @@ export const FORM_STYLES = {
 
   // 체크박스 스타일
   checkbox: {
-    base: 'custom-checkbox mr-3 mt-0.5',
+    base: 'custom-checkbox mt-0.5',
+    // 체크박스 컨테이너 스타일 (체크박스 + 라벨)
+    container: 'flex items-start gap-3',
+    // 체크박스 라벨 스타일
+    label: 'text-sm text-text-200 leading-relaxed',
   },
 
   // textarea 스타일

@@ -7,6 +7,7 @@ import { User, Store } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAuthStore } from '@/store';
+import { FORM_STYLES } from '@/constants/form-styles';
 
 export default function LoginPage() {
   const { loginType, loginFormData, setLoginType, setLoginFormData } = useAuthStore();
@@ -173,13 +174,13 @@ export default function LoginPage() {
 
               {/* 로그인 유지 & 비밀번호 찾기 */}
               <div className="flex items-center justify-between">
-                <label className="flex items-center">
+                <label className={FORM_STYLES.checkbox.container}>
                   <input
                     type="checkbox"
-                    className="custom-checkbox mr-2"
+                    className={FORM_STYLES.checkbox.base}
                     aria-label="로그인 유지"
                   />
-                  <span className="text-sm text-text-200">로그인 유지</span>
+                  <span className={FORM_STYLES.checkbox.label}>로그인 유지</span>
                 </label>
                 <button
                   type="button"
