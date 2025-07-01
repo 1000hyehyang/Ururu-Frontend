@@ -1,3 +1,15 @@
+// 마이페이지 아이템 타입 정의
+interface NavigationItem {
+  icon: string;
+  label: string;
+  href?: string;
+}
+
+interface NavigationSection {
+  title: string;
+  items: NavigationItem[];
+}
+
 // 마이페이지 mock 데이터
 export const myPageData = {
   // 프로필 정보
@@ -26,7 +38,7 @@ export const myPageData = {
         { icon: 'RefreshCwIcon', label: '취소/반품 내역' },
         { icon: 'PointIcon', label: '우르르 포인트 내역' },
         { icon: 'MessageSquareIcon', label: '나의 리뷰' },
-        { icon: 'TruckIcon', label: '배송지 관리' },
+        { icon: 'TruckIcon', label: '배송지 관리', href: '/mypage/address-register' },
       ],
     },
     {

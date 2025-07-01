@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { myPageData } from '@/data/mypage';
+import Link from 'next/link';
 
 // 아이콘 매핑 함수
 const getIcon = (iconName: string) => {
@@ -39,18 +40,39 @@ export function MobileSidebarList() {
         <React.Fragment key={section.title}>
           <div className="flex w-full flex-col items-start gap-3">
             <div className="mb-1 text-base font-semibold text-text-100">{section.title}</div>
-            {section.items.map((item) => (
-              <div
-                key={item.label}
-                className="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-200 hover:bg-bg-300 md:text-base"
-                role="button"
-                tabIndex={0}
-                aria-label={`${item.label} 메뉴로 이동`}
-              >
-                {getIcon(item.icon)}
-                <span>{item.label}</span>
-              </div>
-            ))}
+            {section.items.map((item) => {
+              const content = (
+                <>
+                  {getIcon(item.icon)}
+                  <span>{item.label}</span>
+                </>
+              );
+
+              if (item.href) {
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-200 hover:bg-bg-300 md:text-base"
+                    aria-label={`${item.label} 메뉴로 이동`}
+                  >
+                    {content}
+                  </Link>
+                );
+              }
+
+              return (
+                <div
+                  key={item.label}
+                  className="flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-200 hover:bg-bg-300 md:text-base"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${item.label} 메뉴로 이동`}
+                >
+                  {content}
+                </div>
+              );
+            })}
           </div>
           {idx < navigationSections.length - 1 && <Separator className="my-2 bg-bg-300" />}
         </React.Fragment>
