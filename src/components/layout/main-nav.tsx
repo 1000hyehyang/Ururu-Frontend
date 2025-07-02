@@ -39,20 +39,18 @@ export function MainNav() {
                 <ul className="grid w-[600px] gap-3 p-4 md:w-[900px] md:grid-cols-3">
                   {categoryItems?.length > 0 ? (
                     categoryItems.map((item) => (
-                      <li key={item.href} className="space-y-2">
+                      <li key={item.title} className="space-y-2">
                         <div className="font-pretendard px-3 pt-3 text-sm font-medium leading-none text-text-200">
                           {item.title}
                         </div>
                         <div className="space-y-1">
                           {item.subItems.map((subItem) => (
-                            <NavigationMenuLink key={subItem.href} asChild>
-                              <Link
-                                href={subItem.href}
-                                className="font-pretendard block rounded px-3 py-1 text-xs font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium hover:text-text-200"
-                              >
-                                {subItem.title}
-                              </Link>
-                            </NavigationMenuLink>
+                            <div
+                              key={subItem.title}
+                              className="font-pretendard block cursor-pointer rounded px-3 py-1 text-xs font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium hover:text-text-100"
+                            >
+                              {subItem.title}
+                            </div>
                           ))}
                         </div>
                       </li>
