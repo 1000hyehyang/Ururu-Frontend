@@ -52,55 +52,22 @@ export function ProfileCard() {
         </div>
         {/* 하단 버튼 */}
         <div className="flex w-full flex-col gap-2 md:flex-row md:gap-4">
-          {profileActions.map((action) =>
-            action.label === '나의 리뷰' ? (
-              <Link
-                key={action.label}
-                href="/mypage/reviews"
-                className="flex-1"
-                aria-label="나의 리뷰 페이지로 이동"
-              >
-                <Button variant="outline" className={cn(FORM_STYLES.button.profileCard)}>
-                  {action.label}
-                </Button>
-              </Link>
-            ) : action.label === '프로필 수정' ? (
-              <Link
-                key={action.label}
-                href="/mypage/profile-edit"
-                className="flex-1"
-                aria-label="프로필 수정 페이지로 이동"
-              >
-                <Button variant="outline" className={cn(FORM_STYLES.button.profileCard)}>
-                  {action.label}
-                </Button>
-              </Link>
-            ) : action.label === '뷰티 프로필 수정' ? (
-              <Link
-                key={action.label}
-                href="/mypage/beauty-profile-edit"
-                className="flex-1"
-                aria-label={
-                  hasBeautyProfile
-                    ? '뷰티프로필 수정 페이지로 이동'
-                    : '뷰티프로필 작성 페이지로 이동'
-                }
-              >
-                <Button variant="outline" className={cn(FORM_STYLES.button.profileCard)}>
-                  {hasBeautyProfile ? '뷰티 프로필 수정' : '뷰티 프로필 작성'}
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                key={action.label}
-                variant="outline"
-                className={cn(FORM_STYLES.button.profileCard)}
-                aria-label={`${action.label} 페이지로 이동`}
-              >
-                {action.label}
+          {profileActions.map((action) => (
+            <Link
+              key={action.label}
+              href={action.href || '#'}
+              className="flex-1"
+              aria-label={`${action.label} 페이지로 이동`}
+            >
+              <Button variant="outline" className={cn(FORM_STYLES.button.profileCard)}>
+                {action.label === '뷰티 프로필 수정' && hasBeautyProfile
+                  ? '뷰티 프로필 수정'
+                  : action.label === '뷰티 프로필 수정'
+                    ? '뷰티 프로필 작성'
+                    : action.label}
               </Button>
-            ),
-          )}
+            </Link>
+          ))}
         </div>
       </CardContent>
     </Card>

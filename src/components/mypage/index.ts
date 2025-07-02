@@ -7,3 +7,4 @@ export * from './beauty-profile';
 export * from './address';
 export * from './profile-edit';
 export * from './beauty-profile-edit';
+export * from './review';

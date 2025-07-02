@@ -5,6 +5,11 @@ interface NavigationItem {
   href?: string;
 }
 
+interface ProfileAction {
+  label: string;
+  href?: string;
+}
+
 interface NavigationSection {
   title: string;
   items: NavigationItem[];
@@ -28,7 +33,11 @@ export const myPageData = {
   ],
 
   // 프로필 액션 버튼
-  profileActions: [{ label: '나의 리뷰' }, { label: '프로필 수정' }, { label: '뷰티 프로필 수정' }],
+  profileActions: [
+    { label: '나의 리뷰', href: '/mypage/review' },
+    { label: '프로필 수정', href: '/mypage/profile-edit' },
+    { label: '뷰티 프로필 수정', href: '/mypage/beauty-profile-edit' },
+  ],
 
   // 사이드바 네비게이션
   navigationSections: [
@@ -37,7 +46,7 @@ export const myPageData = {
       items: [
         { icon: 'RefreshCwIcon', label: '취소/반품 내역' },
         { icon: 'PointIcon', label: '우르르 포인트 내역' },
-        { icon: 'MessageSquareIcon', label: '나의 리뷰' },
+        { icon: 'MessageSquareIcon', label: '나의 리뷰', href: '/mypage/review' },
         { icon: 'TruckIcon', label: '배송지 관리', href: '/mypage/address' },
       ],
     },
