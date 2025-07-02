@@ -1,22 +1,24 @@
 import React from 'react';
-import type { FC } from 'react';
-import type { mockProduct as mockProductType } from '@/data/mock-product';
+import type { Product } from '@/types/product';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Truck, Clock } from 'lucide-react';
+import { calculateProgress } from '@/types/product';
 
 interface ProductInfoProps {
-  product: typeof mockProductType;
+  product: Product;
   className?: string;
   variant?: 'mobile' | 'desktop';
 }
 
-export const ProductInfo: FC<ProductInfoProps> = ({
-  product,
-  className = '',
-  variant = 'mobile',
-}) => {
+export const ProductInfo = ({ product, className = '', variant = 'mobile' }: ProductInfoProps) => {
   const isDesktop = variant === 'desktop';
+
+  // 진행률 계산 (0으로 나누기 방지)
+  const progressValue = calculateProgress(product.participants, product.targetParticipants);
+
+  // 다음 리워드까지 남은 인원 계산
+  const remainingForNextReward = Math.max(0, product.targetParticipants - product.participants);
 
   return (
     <div className={className}>
@@ -64,11 +66,7 @@ export const ProductInfo: FC<ProductInfoProps> = ({
           <Clock
             className={`text-primary-300 ${isDesktop ? 'h-5 w-5' : 'h-4 w-4 md:h-5 md:w-5'}`}
           />
-          <div
-            className={`font-normal text-primary-300 ${
-              isDesktop ? 'text-base' : 'text-sm md:text-base'
-            }`}
-          >
+          <div className="text-sm font-normal text-primary-300">
             공동 구매 마감까지 <span className="font-semibold">{product.remainingDays}일</span>{' '}
             남았어요!
           </div>
@@ -89,15 +87,12 @@ export const ProductInfo: FC<ProductInfoProps> = ({
             명 참여중
           </span>
           <span className={`text-text-100 ${isDesktop ? 'text-sm' : 'text-xs md:text-sm'}`}>
-            다음 리워드까지 {product.targetParticipants - product.participants}명 남았어요!
+            다음 리워드까지 {remainingForNextReward}명 남았어요!
           </span>
         </div>
         {/* 진행률 바 */}
         <div className={`flex w-full flex-col gap-2 ${isDesktop ? 'gap-3' : 'gap-2'}`}>
-          <Progress
-            value={(product.participants / product.targetParticipants) * 100}
-            className="h-2 bg-primary-100"
-          />
+          <Progress value={progressValue} className="h-2 bg-primary-100" />
           <div
             className={`w-full text-right text-text-100 ${
               isDesktop ? 'text-xs' : 'text-xs md:text-sm'
@@ -143,7 +138,9 @@ export const ProductInfo: FC<ProductInfoProps> = ({
         </span>
         <div className={`flex flex-col gap-1 ${isDesktop ? 'gap-2' : 'gap-1'}`}>
           <div className={`flex items-center gap-2 ${isDesktop ? 'gap-3' : 'gap-2'}`}>
-            <Truck className={`text-text-100 ${isDesktop ? 'h-6 w-6' : 'h-5 w-5 md:h-6 md:w-6'}`} />
+            <Truck
+              className={`text-primary-200 ${isDesktop ? 'h-6 w-6' : 'h-5 w-5 md:h-6 md:w-6'}`}
+            />
             <span className={`text-text-100 ${isDesktop ? 'text-base' : 'text-sm md:text-base'}`}>
               {product.shippingInfo.type}
             </span>

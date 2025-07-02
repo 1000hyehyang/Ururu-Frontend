@@ -1,6 +1,5 @@
 import React from 'react';
-import type { FC } from 'react';
-import type { mockProduct as mockProductType } from '@/data/mock-product';
+import type { Product, SelectedOption } from '@/types/product';
 import {
   Select,
   SelectContent,
@@ -10,20 +9,20 @@ import {
 } from '@/components/ui/select';
 
 interface OptionSelectProps {
-  product: typeof mockProductType;
+  product: Product;
   onSelect: (value: string) => void;
   className?: string;
   placeholder?: string;
-  selectedOptions?: Array<{ value: string; label: string; quantity: number }>;
+  selectedOptions?: SelectedOption[];
 }
 
-export const OptionSelect: FC<OptionSelectProps> = ({
+export const OptionSelect = ({
   product,
   onSelect,
   className = '',
   placeholder = '옵션을 선택해주세요',
   selectedOptions = [],
-}) => {
+}: OptionSelectProps) => {
   const allOptionsSelected = selectedOptions.length === product.options.length;
   const currentPlaceholder = allOptionsSelected ? '모든 옵션이 선택되었습니다' : placeholder;
 

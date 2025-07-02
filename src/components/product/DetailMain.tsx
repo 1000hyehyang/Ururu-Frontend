@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import type { FC } from 'react';
-import type { mockProduct as mockProductType } from '@/data/mock-product';
+import type { Product } from '@/types/product';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MobileOrderSection } from './OrderBox';
 import { useRouter } from 'next/navigation';
@@ -12,10 +11,10 @@ import { ProductTabs } from './ProductTabs';
 import { PRODUCT_DETAIL_TABS } from '@/constants/product-detail';
 
 interface DetailMainProps {
-  product: typeof mockProductType;
+  product: Product;
 }
 
-export const DetailMain: FC<DetailMainProps> = ({ product }) => {
+export const DetailMain = ({ product }: DetailMainProps) => {
   const [activeTab, setActiveTab] = useState(0);
   const router = useRouter();
 
@@ -27,6 +26,7 @@ export const DetailMain: FC<DetailMainProps> = ({ product }) => {
     thumbScrollRef,
     checkScrollButtons,
     scrollThumbnails,
+    images: safeImages,
   } = useImageCarousel({
     images: product.thumbnails,
     initialImage: product.mainImage,
@@ -75,7 +75,7 @@ export const DetailMain: FC<DetailMainProps> = ({ product }) => {
             }}
             onScroll={checkScrollButtons}
           >
-            {product.thumbnails.map((thumb, idx) => (
+            {safeImages.map((thumb, idx) => (
               <button
                 key={thumb}
                 onClick={() => setMainImage(thumb)}

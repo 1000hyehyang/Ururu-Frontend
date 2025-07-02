@@ -1,13 +1,7 @@
 import { useState } from 'react';
-import type { mockProduct as mockProductType } from '@/data/mock-product';
+import type { Product, SelectedOption } from '@/types/product';
 
-interface SelectedOption {
-  value: string;
-  label: string;
-  quantity: number;
-}
-
-export const useProductOptions = (product: typeof mockProductType) => {
+export const useProductOptions = (product: Product) => {
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
 
   // 옵션 선택 핸들러

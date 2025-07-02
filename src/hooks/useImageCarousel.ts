@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { THUMBNAIL_SCROLL_AMOUNT, SCROLL_OFFSET_TOLERANCE } from '@/constants/product-detail';
+import { DEFAULT_PRODUCT_IMAGE } from '@/data/mock-product';
 
 interface UseImageCarouselProps {
   images: string[];
@@ -7,7 +8,11 @@ interface UseImageCarouselProps {
 }
 
 export const useImageCarousel = ({ images, initialImage }: UseImageCarouselProps) => {
-  const [mainImage, setMainImage] = useState(initialImage || images[0]);
+  // 빈 배열 안전장치: images가 비어있으면 기본 이미지 사용
+  const safeImages = images.length > 0 ? images : [DEFAULT_PRODUCT_IMAGE];
+  const safeInitialImage = initialImage || safeImages[0];
+
+  const [mainImage, setMainImage] = useState(safeInitialImage);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const thumbScrollRef = useRef<HTMLDivElement>(null);
@@ -18,7 +23,8 @@ export const useImageCarousel = ({ images, initialImage }: UseImageCarouselProps
     if (!el) return;
 
     const canScrollLeft = el.scrollLeft > 0;
-    const canScrollRight = el.scrollLeft < el.scrollWidth - el.clientWidth - SCROLL_OFFSET_TOLERANCE;
+    const canScrollRight =
+      el.scrollLeft < el.scrollWidth - el.clientWidth - SCROLL_OFFSET_TOLERANCE;
 
     setCanScrollLeft(canScrollLeft);
     setCanScrollRight(canScrollRight);
@@ -45,6 +51,13 @@ export const useImageCarousel = ({ images, initialImage }: UseImageCarouselProps
     setTimeout(checkScrollButtons, 300);
   };
 
+  // 메인 이미지 변경 (안전한 이미지 배열 사용)
+  const changeMainImage = (imageUrl: string) => {
+    if (safeImages.includes(imageUrl)) {
+      setMainImage(imageUrl);
+    }
+  };
+
   // 컴포넌트 마운트 시 스크롤 버튼 상태 확인
   useEffect(() => {
     checkScrollButtons();
@@ -60,11 +73,12 @@ export const useImageCarousel = ({ images, initialImage }: UseImageCarouselProps
 
   return {
     mainImage,
-    setMainImage,
+    setMainImage: changeMainImage,
     canScrollLeft,
     canScrollRight,
     thumbScrollRef,
     checkScrollButtons,
     scrollThumbnails,
+    images: safeImages, // 안전한 이미지 배열 반환
   };
 };

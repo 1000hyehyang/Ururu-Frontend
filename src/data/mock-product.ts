@@ -1,38 +1,12 @@
 // 상품 상세 mock 데이터 예시
+import type { Product } from '@/types/product';
 
-export interface mockProduct {
-  id: string;
-  name: string;
-  mainImage: string;
-  thumbnails: string[];
-  price: number;
-  originalPrice: number;
-  discountRate: number;
-  point: number;
-  participants: number;
-  targetParticipants: number;
-  remainingDays: number;
-  category: {
-    main: string;
-    sub?: string;
-  };
-  shippingInfo: {
-    type: string;
-    description: string;
-    shippingFee: string;
-  };
-  rewardTiers: Array<{
-    participants: number;
-    discount: string;
-    achieved: boolean;
-  }>;
-  options: Array<{
-    label: string;
-    value: string;
-  }>;
-}
+export type { Product };
 
-export const mockProduct: mockProduct = {
+// 기본 이미지 URL (빈 배열일 때 사용)
+export const DEFAULT_PRODUCT_IMAGE = '/placeholder-product.jpg';
+
+export const mockProductData: Product = {
   id: '1',
   name: '[7월올영픽/산리오캐릭터즈] 롬앤 더 쥬시 래스팅 틴트 (+쉐이킹키링증정) 단품/기획',
   mainImage:
@@ -61,9 +35,9 @@ export const mockProduct: mockProduct = {
     shippingFee: '기본 배송비 3,000원',
   },
   rewardTiers: [
-    { participants: 300, discount: '10% 할인', achieved: true },
-    { participants: 500, discount: '15% 할인', achieved: true },
-    { participants: 1000, discount: '30% 할인', achieved: false },
+    { participants: 300, discount: '20% 할인', achieved: true },
+    { participants: 500, discount: '42% 할인', achieved: true },
+    { participants: 1000, discount: '70% 할인', achieved: false },
   ],
   options: [
     { label: '[태닝 시나모롤]03 베어 그레이프 기획', value: 'option1' },

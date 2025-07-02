@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import type { FC } from 'react';
-import type { mockProduct as mockProductType } from '@/data/mock-product';
+import type { Product } from '@/types/product';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { X, Minus, Plus, Share } from 'lucide-react';
+import { X, Share } from 'lucide-react';
 import Image from 'next/image';
 import { useProductOptions } from '@/hooks/useProductOptions';
 import { OptionCard } from './OptionCard';
@@ -13,7 +11,7 @@ import { OptionSelect } from './OptionSelect';
 import { ActionButtons } from './ActionButtons';
 
 interface OrderFloatingBarProps {
-  product: typeof mockProductType;
+  product: Product;
 }
 
 export function OrderFloatingBar({ product }: OrderFloatingBarProps) {

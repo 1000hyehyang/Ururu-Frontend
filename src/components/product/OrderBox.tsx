@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { FC } from 'react';
-import type { mockProduct as mockProductType } from '@/data/mock-product';
+import type { Product } from '@/types/product';
 import { Card } from '@/components/ui/card';
 import { useProductOptions } from '@/hooks/useProductOptions';
 import { generateBreadcrumb } from '@/constants/product-detail';
@@ -13,11 +12,11 @@ import { OptionSelect } from './OptionSelect';
 import { ActionButtons } from './ActionButtons';
 
 interface OrderBoxProps {
-  product: typeof mockProductType;
+  product: Product;
 }
 
 // 모바일용 주문 섹션 컴포넌트
-export const MobileOrderSection: FC<OrderBoxProps> = ({ product }) => {
+export const MobileOrderSection = ({ product }: OrderBoxProps) => {
   return (
     <div className="w-full lg:hidden">
       <ProductInfo product={product} />
@@ -25,7 +24,7 @@ export const MobileOrderSection: FC<OrderBoxProps> = ({ product }) => {
   );
 };
 
-export const OrderBox: FC<OrderBoxProps> = ({ product }) => {
+export const OrderBox = ({ product }: OrderBoxProps) => {
   const {
     selectedOptions,
     totalPrice,
@@ -53,7 +52,7 @@ export const OrderBox: FC<OrderBoxProps> = ({ product }) => {
   return (
     <>
       {/* 데스크탑: 우측 고정 주문박스 */}
-      <Card className="sticky top-10 hidden w-[489px] flex-col items-start gap-1 rounded-2xl border-0 bg-bg-100 p-8 xl:flex">
+      <Card className="sticky top-10 hidden w-[489px] flex-col items-start gap-1 rounded-2xl border-0 bg-bg-100 p-8 shadow-none xl:flex">
         {/* 브레드크럼 네비게이션 */}
         <Breadcrumb items={generateBreadcrumb(product.category)} className="mb-3" />
 

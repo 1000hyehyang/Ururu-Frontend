@@ -1,14 +1,8 @@
 import React from 'react';
-import type { FC } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, Minus, Plus } from 'lucide-react';
-
-interface SelectedOption {
-  value: string;
-  label: string;
-  quantity: number;
-}
+import type { SelectedOption } from '@/types/product';
 
 interface OptionCardProps {
   option: SelectedOption;
@@ -18,13 +12,13 @@ interface OptionCardProps {
   className?: string;
 }
 
-export const OptionCard: FC<OptionCardProps> = ({
+export const OptionCard = ({
   option,
   price,
   onRemove,
   onQuantityChange,
   className = '',
-}) => {
+}: OptionCardProps) => {
   return (
     <Card
       className={`flex w-full items-center justify-between gap-2 rounded-lg border-none bg-bg-200 p-3 md:p-4 ${className}`}
