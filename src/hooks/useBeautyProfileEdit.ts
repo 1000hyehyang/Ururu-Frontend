@@ -1,5 +1,5 @@
+import { useSafeRouter } from '@/hooks';
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { BeautyProfileFormData } from '@/types/form';
 import {
   SKIN_TYPE_OPTIONS,
@@ -22,7 +22,7 @@ const INITIAL_BEAUTY_PROFILE_DATA: BeautyProfileFormData = {
 };
 
 export const useBeautyProfileEdit = () => {
-  const router = useRouter();
+  const router = useSafeRouter();
 
   const [beautyProfileData, setBeautyProfileData] = useState<BeautyProfileFormData>(
     INITIAL_BEAUTY_PROFILE_DATA,

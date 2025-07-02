@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useSafePathname } from '@/hooks';
 import { cn } from '@/lib/utils';
 import {
   NavigationMenu,
@@ -15,7 +15,7 @@ import {
 import { categoryItems } from '@/data/categories';
 
 export function MainNav() {
-  const pathname = usePathname();
+  const { pathname } = useSafePathname();
 
   const navItems = [
     { href: '/', label: '홈' },

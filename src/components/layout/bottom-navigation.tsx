@@ -2,7 +2,7 @@
 
 import { Home, Menu, History, User } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useSafePathname } from '@/hooks';
 import { cn } from '@/lib/utils';
 
 interface BottomNavItem {
@@ -35,7 +35,7 @@ const bottomNavItems: BottomNavItem[] = [
 ];
 
 export function BottomNavigation() {
-  const pathname = usePathname();
+  const { pathname } = useSafePathname();
 
   return (
     <nav

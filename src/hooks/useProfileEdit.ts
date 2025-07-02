@@ -1,11 +1,11 @@
+import { useSafeRouter } from '@/hooks';
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { formatPhoneNumber } from '@/lib/format-utils';
 import { VALIDATION_CONSTANTS } from '@/constants/validation';
 import { GENDER_OPTIONS, DEFAULT_AGREEMENTS } from '@/constants/form-options';
 
 export const useProfileEdit = () => {
-  const router = useRouter();
+  const router = useSafeRouter();
 
   const [nickname, setNickname] = useState('');
   const [gender, setGender] = useState('');
@@ -44,15 +44,15 @@ export const useProfileEdit = () => {
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      // TODO: 실제 프로필 저장 API 연동 필요
-      console.log('프로필 저장:', {
+      // TODO: 실제 프로필 수정 API 연동 필요
+      console.log('프로필 수정:', {
         nickname,
         gender,
         birth,
         phone,
         agreements,
       });
-      // 저장 후 마이페이지로 이동
+      // 수정 후 마이페이지로 이동
       router.push('/mypage');
     },
     [nickname, gender, birth, phone, agreements, router],

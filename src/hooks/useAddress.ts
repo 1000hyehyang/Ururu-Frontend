@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSafeSearchParams, useSafeRouter } from '@/hooks';
 import { mockAddressData, AddressData } from '@/data/address';
 
 export const useAddress = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useSafeRouter();
+  const searchParams = useSafeSearchParams();
   const addressId = searchParams.get('id');
   const isEditMode = Boolean(addressId);
 
