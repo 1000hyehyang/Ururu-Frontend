@@ -1,21 +1,81 @@
 {
-  "name": "우르르",
+  "name": "우르르 - 뷰티 공동구매 플랫폼",
   "short_name": "우르르",
+  "description": "우르르에서 다양한 뷰티 상품을 공동구매로 더 저렴하게!",
+  "start_url": "https://www.ururu.shop",
+  "scope": "https://www.ururu.shop",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#ff6986",
+  "background_color": "#FBFBFB",
+  "lang": "ko",
+  "dir": "ltr",
+  "categories": ["shopping", "lifestyle", "beauty"],
   "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon0.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
-  "theme_color": "#ff6986",
-  "background_color": "#FBFBFB",
-  "display": "standalone"
+  "shortcuts": [
+    {
+      "name": "홈",
+      "short_name": "홈",
+      "description": "우르르 홈페이지로 이동",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/web-app-manifest-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "카테고리",
+      "short_name": "카테고리",
+      "description": "상품 카테고리 보기",
+      "url": "/category",
+      "icons": [
+        {
+          "src": "/web-app-manifest-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "우르르 데스크탑 화면"
+    }
+  ]
 }
