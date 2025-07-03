@@ -83,7 +83,7 @@ export const ProductInfo = ({ product, className = '', variant = 'mobile' }: Pro
           >
             {product.participants}
           </span>
-          <span className={`text-text-100 ${isDesktop ? 'text-xl' : 'text-lg md:text-xl'}`}>
+          <span className={`text-text-100 ${isDesktop ? 'text-base' : 'text-sm md:text-base'}`}>
             명 참여중
           </span>
           <span className={`text-text-100 ${isDesktop ? 'text-sm' : 'text-xs md:text-sm'}`}>

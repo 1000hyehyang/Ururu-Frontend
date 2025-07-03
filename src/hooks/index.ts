@@ -18,5 +18,8 @@ export * from './useProductActions';
 export * from './useCart';
 export * from './useCartBadge';
 
+// 히스토리 관련 훅들
+export * from './useHistory';
+
 // 안전한 네비게이션 훅들
 export * from './useSafeNavigation';
