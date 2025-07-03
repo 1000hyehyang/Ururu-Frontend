@@ -11,7 +11,9 @@ import {
 import type { Product } from '@/types/product';
 
 export const useHistory = () => {
-  const [sortBy, setSortBy] = useState(HISTORY_CONSTANTS.SORT.DEFAULT);
+  const [sortBy, setSortBy] = useState<
+    (typeof HISTORY_CONSTANTS.SORT.OPTIONS)[keyof typeof HISTORY_CONSTANTS.SORT.OPTIONS]
+  >(HISTORY_CONSTANTS.SORT.DEFAULT);
   const [isClient, setIsClient] = useState(false);
 
   // 클라이언트 사이드에서만 실행
@@ -56,7 +58,9 @@ export const useHistory = () => {
   }, [historyProducts, isClient]);
 
   // 정렬 옵션 변경 핸들러
-  const handleSortChange = (newSortBy: string) => {
+  const handleSortChange = (
+    newSortBy: (typeof HISTORY_CONSTANTS.SORT.OPTIONS)[keyof typeof HISTORY_CONSTANTS.SORT.OPTIONS],
+  ) => {
     if (isClient) {
       setSortBy(newSortBy);
     }

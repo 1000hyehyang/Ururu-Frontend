@@ -55,9 +55,9 @@ export const isValidHistoryProduct = (product: Product): boolean => {
   if (!product || typeof product !== 'object') return false;
 
   return (
-    product.id &&
-    product.name &&
-    product.mainImage &&
+    !!product.id &&
+    !!product.name &&
+    !!product.mainImage &&
     typeof product.price === 'number' &&
     product.price > 0 &&
     typeof product.originalPrice === 'number' &&
