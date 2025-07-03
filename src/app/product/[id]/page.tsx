@@ -12,13 +12,13 @@ export default function ProductDetailPage() {
       showFooter={true}
       showBottomNav={false}
     >
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-4 py-10 pb-24 md:px-0 md:py-12 md:pb-28 xl:flex-row xl:items-start xl:px-8 xl:pb-10">
+      <div className="mx-auto flex w-full max-w-[1248px] flex-col gap-10 px-6 py-10 pb-24 md:px-9 md:py-12 md:pb-28 xl:flex-row xl:items-start xl:gap-12 xl:px-12 xl:pb-10">
         {/* 왼쪽: 상세/리뷰/컨텐츠 */}
-        <section className="w-full px-0 md:px-4 xl:w-[65%] xl:px-0">
+        <section className="w-full xl:w-[60%]">
           <DetailMain product={mockProductData} />
         </section>
         {/* 오른쪽: 주문/상품 정보 (데스크탑만) */}
-        <aside className="hidden w-full xl:block xl:w-[35%]">
+        <aside className="hidden w-full xl:block xl:w-[40%]">
           <OrderBox product={mockProductData} />
         </aside>
       </div>
