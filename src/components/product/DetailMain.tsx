@@ -1,21 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import type { Product } from '@/types/product';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MobileOrderSection } from './OrderBox';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useImageCarousel } from '@/hooks/useImageCarousel';
+import { useImageCarousel, useProductTabs } from '@/hooks';
 import { ProductTabs } from './ProductTabs';
+import { ProductDetailImages } from './ProductDetailImages';
 import { PRODUCT_DETAIL_TABS } from '@/constants/product-detail';
+import { PRODUCT_STYLES } from '@/constants/product-styles';
+import { PRODUCT_CONSTANTS } from '@/constants/product-constants';
+import { ProductPurchaseInfoSection } from './ProductPurchaseInfoSection';
 
 interface DetailMainProps {
   product: Product;
 }
 
 export const DetailMain = ({ product }: DetailMainProps) => {
-  const [activeTab, setActiveTab] = useState(0);
+  const { activeTab, handleTabChange } = useProductTabs();
   const router = useRouter();
 
   const {
@@ -43,7 +47,7 @@ export const DetailMain = ({ product }: DetailMainProps) => {
         <button
           type="button"
           onClick={handleGoBack}
-          className="flex h-10 w-10 items-center justify-center bg-bg-100 transition md:h-12 md:w-12"
+          className={PRODUCT_STYLES.button.back}
           aria-label="이전 페이지로 이동"
         >
           <ArrowLeft className="h-5 w-5 text-text-200 md:h-6 md:w-6" />
@@ -56,9 +60,9 @@ export const DetailMain = ({ product }: DetailMainProps) => {
           <Image
             src={mainImage}
             alt={product.name}
-            width={480}
-            height={480}
-            className="h-full w-full rounded-2xl border border-bg-200 object-cover"
+            width={PRODUCT_CONSTANTS.IMAGE.MAIN_WIDTH}
+            height={PRODUCT_CONSTANTS.IMAGE.MAIN_HEIGHT}
+            className={PRODUCT_STYLES.image.main}
             priority
           />
         </div>
@@ -85,9 +89,9 @@ export const DetailMain = ({ product }: DetailMainProps) => {
                 <Image
                   src={thumb}
                   alt={`썸네일 ${idx + 1}`}
-                  width={120}
-                  height={120}
-                  className="h-full w-full rounded-xl object-cover"
+                  width={PRODUCT_CONSTANTS.IMAGE.THUMBNAIL_WIDTH}
+                  height={PRODUCT_CONSTANTS.IMAGE.THUMBNAIL_HEIGHT}
+                  className={PRODUCT_STYLES.image.thumbnail}
                 />
               </button>
             ))}
@@ -97,7 +101,7 @@ export const DetailMain = ({ product }: DetailMainProps) => {
           {canScrollLeft && (
             <button
               type="button"
-              className="absolute left-0 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-bg-200 bg-bg-100 shadow hover:bg-bg-200 md:flex md:h-10 md:w-10"
+              className={`${PRODUCT_STYLES.button.scroll} left-0 hidden md:flex`}
               onClick={() => scrollThumbnails('left')}
               aria-label="이전 썸네일"
             >
@@ -107,7 +111,7 @@ export const DetailMain = ({ product }: DetailMainProps) => {
           {canScrollRight && (
             <button
               type="button"
-              className="absolute right-0 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-bg-200 bg-bg-100 shadow hover:bg-bg-200 md:flex md:h-10 md:w-10"
+              className={`${PRODUCT_STYLES.button.scroll} right-0 hidden md:flex`}
               onClick={() => scrollThumbnails('right')}
               aria-label="다음 썸네일"
             >
@@ -126,9 +130,15 @@ export const DetailMain = ({ product }: DetailMainProps) => {
       <ProductTabs
         tabs={PRODUCT_DETAIL_TABS}
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         className="mt-6"
       />
+
+      {/* 상품 상세 이미지들 - 탭 메뉴 하단 */}
+      {activeTab === 0 && <ProductDetailImages product={product} className="mt-6" />}
+
+      {/* 구매정보 탭: 상품정보 제공고시/교환환불 안내 */}
+      {activeTab === 1 && <ProductPurchaseInfoSection />}
     </div>
   );
 };

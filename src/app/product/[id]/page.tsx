@@ -18,7 +18,7 @@ export default function ProductDetailPage() {
           <DetailMain product={mockProductData} />
         </section>
         {/* 오른쪽: 주문/상품 정보 (데스크탑만) */}
-        <aside className="hidden w-full lg:sticky lg:top-10 lg:block lg:w-[35%] xl:w-[40%]">
+        <aside className="hidden w-full lg:sticky lg:top-4 lg:block lg:w-[35%] xl:w-[40%]">
           <OrderBox product={mockProductData} />
         </aside>
       </div>

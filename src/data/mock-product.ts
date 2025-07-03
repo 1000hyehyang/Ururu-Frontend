@@ -18,6 +18,11 @@ export const mockProductData: Product = {
     'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/6/7839022337601283246.jpg',
     'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/options/item/2025/6/4453299188002602854.jpg',
   ],
+  detailImages: [
+    'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000213153/202507021050/crop0/image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/attached/2025/07/01/e43_01002920.jpg?created=202507021050',
+    'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000213153/202507021050/crop1/image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/attached/2025/07/01/e43_01002920.jpg?created=202507021050',
+    'https://image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/crop/A000000213153/202507021050/crop2/image.oliveyoung.co.kr/cfimages/cf-goods/uploads/images/html/attached/2025/07/01/e43_01002920.jpg?created=202507021050',
+  ],
   price: 7500,
   originalPrice: 13000,
   discountRate: 42,

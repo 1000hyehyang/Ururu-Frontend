@@ -45,17 +45,11 @@ export const useProfileEdit = () => {
     (e: React.FormEvent) => {
       e.preventDefault();
       // TODO: 실제 프로필 수정 API 연동 필요
-      console.log('프로필 수정:', {
-        nickname,
-        gender,
-        birth,
-        phone,
-        agreements,
-      });
+      // TODO: 실제 프로필 수정 API 호출
       // 수정 후 마이페이지로 이동
       router.push('/mypage');
     },
-    [nickname, gender, birth, phone, agreements, router],
+    [router],
   );
 
   return {

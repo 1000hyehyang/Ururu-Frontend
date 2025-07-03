@@ -61,7 +61,7 @@ export default function LoginPage() {
                 onClick={() => setLoginType('buyer')}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md py-3 text-sm font-medium transition-all ${
                   loginType === 'buyer'
-                    ? 'bg-bg-100 text-primary-300 shadow-sm'
+                    ? 'bg-bg-100 text-text-100 shadow-sm'
                     : 'text-text-200 hover:text-text-100'
                 }`}
                 role="tab"
@@ -76,7 +76,7 @@ export default function LoginPage() {
                 onClick={() => setLoginType('seller')}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md py-3 text-sm font-medium transition-all ${
                   loginType === 'seller'
-                    ? 'bg-bg-100 text-primary-300 shadow-sm'
+                    ? 'bg-bg-100 text-text-100 shadow-sm'
                     : 'text-text-200 hover:text-text-100'
                 }`}
                 role="tab"

@@ -98,8 +98,7 @@ export const useReviewWrite = ({ categoryId }: UseReviewWriteProps = {}) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('리뷰 데이터:', reviewData);
-    console.log('카테고리 옵션:', categoryOptions);
+    // TODO: 실제 리뷰 작성 API 호출
     // TODO: API 호출 로직 추가
   };
 

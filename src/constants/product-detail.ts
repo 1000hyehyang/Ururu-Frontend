@@ -7,9 +7,6 @@ export const PRODUCT_DETAIL_TABS = [
   { label: 'Q&A' },
 ];
 
-export const THUMBNAIL_SCROLL_AMOUNT = 120 * 3; // 썸네일 3개씩 이동
-export const SCROLL_OFFSET_TOLERANCE = 1; // 스크롤 오차 허용값
-
 // 브레드크럼 아이템 타입
 export interface BreadcrumbItem {
   label: string;

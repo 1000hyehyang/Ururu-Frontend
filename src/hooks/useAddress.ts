@@ -35,7 +35,7 @@ export const useAddress = () => {
     (e: React.FormEvent) => {
       e.preventDefault();
       // TODO: 실제 배송지 저장 API 연동 필요
-      console.log('배송지 저장:', addressData);
+      // TODO: 실제 배송지 저장 API 호출
       // 저장 후 배송지 관리 페이지로 이동
       router.push('/mypage/address');
     },

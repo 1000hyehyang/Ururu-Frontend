@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { ApiError } from '@/types/api';
 
 // 환경변수에서 API URL 가져오기 (개발/운영 환경 분리)
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.ururu.shop/api';
 
 // axios 인스턴스 생성
 const axiosInstance: AxiosInstance = axios.create({

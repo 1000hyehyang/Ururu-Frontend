@@ -1,21 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import type { Product } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { X, Share } from 'lucide-react';
 import Image from 'next/image';
-import { useProductOptions } from '@/hooks/useProductOptions';
+import { useProductOptions, useProductDrawer, useProductActions } from '@/hooks';
 import { OptionCard } from './OptionCard';
 import { OptionSelect } from './OptionSelect';
 import { ActionButtons } from './ActionButtons';
+import { PRODUCT_STYLES } from '@/constants/product-styles';
 
 interface OrderFloatingBarProps {
   product: Product;
 }
 
 export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { isDrawerOpen, openDrawer, closeDrawer } = useProductDrawer();
   const {
     selectedOptions,
     totalPrice,
@@ -25,44 +26,36 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
     handleChangeQuantity,
   } = useProductOptions(product);
 
+  const { handleShare, handlePurchase } = useProductActions();
+
   const handleBuyNow = () => {
-    setIsDrawerOpen(true);
+    openDrawer();
   };
 
   const handleAddToCart = () => {
-    setIsDrawerOpen(true);
+    openDrawer();
   };
 
   const handleCloseDrawer = () => {
-    setIsDrawerOpen(false);
+    closeDrawer();
   };
 
-  const handlePurchase = () => {
-    // 구매 로직
-    console.log('구매 완료');
-    setIsDrawerOpen(false);
-  };
-
-  const handleShare = () => {
-    // 공유 로직
-    console.log('공유하기');
+  const handlePurchaseAndClose = () => {
+    handlePurchase();
+    closeDrawer();
   };
 
   return (
     <>
       {/* 모바일/태블릿 하단 플로팅 바 */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex h-16 w-full items-center justify-between bg-bg-100 px-4 shadow-lg md:h-20 md:px-6 lg:hidden">
-        <Button
-          variant="outline"
-          className="flex h-10 w-10 items-center justify-center rounded-lg border-bg-300 p-0 transition hover:bg-primary-100 focus:ring-primary-300 active:bg-primary-200 md:h-12 md:w-12"
-          onClick={handleShare}
-        >
+      <div className={PRODUCT_STYLES.container.floating}>
+        <Button variant="outline" className={PRODUCT_STYLES.button.floating} onClick={handleShare}>
           <Share className="h-5 w-5 text-text-100 md:h-6 md:w-6" />
         </Button>
         <div className="flex flex-1 items-center gap-3 px-4 md:gap-4">
           <Button
             variant="outline"
-            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border-primary-300 text-primary-300 transition hover:bg-primary-100 focus:ring-primary-300 active:bg-primary-200 md:h-12 md:text-sm"
+            className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border-primary-300 text-primary-300 transition hover:bg-primary-100 focus:ring-primary-300 active:bg-primary-100 md:h-12 md:text-sm"
             onClick={handleAddToCart}
           >
             <span className="text-xs font-medium md:text-sm">장바구니</span>
@@ -77,20 +70,15 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
       </div>
 
       {/* Drawer 배경 오버레이 */}
-      {isDrawerOpen && (
-        <div
-          className="fixed inset-0 z-[60] bg-black bg-opacity-50 transition-opacity duration-300 lg:hidden"
-          onClick={handleCloseDrawer}
-        />
-      )}
+      {isDrawerOpen && <div className={PRODUCT_STYLES.overlay} onClick={handleCloseDrawer} />}
 
       {/* 옵션 선택 Drawer */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-[70] w-full transform transition-transform duration-300 ease-in-out lg:hidden ${
+        className={`${PRODUCT_STYLES.container.drawer} ${
           isDrawerOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
-        <div className="w-full max-w-none rounded-t-3xl bg-bg-100 md:max-w-none">
+        <div className={PRODUCT_STYLES.container.drawerContent}>
           {/* Drawer 헤더 */}
           <div className="flex items-center justify-between border-b border-bg-200 px-4 py-4 md:px-6 md:py-5">
             <h3 className="text-lg font-semibold text-text-100 md:text-xl">옵션 선택</h3>
@@ -179,7 +167,11 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
 
           {/* Drawer 하단 버튼 */}
           <div className="border-t border-bg-200 px-4 py-4 md:px-6 md:py-5">
-            <ActionButtons onAddToCart={handleAddToCart} onBuyNow={handlePurchase} size="large" />
+            <ActionButtons
+              onAddToCart={handleAddToCart}
+              onBuyNow={handlePurchaseAndClose}
+              size="large"
+            />
           </div>
         </div>
       </div>

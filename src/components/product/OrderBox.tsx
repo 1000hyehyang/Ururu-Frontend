@@ -3,7 +3,7 @@
 import React from 'react';
 import type { Product } from '@/types/product';
 import { Card } from '@/components/ui/card';
-import { useProductOptions } from '@/hooks/useProductOptions';
+import { useProductOptions, useProductActions } from '@/hooks';
 import { generateBreadcrumb } from '@/constants/product-detail';
 import { Breadcrumb } from './Breadcrumb';
 import { OptionCard } from './OptionCard';
@@ -34,25 +34,12 @@ export const OrderBox = ({ product }: OrderBoxProps) => {
     handleChangeQuantity,
   } = useProductOptions(product);
 
-  const handleShare = () => {
-    // 공유 로직
-    console.log('공유하기');
-  };
-
-  const handleAddToCart = () => {
-    // 장바구니 추가 로직
-    console.log('장바구니 추가');
-  };
-
-  const handleBuyNow = () => {
-    // 바로구매 로직
-    console.log('바로구매');
-  };
+  const { handleShare, handleAddToCart, handleBuyNow } = useProductActions();
 
   return (
     <>
       {/* 데스크탑: 우측 고정 주문박스 */}
-      <Card className="sticky top-10 hidden w-[489px] flex-col items-start gap-1 rounded-2xl border-0 bg-bg-100 p-8 shadow-none xl:flex">
+      <Card className="sticky top-4 hidden w-[489px] flex-col items-start gap-1 rounded-2xl border-0 bg-bg-100 px-8 shadow-none xl:flex">
         {/* 브레드크럼 네비게이션 */}
         <Breadcrumb items={generateBreadcrumb(product.category)} className="mb-3" />
 

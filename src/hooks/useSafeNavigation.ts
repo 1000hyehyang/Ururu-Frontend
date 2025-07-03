@@ -9,7 +9,9 @@ export function useSafeSearchParams() {
 
   useEffect(() => {
     setIsClient(true);
-    setSearchParams(new URLSearchParams(window.location.search));
+    if (typeof window !== 'undefined') {
+      setSearchParams(new URLSearchParams(window.location.search));
+    }
   }, []);
 
   const get = useCallback(
@@ -56,7 +58,9 @@ export function useSafePathname() {
 
   useEffect(() => {
     setIsClient(true);
-    setPathname(window.location.pathname);
+    if (typeof window !== 'undefined') {
+      setPathname(window.location.pathname);
+    }
   }, []);
 
   return { pathname, isClient };

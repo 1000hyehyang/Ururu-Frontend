@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { THUMBNAIL_SCROLL_AMOUNT, SCROLL_OFFSET_TOLERANCE } from '@/constants/product-detail';
+import { PRODUCT_CONSTANTS } from '@/constants/product-constants';
 import { DEFAULT_PRODUCT_IMAGE } from '@/data/mock-product';
 
 interface UseImageCarouselProps {
@@ -24,7 +24,8 @@ export const useImageCarousel = ({ images, initialImage }: UseImageCarouselProps
 
     const canScrollLeft = el.scrollLeft > 0;
     const canScrollRight =
-      el.scrollLeft < el.scrollWidth - el.clientWidth - SCROLL_OFFSET_TOLERANCE;
+      el.scrollLeft <
+      el.scrollWidth - el.clientWidth - PRODUCT_CONSTANTS.THUMBNAIL.SCROLL_OFFSET_TOLERANCE;
 
     setCanScrollLeft(canScrollLeft);
     setCanScrollRight(canScrollRight);
@@ -35,7 +36,7 @@ export const useImageCarousel = ({ images, initialImage }: UseImageCarouselProps
     const el = thumbScrollRef.current;
     if (!el) return;
 
-    const scrollAmount = THUMBNAIL_SCROLL_AMOUNT;
+    const scrollAmount = PRODUCT_CONSTANTS.THUMBNAIL.SCROLL_AMOUNT;
     const currentScroll = el.scrollLeft;
     const maxScroll = el.scrollWidth - el.clientWidth;
 

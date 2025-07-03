@@ -33,6 +33,7 @@ export interface Product {
   name: string;
   mainImage: string;
   thumbnails: string[];
+  detailImages: string[];
   price: number;
   originalPrice: number;
   discountRate: number;
