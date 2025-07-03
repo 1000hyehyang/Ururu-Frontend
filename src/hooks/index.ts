@@ -14,5 +14,9 @@ export * from './useProductTabs';
 export * from './useProductDrawer';
 export * from './useProductActions';
 
+// 장바구니 관련 훅들
+export * from './useCart';
+export * from './useCartBadge';
+
 // 안전한 네비게이션 훅들
 export * from './useSafeNavigation';

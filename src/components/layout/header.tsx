@@ -6,10 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { useUIStore } from '@/store';
+import { useCartBadge } from '@/hooks/useCartBadge';
 
 // 태블릿/모바일 헤더 컴포넌트
 function MobileHeader() {
   const { searchOpen, toggleSearch } = useUIStore();
+  const { cartItemCount } = useCartBadge();
 
   return (
     <header className="sticky top-0 z-40 bg-bg-100 desktop:hidden" role="banner">
@@ -51,8 +53,13 @@ function MobileHeader() {
 
             {/* 장바구니 */}
             <Link href="/cart" aria-label="장바구니로 이동">
-              <Button variant="ghost" size="sm" className="p-2" aria-label="장바구니">
+              <Button variant="ghost" size="sm" className="relative p-2" aria-label="장바구니">
                 <ShoppingCart className="h-5 w-5 text-text-200" aria-hidden="true" />
+                {cartItemCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-300 text-xs font-medium text-text-on">
+                    {cartItemCount > 99 ? '99+' : cartItemCount}
+                  </span>
+                )}
               </Button>
             </Link>
           </nav>
