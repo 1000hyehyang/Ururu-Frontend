@@ -33,7 +33,7 @@ export function BeautyProfileFormFields({
   return (
     <>
       {/* 3-1. 피부 타입 */}
-      <FormField label="피부 타입 (중복 선택 가능)" required>
+      <FormField label="피부 타입" required>
         <SelectableButtonGroup
           options={skinTypeOptions}
           selectedValue={beautyProfileData.skinType}
@@ -42,7 +42,7 @@ export function BeautyProfileFormFields({
       </FormField>
 
       {/* 3-2. 피부 톤 */}
-      <FormField label="피부 톤 (중복 선택 가능)" required>
+      <FormField label="피부 톤" required>
         <SelectableButtonGroup
           options={skinToneOptions}
           selectedValue={beautyProfileData.skinTone}

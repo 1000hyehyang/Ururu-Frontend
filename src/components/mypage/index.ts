@@ -1,5 +1,4 @@
 export { ProfileCard } from './ProfileCard';
-export { OrderStatus } from './OrderStatus';
 export { Sidebar } from './Sidebar';
 export { MobileSidebarList } from './MobileSidebarList';
 export { MyPageLayout } from './MyPageLayout';

@@ -25,13 +25,6 @@ export const myPageData = {
     points: 12345,
   },
 
-  // 주문/배송 현황
-  orderStatuses: [
-    { count: 0, label: '배송중' },
-    { count: 0, label: '배송 완료' },
-    { count: 0, label: '취소/반품' },
-  ],
-
   // 프로필 액션 버튼
   profileActions: [
     { label: '나의 리뷰', href: '/mypage/review' },

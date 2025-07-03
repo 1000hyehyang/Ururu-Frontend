@@ -17,11 +17,16 @@ interface AddressFormFieldsProps {
     addressDetail: string;
   };
   onInputChange: (field: string, value: string | boolean) => void;
+  showDefaultCheckbox?: boolean;
 }
 
-export function AddressFormFields({ addressData, onInputChange }: AddressFormFieldsProps) {
+export function AddressFormFields({
+  addressData,
+  onInputChange,
+  showDefaultCheckbox = true,
+}: AddressFormFieldsProps) {
   return (
-    <>
+    <div className="space-y-6">
       {/* 배송지명 */}
       <FormField
         label="배송지명"
@@ -43,17 +48,19 @@ export function AddressFormFields({ addressData, onInputChange }: AddressFormFie
       </FormField>
 
       {/* 기본 배송지 설정 */}
-      <div className="space-y-3">
-        <label className={FORM_STYLES.checkbox.container}>
-          <input
-            type="checkbox"
-            checked={addressData.isDefault}
-            onChange={(e) => onInputChange('isDefault', e.target.checked)}
-            className={FORM_STYLES.checkbox.base}
-          />
-          <span className={FORM_STYLES.checkbox.label}>기본 배송지로 설정</span>
-        </label>
-      </div>
+      {showDefaultCheckbox && (
+        <div className="space-y-3">
+          <label className={FORM_STYLES.checkbox.container}>
+            <input
+              type="checkbox"
+              checked={addressData.isDefault}
+              onChange={(e) => onInputChange('isDefault', e.target.checked)}
+              className={FORM_STYLES.checkbox.base}
+            />
+            <span className={FORM_STYLES.checkbox.label}>기본 배송지로 설정</span>
+          </label>
+        </div>
+      )}
 
       {/* 연락처 */}
       <FormField
@@ -116,6 +123,6 @@ export function AddressFormFields({ addressData, onInputChange }: AddressFormFie
           required
         />
       </FormField>
-    </>
+    </div>
   );
 }
