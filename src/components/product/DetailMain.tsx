@@ -43,7 +43,7 @@ export const DetailMain = ({ product }: DetailMainProps) => {
   return (
     <div className="w-full">
       {/* 모바일/태블릿 이전 페이지 버튼 */}
-      <div className="mb-4 flex items-center lg:hidden">
+      <div className="mb-4 flex items-center xl:hidden">
         <button
           type="button"
           onClick={handleGoBack}
@@ -122,7 +122,7 @@ export const DetailMain = ({ product }: DetailMainProps) => {
       </div>
 
       {/* 모바일/태블릿용 주문 섹션 - 썸네일 하단, 탭 메뉴 위 */}
-      <div className="mt-6 w-full max-w-[480px] md:max-w-none lg:hidden">
+      <div className="mt-6 w-full max-w-[480px] md:max-w-none xl:hidden">
         <MobileOrderSection product={product} />
       </div>
 

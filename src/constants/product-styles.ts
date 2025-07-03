@@ -19,14 +19,14 @@ export const PRODUCT_STYLES = {
   container: {
     main: 'w-full',
     floating:
-      'fixed bottom-0 left-0 right-0 z-50 flex h-16 w-full items-center justify-between bg-bg-100 px-4 shadow-lg md:h-20 md:px-6 lg:hidden',
+      'fixed bottom-0 left-0 right-0 z-50 flex h-16 w-full items-center justify-between bg-bg-100 px-4 shadow-lg md:h-20 md:px-6 xl:hidden',
     drawer:
-      'fixed bottom-0 left-0 right-0 z-[70] w-full transform transition-transform duration-300 ease-in-out lg:hidden',
+      'fixed bottom-0 left-0 right-0 z-[70] w-full transform transition-transform duration-300 ease-in-out xl:hidden',
     drawerContent: 'w-full max-w-none rounded-t-3xl bg-bg-100 md:max-w-none',
   },
 
   // 오버레이 스타일
-  overlay: 'fixed inset-0 z-[60] bg-black bg-opacity-50 transition-opacity duration-300 lg:hidden',
+  overlay: 'fixed inset-0 z-[60] bg-black bg-opacity-50 transition-opacity duration-300 xl:hidden',
 
   // 블러 효과 스타일
   blur: 'pointer-events-none absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent',

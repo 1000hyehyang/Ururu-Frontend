@@ -49,7 +49,11 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
     <>
       {/* 모바일/태블릿 하단 플로팅 바 */}
       <div className={PRODUCT_STYLES.container.floating}>
-        <Button variant="outline" className={PRODUCT_STYLES.button.floating} onClick={handleShare}>
+        <Button
+          variant="outline"
+          className={`${PRODUCT_STYLES.button.floating} hover:bg-bg-200 active:bg-bg-200`}
+          onClick={handleShare}
+        >
           <Share className="h-5 w-5 text-text-100 md:h-6 md:w-6" />
         </Button>
         <div className="flex flex-1 items-center gap-3 px-4 md:gap-4">
