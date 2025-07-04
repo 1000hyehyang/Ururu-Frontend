@@ -9,6 +9,7 @@ import {
   TruckIcon,
   PackageIcon,
 } from 'lucide-react';
+import { PointIcon } from './PointIcon';
 
 interface SidebarIconProps {
   iconName: string;
@@ -19,11 +20,7 @@ export function SidebarIcon({ iconName, className = 'h-3 w-3 text-text-200' }: S
   const iconMap: { [key: string]: React.ReactNode } = {
     PackageIcon: <PackageIcon className={className} />,
     RefreshCwIcon: <RefreshCwIcon className={className} />,
-    PointIcon: (
-      <div className="relative flex h-3 w-3 items-center justify-center rounded-md border border-solid border-text-200">
-        <span className="text-[8px] font-bold text-text-200">P</span>
-      </div>
-    ),
+    PointIcon: <PointIcon size="sm" className="mr-0" />,
     MessageSquareIcon: <MessageSquareIcon className={className} />,
     TruckIcon: <TruckIcon className={className} />,
     LogOutIcon: <LogOutIcon className={className} />,

@@ -54,7 +54,7 @@ export default function OrdersPage() {
         {filteredOrders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12">
             <div className="text-lg font-medium text-text-200">주문 내역이 없습니다.</div>
-            <div className="text-sm text-text-300">첫 주문을 시작해보세요!</div>
+            <div className="text-sm text-text-200">첫 주문을 시작해보세요!</div>
           </div>
         ) : (
           filteredOrders.map((order) => <OrderCard key={order.id} order={order} />)

@@ -85,7 +85,7 @@ export default function ReviewPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-medium text-text-100">아직 작성된 리뷰가 없어요</h3>
-                  <p className="text-sm text-text-300">첫 번째 리뷰를 작성해보세요!</p>
+                  <p className="text-sm text-text-200">첫 번째 리뷰를 작성해보세요!</p>
                 </div>
               </div>
             </div>

@@ -4,3 +4,8 @@ export { RewardBadge } from './RewardBadge';
 export { ReviewButton, RefundButton, DeliveryButton } from './OrderActionButtons';
 export { SidebarIcon } from './SidebarIcon';
 export { SidebarItem } from './SidebarItem';
+export { NoticeBanner } from './NoticeBanner';
+export { PointIcon } from './PointIcon';
+export { PointHistoryCard } from './PointHistoryCard';
+export { PointEarnMethodAccordion } from './PointEarnMethodAccordion';
+export { PointHistorySection } from './PointHistorySection';

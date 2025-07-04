@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { MyPageLayout } from '@/components/mypage/MyPageLayout';
 import { BeautyProfileFormFields } from '@/components/mypage/beauty-profile-edit';
 import { Card, CardContent } from '@/components/ui/card';
+import { NoticeBanner } from '@/components/common';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { useBeautyProfileEdit } from '@/hooks/useBeautyProfileEdit';
-import Image from 'next/image';
 
 export default function BeautyProfileEditPage() {
   const {
@@ -31,20 +31,10 @@ export default function BeautyProfileEditPage() {
           <h1 className="mb-6 text-center text-2xl font-semibold md:text-2xl">뷰티프로필 수정</h1>
 
           {/* 알림 박스 */}
-          <div className="mb-8 flex items-start gap-3 rounded-lg bg-bg-100 p-6 shadow-sm">
-            <Image
-              src="/ururu-gradient.svg"
-              alt="우르르"
-              width={24}
-              height={24}
-              className="h-6 w-6 flex-shrink-0"
-            />
-            <div className="flex-1">
-              <p className="text-sm font-medium text-text-300">
-                뷰티 프로필을 설정하면 회원님만의 맞춤 서비스가 제공돼요!
-              </p>
-            </div>
-          </div>
+          <NoticeBanner
+            message="뷰티 프로필을 설정하면 회원님만의 맞춤 서비스가 제공돼요!"
+            className="mb-8"
+          />
 
           <form onSubmit={handleSubmit} className="w-full space-y-6">
             <BeautyProfileFormFields

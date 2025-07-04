@@ -31,7 +31,7 @@ export function RefundButton({ canRefund, refundDeadline, className = '' }: Refu
   return (
     <Button
       disabled={!canRefund || isRefundExpired}
-      className={`${FORM_STYLES.button.refundButton} h-10 min-w-[120px] lg:w-full ${className}`}
+      className={`${FORM_STYLES.button.refundButton} h-10 w-full ${className}`}
     >
       {isRefundExpired ? '환불 기간 만료' : '환불하기'}
     </Button>
@@ -46,19 +46,14 @@ interface DeliveryButtonProps {
 export function DeliveryButton({ deliveryStatus, className = '' }: DeliveryButtonProps) {
   if (deliveryStatus === 'completed') {
     return (
-      <Button
-        disabled
-        className={`${FORM_STYLES.button.submit} h-10 min-w-[120px] lg:w-full ${className}`}
-      >
+      <Button disabled className={`${FORM_STYLES.button.submit} h-10 w-full ${className}`}>
         배송 완료
       </Button>
     );
   }
 
   return (
-    <Button
-      className={`${FORM_STYLES.button.deliveryButton} h-10 min-w-[120px] lg:w-full ${className}`}
-    >
+    <Button className={`${FORM_STYLES.button.deliveryButton} h-10 w-full ${className}`}>
       배송 조회
     </Button>
   );
