@@ -17,6 +17,10 @@ export const FORM_STYLES = {
   button: {
     pinkOutline:
       'h-10 px-4 rounded-lg border border-primary-300 bg-bg-100 text-primary-300 text-sm font-medium hover:bg-primary-100 transition',
+    refundButton:
+      'h-10 px-4 rounded-lg border border-primary-200 bg-bg-100 text-primary-200 text-sm font-medium hover:bg-primary-100 transition shadow-none',
+    deliveryButton:
+      'h-10 px-4 rounded-lg border border-primary-300 bg-primary-300 text-text-on text-sm font-medium hover:opacity-80 transition-opacity shadow-none',
     submit:
       'h-12 w-full rounded-lg border border-primary-300 bg-bg-100 text-primary-300 transition-colors hover:bg-primary-100 disabled:border-bg-300 disabled:text-text-300 disabled:hover:bg-bg-100',
     // 프로필 카드 버튼 스타일

@@ -37,6 +37,7 @@ export const myPageData = {
     {
       title: '쇼핑 활동',
       items: [
+        { icon: 'PackageIcon', label: '주문/배송 조회', href: '/mypage/orders' },
         { icon: 'RefreshCwIcon', label: '취소/반품 내역' },
         { icon: 'PointIcon', label: '우르르 포인트 내역' },
         { icon: 'MessageSquareIcon', label: '나의 리뷰', href: '/mypage/review' },
