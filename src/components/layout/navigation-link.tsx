@@ -1,9 +1,6 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import {
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
+import { NavigationMenuLink, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import { NavItem } from '@/constants/navigation';
 
 interface NavigationLinkProps {

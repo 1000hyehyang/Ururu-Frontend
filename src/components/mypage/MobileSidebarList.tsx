@@ -13,10 +13,7 @@ export function MobileSidebarList() {
           <div className="flex w-full flex-col items-start gap-3">
             <div className="mb-1 text-base font-semibold text-text-100">{section.title}</div>
             {section.items.map((item) => (
-              <SidebarItem
-                key={item.label}
-                item={item}
-              />
+              <SidebarItem key={item.label} item={item} />
             ))}
           </div>
           {idx < navigationSections.length - 1 && <Separator className="my-2 bg-bg-300" />}
