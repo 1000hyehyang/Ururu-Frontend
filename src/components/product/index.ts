@@ -12,3 +12,4 @@ export { LoadMoreButton } from './LoadMoreButton';
 export { ProductImage } from './ProductImage';
 export { ProductPurchaseInfoSection } from './ProductPurchaseInfoSection';
 export { ProductCard } from './ProductCard';
+export { ProductGrid } from './ProductGrid';

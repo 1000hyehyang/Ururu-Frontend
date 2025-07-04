@@ -1,30 +1,19 @@
 'use client';
 
-import Link from 'next/link';
-import { useSafePathname } from '@/hooks';
-import { cn } from '@/lib/utils';
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { categoryItems } from '@/data/categories';
+import { DESKTOP_NAV_ITEMS } from '@/constants/navigation';
+import { NavigationLink } from './navigation-link';
+import { useSafeNavigation } from '@/hooks/useSafeNavigation';
 
 export function MainNav() {
-  const { pathname } = useSafePathname();
-
-  const navItems = [
-    { href: '/', label: '홈' },
-    { href: '/ranking', label: '랭킹' },
-    { href: '/short', label: '숏구' },
-    { href: '/event', label: '이벤트' },
-  ];
-
-  const isActive = (href: string) => pathname === href;
+  const { isActive } = useSafeNavigation();
 
   return (
     <div className="hidden bg-bg-100 desktop:block">
@@ -62,19 +51,9 @@ export function MainNav() {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
-            {navItems.map((item) => (
+            {DESKTOP_NAV_ITEMS.map((item) => (
               <NavigationMenuItem key={item.href}>
-                <Link href={item.href} legacyBehavior passHref>
-                  <NavigationMenuLink
-                    className={cn(
-                      navigationMenuTriggerStyle(),
-                      'font-pretendard font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium',
-                      isActive(item.href) && 'font-medium text-primary-300',
-                    )}
-                  >
-                    {item.label}
-                  </NavigationMenuLink>
-                </Link>
+                <NavigationLink item={item} isActive={isActive(item.href)} />
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>

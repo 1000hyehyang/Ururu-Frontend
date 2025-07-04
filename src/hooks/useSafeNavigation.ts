@@ -63,7 +63,15 @@ export function useSafePathname() {
     }
   }, []);
 
-  return { pathname, isClient };
+  const isActive = useCallback(
+    (href: string): boolean => {
+      if (!isClient) return false;
+      return pathname === href;
+    },
+    [isClient, pathname],
+  );
+
+  return { pathname, isClient, isActive };
 }
 
 export function useSafeRouter() {
@@ -126,13 +134,14 @@ export function useSafeRouter() {
  */
 export function useSafeNavigation() {
   const searchParams = useSafeSearchParams();
-  const { pathname, isClient: isPathnameClient } = useSafePathname();
+  const { pathname, isClient: isPathnameClient, isActive } = useSafePathname();
   const router = useSafeRouter();
 
   return {
     searchParams,
     pathname,
     router,
+    isActive,
     isClient: isPathnameClient && router.isClient,
   };
 }

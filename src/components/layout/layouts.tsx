@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { TopBar } from './top-bar';
 import { SearchBar } from './search-bar';
 import { MainNav } from './main-nav';
+import { MobileNav } from './mobile-nav';
 import { Header } from './header';
 import { BottomNavigation } from './bottom-navigation';
 import { Footer } from './footer';
@@ -20,6 +21,7 @@ export function FullLayout({ children, className = '' }: BaseLayoutProps) {
       <SearchBar />
       <MainNav />
       <Header />
+      <MobileNav />
       <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       <Footer />
       <BottomNavigation />
@@ -49,6 +51,7 @@ export function NoFooterLayout({ children, className = '' }: BaseLayoutProps) {
       <SearchBar />
       <MainNav />
       <Header />
+      <MobileNav />
       <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       <BottomNavigation />
       <ScrollToTopButton />
@@ -64,6 +67,7 @@ export function CustomLayout({
   showSearchBar = false,
   showMainNav = false,
   showMobileHeader = true,
+  showMobileNav = true,
   showFooter = false,
   showBottomNav = true,
 }: BaseLayoutProps & {
@@ -71,6 +75,7 @@ export function CustomLayout({
   showSearchBar?: boolean;
   showMainNav?: boolean;
   showMobileHeader?: boolean;
+  showMobileNav?: boolean;
   showFooter?: boolean;
   showBottomNav?: boolean;
 }) {
@@ -80,6 +85,7 @@ export function CustomLayout({
       {showSearchBar && <SearchBar />}
       {showMainNav && <MainNav />}
       {showMobileHeader && <Header />}
+      {showMobileNav && <MobileNav />}
       <main className="min-h-[calc(100vh-4rem)] pb-16 desktop:pb-0">{children}</main>
       {showFooter && <Footer />}
       {showBottomNav && <BottomNavigation />}

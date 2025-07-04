@@ -5,25 +5,54 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/types/product';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Clock } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
+  rank?: number;
   className?: string;
 }
 
-export const ProductCard = ({ product, className = '' }: ProductCardProps) => {
+const RANK_BADGE_STYLES = {
+  1: { variant: 'default' as const, color: 'bg-amber-400 text-white border-amber-400' },
+  2: { variant: 'secondary' as const, color: 'bg-slate-300 text-white border-slate-300' },
+  3: { variant: 'outline' as const, color: 'bg-amber-600 text-white border-amber-600' },
+} as const;
+
+export const ProductCard = ({ product, rank, className = '' }: ProductCardProps) => {
   const [imageError, setImageError] = useState(false);
 
   const handleImageError = () => {
     setImageError(true);
   };
 
+  const getRankBadgeStyle = (rank: number) => {
+    return (
+      RANK_BADGE_STYLES[rank as keyof typeof RANK_BADGE_STYLES] || {
+        variant: 'outline' as const,
+        color: 'bg-bg-200 text-text-200 border-border-200',
+      }
+    );
+  };
+
   return (
     <Link href={`/product/${product.id}`} className="block">
       <Card
-        className={`w-full overflow-hidden border-none bg-transparent shadow-none ${className}`}
+        className={`relative w-full overflow-hidden border-none bg-transparent shadow-none ${className}`}
       >
+        {/* 랭킹 뱃지 */}
+        {rank && (
+          <div className="absolute left-2 top-2 z-[5]">
+            <Badge
+              className={`${getRankBadgeStyle(rank).color} text-xs font-bold`}
+              variant={getRankBadgeStyle(rank).variant}
+            >
+              {rank}
+            </Badge>
+          </div>
+        )}
+
         {/* 상품 이미지 - 정사각형 */}
         <div className="relative aspect-square w-full">
           {!imageError ? (
