@@ -8,7 +8,6 @@ import {
   filterValidHistoryProducts,
   limitHistoryProducts,
 } from '@/lib/history-utils';
-import type { Product } from '@/types/product';
 
 export const useHistory = () => {
   const [sortBy, setSortBy] = useState<

@@ -32,7 +32,7 @@ export function PointIcon({ size = 'md', className = '' }: PointIconProps) {
 
   return (
     <span
-      className={`mr-3 flex items-center justify-center rounded-full border ${sizeClasses[size]} ${borderClasses[size]} ${bgClasses[size]} font-semibold ${textClasses[size]} shadow-none ${className}`}
+      className={`flex items-center justify-center rounded-full border ${sizeClasses[size]} ${borderClasses[size]} ${bgClasses[size]} font-semibold ${textClasses[size]} shadow-none ${className}`}
     >
       P
     </span>

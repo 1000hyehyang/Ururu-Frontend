@@ -26,7 +26,7 @@ export function CartSummary({
 
       {/* 결제 요약 */}
       <Card className="rounded-2xl border-0 bg-bg-100 shadow-none">
-        <CardContent className="p-4 md:p-6">
+        <CardContent className="px-0 py-4 md:py-6">
           {/* 타이틀과 총 결제금액 */}
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-text-100 md:text-xl">최종 결제 금액</h2>

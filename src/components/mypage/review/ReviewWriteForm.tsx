@@ -4,6 +4,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/form';
+import { PageHeader } from '@/components/common';
 import { Star, Upload, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FORM_STYLES } from '@/constants/form-styles';
@@ -31,7 +32,7 @@ export function ReviewWriteForm({ categoryId }: ReviewWriteFormProps) {
   // 카테고리 옵션이 없는 경우 로딩 상태 표시
   if (!categoryOptions) {
     return (
-      <Card className="w-full rounded-2xl border-0 bg-bg-100 px-4 py-6 shadow-none md:px-8">
+      <Card className="w-full rounded-2xl border-0 bg-bg-100 py-6 shadow-none lg:px-8">
         <CardContent className="p-0">
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
@@ -47,15 +48,9 @@ export function ReviewWriteForm({ categoryId }: ReviewWriteFormProps) {
   }
 
   return (
-    <Card className="w-full rounded-2xl border-0 bg-bg-100 px-4 py-6 shadow-none md:px-8">
-      <CardContent className="p-0">
-        <h1 className="mb-6 text-center text-2xl font-semibold md:text-2xl">리뷰 작성</h1>
-
-        {/* 카테고리 정보 */}
-        <div className="mb-4 text-center">
-          <span className="text-sm text-text-300">카테고리: </span>
-          <span className="text-sm font-medium text-text-100">{categoryOptions.categoryName}</span>
-        </div>
+    <Card className={FORM_STYLES.card.base}>
+      <CardContent className={FORM_STYLES.card.content}>
+        <PageHeader title="리뷰 작성" />
 
         {/* 알림 박스 */}
         <div className="mb-8 flex items-start gap-3 rounded-lg bg-bg-100 p-6 shadow-sm">

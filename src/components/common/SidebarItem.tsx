@@ -23,7 +23,7 @@ export function SidebarItem({ item, className = '' }: SidebarItemProps) {
     return (
       <Link
         href={item.href}
-        className={`flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-200 hover:bg-bg-300 md:text-base ${className}`}
+        className={`flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-200 hover:bg-bg-200 md:text-base ${className}`}
         aria-label={`${item.label} 메뉴로 이동`}
       >
         {content}
@@ -33,7 +33,7 @@ export function SidebarItem({ item, className = '' }: SidebarItemProps) {
 
   return (
     <div
-      className={`flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-200 hover:bg-bg-300 md:text-base ${className}`}
+      className={`flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-200 hover:bg-bg-200 md:text-base ${className}`}
       role="button"
       tabIndex={0}
       aria-label={`${item.label} 메뉴로 이동`}

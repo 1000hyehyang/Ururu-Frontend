@@ -6,7 +6,7 @@ import { BOTTOM_NAV_ITEMS } from '@/constants/navigation';
 import { useSafeNavigation } from '@/hooks/useSafeNavigation';
 
 export function BottomNavigation() {
-  const { pathname, isActive } = useSafeNavigation();
+  const { isActive } = useSafeNavigation();
 
   return (
     <nav

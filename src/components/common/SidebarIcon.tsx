@@ -20,7 +20,7 @@ export function SidebarIcon({ iconName, className = 'h-3 w-3 text-text-200' }: S
   const iconMap: { [key: string]: React.ReactNode } = {
     PackageIcon: <PackageIcon className={className} />,
     RefreshCwIcon: <RefreshCwIcon className={className} />,
-    PointIcon: <PointIcon size="sm" className="mr-0" />,
+    PointIcon: <PointIcon size="sm" className={className} />,
     MessageSquareIcon: <MessageSquareIcon className={className} />,
     TruckIcon: <TruckIcon className={className} />,
     LogOutIcon: <LogOutIcon className={className} />,

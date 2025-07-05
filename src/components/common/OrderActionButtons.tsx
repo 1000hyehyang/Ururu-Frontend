@@ -22,18 +22,25 @@ export function ReviewButton({ item, className = '' }: ReviewButtonProps) {
 interface RefundButtonProps {
   canRefund: boolean;
   refundDeadline: Date;
+  deliveryStatus: Order['deliveryStatus'];
   className?: string;
 }
 
-export function RefundButton({ canRefund, refundDeadline, className = '' }: RefundButtonProps) {
+export function RefundButton({
+  canRefund,
+  refundDeadline,
+  deliveryStatus,
+  className = '',
+}: RefundButtonProps) {
   const isRefundExpired = new Date() > refundDeadline;
+  const isDelivered = deliveryStatus === 'delivered' || deliveryStatus === 'completed';
 
   return (
     <Button
       disabled={!canRefund || isRefundExpired}
       className={`${FORM_STYLES.button.refundButton} h-10 w-full ${className}`}
     >
-      {isRefundExpired ? '환불 기간 만료' : '환불하기'}
+      {isRefundExpired ? '환불 기간 만료' : isDelivered ? '환불하기' : '주문 취소'}
     </Button>
   );
 }

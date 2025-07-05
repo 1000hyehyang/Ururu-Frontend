@@ -26,7 +26,7 @@ export function CartItem({ item, onToggleSelect, onUpdateQuantity, onRemove }: C
 
   return (
     <Card className="w-full rounded-2xl border-0 bg-bg-100 shadow-none">
-      <CardContent className="p-4 md:p-6">
+      <CardContent className="px-0 py-4 md:py-6">
         <div className="flex items-start gap-4">
           {/* 체크박스 */}
           <div className="flex-shrink-0 pt-1">

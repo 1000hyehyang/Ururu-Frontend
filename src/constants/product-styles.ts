@@ -4,6 +4,10 @@ export const PRODUCT_STYLES = {
     main: 'h-full w-full rounded-2xl border border-bg-200 object-cover',
     thumbnail: 'h-full w-full rounded-xl object-cover',
     detail: 'w-full object-cover',
+    card: 'h-full w-full rounded-lg object-cover',
+    error: 'flex h-full w-full items-center justify-center rounded-lg bg-gray-200',
+    errorText: 'text-sm text-gray-500',
+    drawer: 'h-16 w-16 rounded-lg object-cover md:h-20 md:w-20',
   },
 
   // 버튼 관련 스타일
@@ -13,6 +17,61 @@ export const PRODUCT_STYLES = {
     back: 'flex h-10 w-10 items-center justify-center bg-bg-100 transition md:h-12 md:w-12',
     floating:
       'flex h-10 w-10 items-center justify-center rounded-lg border-bg-300 p-0 transition hover:bg-primary-100 focus:ring-primary-300 active:bg-primary-100 md:h-12 md:w-12',
+    tab: 'flex flex-1 items-center justify-center gap-2 rounded-md py-2 text-sm font-medium transition-all md:py-3 md:text-base',
+    cart: 'flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border-primary-300 text-primary-300 transition hover:bg-primary-100 focus:ring-primary-300 active:bg-primary-100 md:h-12 md:text-sm',
+    buyNow:
+      'hover:bg-primary-400 active:bg-primary-500 flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-primary-300 text-text-on transition focus:ring-primary-300 md:h-12 md:text-sm',
+    close: 'h-8 w-8 p-0 md:h-10 md:w-10',
+  },
+
+  // 탭 관련 스타일
+  tab: {
+    container: 'flex w-full max-w-[480px] rounded-lg bg-bg-200 p-1 md:max-w-none',
+    active: 'bg-bg-100 text-text-100 shadow-sm',
+    inactive: 'text-text-200 hover:text-text-100',
+  },
+
+  // 카드 관련 스타일
+  card: {
+    container: 'relative w-full overflow-hidden border-none bg-transparent shadow-none',
+    content: 'space-y-3 p-0 pt-3',
+    rankBadge: 'absolute left-2 top-2 z-[5]',
+    deadlineInfo: 'flex items-center gap-2 rounded-lg bg-primary-100 px-3 py-2',
+    deadlineIcon: 'h-3 w-3 flex-shrink-0 text-primary-300',
+    deadlineText: 'text-sm text-primary-300',
+    deadlineBold: 'font-semibold',
+    productName: 'line-clamp-2 text-sm font-normal text-text-100',
+    priceContainer: 'flex items-center gap-2',
+    discountRate: 'text-lg font-bold text-primary-300',
+    originalPrice: 'text-sm font-normal text-text-300 line-through',
+    currentPrice: 'text-lg font-bold text-text-100',
+  },
+
+  // 랭킹 뱃지 스타일
+  rankBadge: {
+    1: 'bg-amber-400 text-white border-amber-400',
+    2: 'bg-slate-300 text-white border-slate-300',
+    3: 'bg-amber-600 text-white border-amber-600',
+    default: 'bg-bg-200 text-text-200 border-border-200',
+  },
+
+  // Drawer 관련 스타일
+  drawer: {
+    header: 'flex items-center justify-between border-b border-bg-200 px-4 py-4 md:px-6 md:py-5',
+    title: 'text-lg font-semibold text-text-100 md:text-xl',
+    content: 'max-h-[60vh] overflow-y-auto px-4 py-4 md:px-6 md:py-5',
+    productInfo: 'mb-6 flex items-start gap-4 rounded-lg bg-bg-100 p-4 shadow-sm md:p-5',
+    productName: 'mb-2 line-clamp-2 text-sm font-medium text-text-100 md:text-base',
+    productPrice: 'flex items-center gap-2',
+    productDiscount: 'text-lg font-bold text-primary-300 md:text-xl',
+    productOriginal: 'text-sm text-text-300 line-through md:text-base',
+    productCurrent: 'text-lg font-bold text-primary-300 md:text-xl',
+    optionTitle: 'mb-3 text-base font-medium text-text-100 md:text-lg',
+    totalInfo: 'mb-6 flex items-center justify-between border-t border-bg-200 pt-4 md:pt-5',
+    totalText: 'text-sm text-text-100 md:text-base',
+    totalBold: 'font-semibold',
+    totalPrice: 'text-lg font-semibold text-text-100 md:text-xl',
+    footer: 'border-t border-bg-200 px-4 py-4 md:px-6 md:py-5',
   },
 
   // 컨테이너 관련 스타일

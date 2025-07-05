@@ -65,4 +65,17 @@ export const FORM_STYLES = {
     focus:
       'focus:border-primary-300 focus:outline-none focus:ring-1 focus:ring-primary-300 focus:ring-offset-0',
   },
+
+  // 카드 스타일
+  card: {
+    base: 'w-full rounded-2xl border-0 bg-bg-100 py-6 shadow-none lg:px-8',
+    content: 'p-0',
+  },
+
+  // 호버 스타일
+  hover: {
+    bg200: 'hover:bg-bg-200',
+    bg100: 'hover:bg-bg-100',
+    primary100: 'hover:bg-primary-100',
+  },
 } as const;

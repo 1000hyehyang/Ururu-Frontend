@@ -11,13 +11,16 @@ import {
 } from '@/components/common';
 
 interface OrderCardProps {
-  order: Order & { status: 'in_progress' | 'confirmed' | 'failed' };
+  order: Order & { status: 'in_progress' | 'confirmed' | 'failed' | 'refund_pending' };
 }
 
 export function OrderCard({ order }: OrderCardProps) {
   // 리워드 달성 뱃지 노출 조건: 진행중/확정 + progressRate >= 20
   const showRewardBadge =
     (order.status === 'in_progress' || order.status === 'confirmed') && order.progressRate >= 20;
+
+  // 실패한 주문인지 확인
+  const isFailedOrder = order.status === 'failed';
 
   return (
     <div className="rounded-lg bg-bg-100 p-0">
@@ -26,6 +29,19 @@ export function OrderCard({ order }: OrderCardProps) {
         <div className="text-lg font-bold text-text-100">{formatDate(order.orderDate)}</div>
         <div className="text-sm text-text-200">주문번호: {order.orderNumber}</div>
       </div>
+
+      {/* 환불 대기중인 경우 환불 정보 표시 */}
+      {order.status === 'refund_pending' && order.refundRequestDate && (
+        <div className="mb-4 rounded-lg border border-bg-300 bg-bg-200 p-3">
+          <div className="mb-2 flex items-center space-x-2">
+            <span className="text-sm font-medium text-text-100">환불 신청</span>
+            <span className="text-xs text-text-200">
+              {order.refundRequestDate.toLocaleDateString('ko-KR')}
+            </span>
+          </div>
+          <p className="text-sm text-text-200">{order.refundReason}</p>
+        </div>
+      )}
 
       {/* 주문 상품들 */}
       <div className="space-y-6">
@@ -78,10 +94,17 @@ export function OrderCard({ order }: OrderCardProps) {
             총 {formatPrice(order.totalAmount)}원 (배송비 포함)
           </span>
         </div>
-        <div className="flex gap-2">
-          <RefundButton canRefund={order.canRefund} refundDeadline={order.refundDeadline} />
-          <DeliveryButton deliveryStatus={order.deliveryStatus} />
-        </div>
+        {/* 실패한 주문이 아닌 경우에만 배송/취소 버튼 표시 */}
+        {!isFailedOrder && (
+          <div className="flex gap-2">
+            <RefundButton
+              canRefund={order.canRefund}
+              refundDeadline={order.refundDeadline}
+              deliveryStatus={order.deliveryStatus}
+            />
+            <DeliveryButton deliveryStatus={order.deliveryStatus} />
+          </div>
+        )}
       </div>
     </div>
   );

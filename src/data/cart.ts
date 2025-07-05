@@ -1,4 +1,3 @@
-import type { Product } from '@/types/product';
 import type { CartItem } from '@/types/cart';
 import { mockProductData } from './mock-product';
 

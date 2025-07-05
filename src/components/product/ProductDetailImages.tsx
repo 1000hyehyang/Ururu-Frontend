@@ -21,7 +21,6 @@ export const ProductDetailImages: React.FC<ProductDetailImagesProps> = ({
 }) => {
   const {
     displayedImages,
-    remainingImages,
     hasMoreImages,
     showAllImages,
     isLoading,

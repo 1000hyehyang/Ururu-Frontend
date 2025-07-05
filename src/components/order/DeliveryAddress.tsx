@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/select';
 import { AddressFormFields } from '@/components/mypage/address/AddressFormFields';
 import { addressListData, mockAddressData } from '@/data/address';
-import type { AddressData } from '@/data/address';
 
 interface DeliveryAddressProps {
   deliveryType: 'existing' | 'new';
@@ -38,12 +37,9 @@ export function DeliveryAddress({
   onAddressIdChange,
   onNewAddressChange,
 }: DeliveryAddressProps) {
-  // 선택된 기존 배송지 데이터
-  const selectedAddress = mockAddressData[Number(selectedAddressId)];
-
   return (
     <Card className="rounded-2xl border-0 bg-bg-100 shadow-none">
-      <CardContent className="p-4 md:p-6">
+      <CardContent className="px-0 py-4 md:py-6">
         <h2 className="mb-6 text-lg font-semibold text-text-100">배송지 정보</h2>
 
         {/* 배송지 선택 */}

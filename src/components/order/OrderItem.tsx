@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import type { CartItem } from '@/types/cart';
 
 interface OrderItemProps {
@@ -9,12 +10,14 @@ interface OrderItemProps {
 
 export function OrderItem({ item }: OrderItemProps) {
   return (
-    <div className="flex items-start gap-4 rounded-lg bg-bg-100 p-4">
+    <div className="flex items-start gap-4 rounded-lg bg-bg-100 px-0 py-4">
       {/* 상품 이미지 */}
       <div className="flex-shrink-0">
-        <img
+        <Image
           src={item.product.mainImage}
           alt={item.product.name}
+          width={96}
+          height={96}
           className="h-20 w-20 rounded-lg object-cover md:h-24 md:w-24"
         />
       </div>

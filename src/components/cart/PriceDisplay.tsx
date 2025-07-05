@@ -6,7 +6,7 @@ interface PriceDisplayProps {
   quantity: number;
 }
 
-export function PriceDisplay({ price, originalPrice, quantity }: PriceDisplayProps) {
+export function PriceDisplay({ price, originalPrice }: PriceDisplayProps) {
   return (
     <div className="flex items-center gap-2">
       <span className="whitespace-nowrap text-lg font-bold text-text-100 md:text-xl">

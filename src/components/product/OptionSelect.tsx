@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { FORM_STYLES } from '@/constants/form-styles';
 
 interface OptionSelectProps {
   product: Product;
@@ -30,7 +31,7 @@ export const OptionSelect = ({
     <div className={className}>
       <Select onValueChange={onSelect} disabled={allOptionsSelected}>
         <SelectTrigger
-          className={`h-12 w-full rounded-lg border-bg-300 bg-bg-100 px-6 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300 ${
+          className={`${FORM_STYLES.input.base} px-6 text-left ${
             allOptionsSelected ? 'cursor-not-allowed opacity-60' : ''
           }`}
         >

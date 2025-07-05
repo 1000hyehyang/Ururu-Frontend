@@ -2,28 +2,27 @@
 
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
-import { OrderStatusSummary, OrderStatusFilter } from '@/types/order';
+import { RefundStatusSummary, RefundStatusFilter } from '@/types/refund';
 import { useDropdown } from '@/hooks';
 import { FORM_STYLES } from '@/constants/form-styles';
 
-interface OrderStatusTabsProps {
-  summary: OrderStatusSummary;
-  activeFilter: OrderStatusFilter;
-  onFilterChange: (filter: OrderStatusFilter) => void;
+interface RefundStatusTabsProps {
+  summary: RefundStatusSummary;
+  activeFilter: RefundStatusFilter;
+  onFilterChange: (filter: RefundStatusFilter) => void;
 }
 
-export function OrderStatusTabs({ summary, activeFilter, onFilterChange }: OrderStatusTabsProps) {
+export function RefundStatusTabs({ summary, activeFilter, onFilterChange }: RefundStatusTabsProps) {
   const { isOpen: isDropdownOpen, dropdownRef, toggle, close } = useDropdown();
 
   const tabs = [
     {
       value: 'all' as const,
       label: '전체',
-      count: summary.inProgress + summary.confirmed + summary.refundPending, // failed 제외
+      count: summary.completed + summary.rejected,
     },
-    { value: 'in_progress' as const, label: '공구 진행중', count: summary.inProgress },
-    { value: 'confirmed' as const, label: '공구 확정', count: summary.confirmed },
-    { value: 'refund_pending' as const, label: '환불 대기중', count: summary.refundPending },
+    { value: 'COMPLETED' as const, label: '환불 완료', count: summary.completed },
+    { value: 'REJECTED' as const, label: '환불 거절', count: summary.rejected },
   ];
 
   const selectedTab = tabs.find((tab) => tab.value === activeFilter);

@@ -1,6 +1,6 @@
 import { useSafeRouter } from '@/hooks';
 import { useState, useCallback } from 'react';
-import { formatPhoneNumber } from '@/lib/format-utils';
+
 import { VALIDATION_CONSTANTS } from '@/constants/validation';
 import { GENDER_OPTIONS, DEFAULT_AGREEMENTS } from '@/constants/form-options';
 
@@ -12,7 +12,7 @@ export const useProfileEdit = () => {
   const [birth, setBirth] = useState<Date | undefined>(undefined);
   const [phone, setPhone] = useState('');
   const [agreements, setAgreements] = useState(DEFAULT_AGREEMENTS);
-  const [profileImg, setProfileImg] = useState('/profile-image.svg');
+  const [profileImg] = useState('/profile-image.svg');
   const [nicknameGuide, setNicknameGuide] = useState('');
   const [nicknameGuideType, setNicknameGuideType] = useState<'success' | 'error' | 'base'>('base');
 

@@ -59,11 +59,6 @@ export const useReviewWrite = ({ categoryId }: UseReviewWriteProps = {}) => {
     return url;
   };
 
-  const revokeObjectUrl = (url: string) => {
-    URL.revokeObjectURL(url);
-    objectUrlsRef.current.delete(url);
-  };
-
   const handleRatingChange = (rating: number) => {
     setReviewData((prev) => ({ ...prev, rating }));
   };

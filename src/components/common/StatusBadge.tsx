@@ -1,37 +1,57 @@
-import React from 'react';
-import { Clock, CheckCircle, XCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface StatusBadgeProps {
-  status: 'in_progress' | 'confirmed' | 'failed';
+  status: 'in_progress' | 'confirmed' | 'failed' | 'refund_pending' | 'COMPLETED' | 'REJECTED';
   className?: string;
 }
 
 export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
-  let icon, text, bg, textColor;
+  const getStatusConfig = (status: StatusBadgeProps['status']) => {
+    switch (status) {
+      case 'in_progress':
+        return {
+          label: '공구 진행중',
+          className: 'bg-primary-100 text-primary-300',
+        };
+      case 'confirmed':
+        return {
+          label: '공구 확정',
+          className: 'bg-primary-100 text-primary-200 border border-primary-200',
+        };
+      case 'refund_pending':
+        return {
+          label: '환불 대기중',
+          className: 'bg-bg-200 text-text-200',
+        };
+      case 'COMPLETED':
+        return {
+          label: '환불 완료',
+          className: 'bg-primary-100 text-primary-200 border border-primary-200',
+        };
+      case 'REJECTED':
+        return {
+          label: '환불 거절',
+          className: 'bg-bg-200 text-text-300',
+        };
+      default:
+        return {
+          label: '알 수 없음',
+          className: 'bg-bg-200 text-text-200',
+        };
+    }
+  };
 
-  if (status === 'in_progress') {
-    icon = <Clock className="mr-1 h-4 w-4 text-primary-300" />;
-    text = '공구 진행중';
-    bg = 'bg-primary-100';
-    textColor = 'text-primary-300';
-  } else if (status === 'confirmed') {
-    icon = <CheckCircle className="mr-1 h-4 w-4 text-primary-300" />;
-    text = '공구 확정';
-    bg = 'bg-primary-100';
-    textColor = 'text-primary-300';
-  } else {
-    icon = <XCircle className="mr-1 h-4 w-4 text-text-300" />;
-    text = '공구 실패';
-    bg = 'bg-bg-200';
-    textColor = 'text-text-300';
-  }
+  const config = getStatusConfig(status);
 
   return (
     <span
-      className={`flex items-center rounded-lg px-3 py-1.5 text-xs font-medium ${bg} ${textColor} ${className}`}
+      className={cn(
+        'inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-medium',
+        config.className,
+        className,
+      )}
     >
-      {icon}
-      {text}
+      {config.label}
     </span>
   );
 }

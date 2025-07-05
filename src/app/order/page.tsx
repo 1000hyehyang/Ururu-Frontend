@@ -9,7 +9,6 @@ import { OrderItem, PointUsage, PaymentSummary, DeliveryAddress } from '@/compon
 import { mockCartData } from '@/data/cart';
 import { mockAddressData } from '@/data/address';
 import type { CartItem as CartItemType } from '@/types/cart';
-import type { AddressData } from '@/data/address';
 
 export default function OrderPage() {
   // 배송지 관련 상태
@@ -91,7 +90,7 @@ export default function OrderPage() {
 
           {/* 주문 상품 */}
           <Card className="rounded-2xl border-0 bg-bg-100 shadow-none">
-            <CardContent className="p-4 md:p-6">
+            <CardContent className="px-0 py-4 md:py-6">
               <h2 className="mb-4 text-lg font-semibold text-text-100">주문 상품</h2>
 
               <div className="space-y-4">
@@ -104,7 +103,7 @@ export default function OrderPage() {
 
           {/* 포인트 사용 */}
           <Card className="rounded-2xl border-0 bg-bg-100 shadow-none">
-            <CardContent className="p-4 md:p-6">
+            <CardContent className="px-0 py-4 md:py-6">
               <h2 className="mb-4 text-lg font-semibold text-text-100">포인트 사용</h2>
 
               <PointUsage

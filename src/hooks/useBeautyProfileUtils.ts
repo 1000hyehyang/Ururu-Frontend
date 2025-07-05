@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
   SKIN_TYPE_OPTIONS,
   SKIN_TONE_OPTIONS,

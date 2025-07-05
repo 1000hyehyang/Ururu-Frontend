@@ -18,7 +18,7 @@ export function CartSelectAll({
   totalCount,
 }: CartSelectAllProps) {
   return (
-    <div className="flex items-center justify-between rounded-2xl bg-bg-100 p-4 md:p-6">
+    <div className="flex items-center justify-between rounded-2xl bg-bg-100 px-0 py-4 md:py-6">
       <div className="flex items-center gap-3">
         <input
           type="checkbox"

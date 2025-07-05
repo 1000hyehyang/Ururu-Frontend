@@ -1,5 +1,4 @@
 import React from 'react';
-import { FORM_STYLES } from '@/constants/form-styles';
 
 interface PasswordStrengthIndicatorProps {
   password: string;

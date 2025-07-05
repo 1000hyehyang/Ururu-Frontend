@@ -1,6 +1,7 @@
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
 import { SidebarItem } from '@/components/common';
+import { FORM_STYLES } from '@/constants/form-styles';
 import { myPageData } from '@/data/mypage';
 
 export function Sidebar() {
@@ -13,7 +14,7 @@ export function Sidebar() {
           <div className="flex w-full flex-col items-start gap-3">
             <div className="mb-1 text-base font-semibold text-text-100">{section.title}</div>
             {section.items.map((item) => (
-              <SidebarItem key={item.label} item={item} className="hover:bg-bg-200" />
+              <SidebarItem key={item.label} item={item} className={FORM_STYLES.hover.bg200} />
             ))}
           </div>
           {idx < navigationSections.length - 1 && <Separator className="my-2 bg-bg-300" />}

@@ -1,5 +1,3 @@
-import { VALIDATION_CONSTANTS } from '@/constants/validation';
-
 export const formatPhoneNumber = (value: string) => {
   const cleaned = value.replace(/\D/g, '');
   const match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);

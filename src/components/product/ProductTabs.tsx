@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FC } from 'react';
 import { cn } from '@/lib/utils';
+import { PRODUCT_STYLES } from '@/constants/product-styles';
 
 interface Tab {
   label: string;
@@ -21,7 +22,7 @@ export const ProductTabs: FC<ProductTabsProps> = ({
 }) => {
   return (
     <div
-      className={`flex w-full max-w-[480px] rounded-lg bg-bg-200 p-1 md:max-w-none ${className}`}
+      className={`${PRODUCT_STYLES.tab.container} ${className}`}
       role="tablist"
       aria-label="상세 탭 메뉴"
     >
@@ -29,10 +30,8 @@ export const ProductTabs: FC<ProductTabsProps> = ({
         <button
           key={tab.label}
           className={cn(
-            'flex flex-1 items-center justify-center gap-2 rounded-md py-2 text-sm font-medium transition-all md:py-3 md:text-base',
-            activeTab === idx
-              ? 'bg-bg-100 text-text-100 shadow-sm'
-              : 'text-text-200 hover:text-text-100',
+            PRODUCT_STYLES.button.tab,
+            activeTab === idx ? PRODUCT_STYLES.tab.active : PRODUCT_STYLES.tab.inactive,
           )}
           onClick={() => onTabChange(idx)}
           type="button"

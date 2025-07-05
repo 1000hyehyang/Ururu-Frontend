@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { MyPageLayout } from '@/components/mypage/MyPageLayout';
 import { BeautyProfileFormFields } from '@/components/mypage/beauty-profile-edit';
 import { Card, CardContent } from '@/components/ui/card';
-import { NoticeBanner } from '@/components/common';
+import { NoticeBanner, PageHeader } from '@/components/common';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { useBeautyProfileEdit } from '@/hooks/useBeautyProfileEdit';
 
@@ -26,9 +26,9 @@ export default function BeautyProfileEditPage() {
 
   return (
     <MyPageLayout>
-      <Card className="w-full rounded-2xl border-0 bg-bg-100 px-4 py-6 shadow-none md:px-8">
-        <CardContent className="p-0">
-          <h1 className="mb-6 text-center text-2xl font-semibold md:text-2xl">뷰티프로필 수정</h1>
+      <Card className={FORM_STYLES.card.base}>
+        <CardContent className={FORM_STYLES.card.content}>
+          <PageHeader title="뷰티프로필 수정" />
 
           {/* 알림 박스 */}
           <NoticeBanner
