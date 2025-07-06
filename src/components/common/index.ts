@@ -12,3 +12,4 @@ export { PointHistorySection } from './PointHistorySection';
 export { PageHeader } from './PageHeader';
 export { EmptyState } from './EmptyState';
 export { LoadingSkeleton, CardSkeleton } from './LoadingSkeleton';
+export { SectionHeader } from './SectionHeader';

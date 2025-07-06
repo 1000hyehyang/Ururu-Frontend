@@ -2,6 +2,7 @@ export * from './cart';
 export * from './common';
 export * from './form';
 export * from './history';
+export * from './home';
 export * from './layout';
 export * from './mypage';
 export * from './order';
