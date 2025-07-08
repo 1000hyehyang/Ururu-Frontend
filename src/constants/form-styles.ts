@@ -35,14 +35,6 @@ export const FORM_STYLES = {
       selected: 'border-primary-300 bg-primary-100 text-primary-300',
       unselected: 'border-bg-300 bg-bg-100 text-text-300 hover:bg-bg-200',
     },
-    // 판매자 대시보드 버튼 스타일
-    seller: {
-      primary: 'bg-primary-300 text-text-on hover:bg-primary-200',
-      outline: 'border border-primary-300 bg-bg-100 text-primary-300 hover:bg-primary-100',
-      ghost: 'text-text-200 hover:text-text-100 hover:bg-bg-200',
-      action:
-        'h-8 w-8 rounded-lg border border-bg-300 bg-bg-100 text-text-300 hover:border-primary-300 hover:text-primary-300',
-    },
   },
 
   // 헬퍼 텍스트 스타일
@@ -79,7 +71,7 @@ export const FORM_STYLES = {
     base: 'w-full rounded-2xl border-0 bg-bg-100 py-6 shadow-none lg:px-8',
     content: 'p-0',
     seller: 'border-bg-300 bg-bg-100',
-    option: 'w-full rounded-2xl border border-none bg-bg-100 p-8 shadow-sm',
+    option: 'w-full rounded-2xl border border-bg-300 bg-bg-100 p-6',
   },
 
   // 호버 스타일
@@ -87,57 +79,5 @@ export const FORM_STYLES = {
     bg200: 'hover:bg-bg-200',
     bg100: 'hover:bg-bg-100',
     primary100: 'hover:bg-primary-100',
-  },
-
-  // 판매자 대시보드 전용 스타일
-  seller: {
-    // 검색 필드 스타일
-    search: {
-      container: 'relative flex-1 max-w-md',
-      input: 'pl-10',
-      icon: 'absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-300',
-    },
-    // 필터 스타일
-    filter: {
-      container: 'flex items-center gap-2',
-      select:
-        'rounded-lg border border-bg-300 bg-bg-100 px-3 py-2 text-sm text-text-100 focus:border-primary-300 focus:outline-none',
-    },
-    // 통계 카드 스타일
-    stats: {
-      container: 'grid grid-cols-2 gap-4 md:grid-cols-5',
-      card: 'border-bg-300 bg-bg-100',
-      content: 'p-4 text-center',
-      value: 'text-2xl font-bold text-text-100',
-      label: 'text-sm text-text-200',
-    },
-    // 액션 메뉴 스타일
-    actionMenu: {
-      container: 'relative',
-      button: 'h-8 w-8',
-      dropdown:
-        'absolute right-0 top-full z-10 mt-1 w-32 rounded-lg border border-bg-300 bg-bg-100 shadow-lg',
-      item: 'flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-bg-200',
-      danger: 'text-red-600 hover:text-red-700',
-    },
-    // 진행률 바 스타일
-    progress: {
-      container: 'h-2 w-full rounded-full bg-bg-200',
-      bar: 'h-2 rounded-full bg-primary-300 transition-all',
-    },
-    // 이미지 스타일
-    image: {
-      container: 'relative h-20 w-20 flex-shrink-0',
-      img: 'rounded-lg object-cover',
-    },
-    // 텍스트 스타일
-    text: {
-      title: 'truncate font-semibold text-text-100',
-      subtitle: 'text-sm text-text-200',
-      price: 'text-lg font-bold text-primary-300',
-      originalPrice: 'text-sm text-text-300 line-through',
-      label: 'text-text-200',
-      value: 'text-text-100',
-    },
   },
 } as const;

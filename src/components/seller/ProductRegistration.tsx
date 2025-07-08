@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,11 +14,9 @@ import {
 import { FormField } from '@/components/form/FormField';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { PRODUCT_CATEGORY_DATA, CAPACITY_UNITS } from '@/data/seller';
-import { ArrowLeft, Upload, Plus, X, Save, Image as ImageIcon } from 'lucide-react';
-import Link from 'next/link';
 import { useFormArray } from '@/hooks/seller/useFormArray';
 import { OptionList } from './common/OptionList';
-import { SectionHeader } from './common/SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
 
 interface ProductOption {
   id: string;

@@ -3,7 +3,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FORM_STYLES } from '@/constants/form-styles';
-import { X, Image as ImageIcon } from 'lucide-react';
+import { X } from 'lucide-react';
+import { ImageUploadField } from './ImageUploadField';
 
 interface Option {
   id: string;
@@ -35,7 +36,7 @@ function OptionCard({
 }) {
   return (
     <Card className={FORM_STYLES.card.option + ' mb-8'}>
-      <CardContent className={FORM_STYLES.card.content + ' relative'}>
+      <CardContent className={FORM_STYLES.card.content + ' relative p-4'}>
         {/* 옵션 번호 & 삭제 버튼 */}
         <div className="mb-4 flex items-center justify-between">
           <div className="w-full text-center text-xl font-medium">옵션 {index + 1}</div>
@@ -89,26 +90,15 @@ function OptionCard({
         </div>
         {/* 이미지 업로드 */}
         <div className="mb-4">
-          <label className={FORM_STYLES.label.base}>
-            옵션 이미지 <span className={FORM_STYLES.label.required}>*</span>
-          </label>
-          <div className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-bg-300 bg-bg-100 p-6 text-center">
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              id={`option-image-upload-${option.id}`}
-              onChange={(e) => onImageUpload(option.id, e)}
-            />
-            <label
-              htmlFor={`option-image-upload-${option.id}`}
-              className="flex cursor-pointer flex-col items-center"
-            >
-              <ImageIcon className="mb-2 h-8 w-8 text-text-300" />
-              <span className="text-sm text-text-300">대표 이미지를 업로드하세요</span>
-            </label>
-            {option.image && <div className="mt-2 text-xs text-text-200">{option.image.name}</div>}
-          </div>
+          <ImageUploadField
+            label="옵션 이미지"
+            required
+            placeholder="대표 이미지를 업로드하세요"
+            uploadedFiles={option.image ? [option.image] : []}
+            onUpload={(e) => onImageUpload(option.id, e)}
+            id={`option-image-upload-${option.id}`}
+            variant="option"
+          />
         </div>
         {/* 전성분 */}
         <div>

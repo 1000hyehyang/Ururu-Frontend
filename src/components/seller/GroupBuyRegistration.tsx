@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,17 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { FormField } from '@/components/form/FormField';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { MOCK_PRODUCTS } from '@/data/seller';
-import { Upload, Plus, X, Image as ImageIcon, CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
 import Image from 'next/image';
-import { useFormArray } from '@/hooks/seller/useFormArray';
-import { OptionList } from './common/OptionList';
-import { SectionHeader } from './common/SectionHeader';
+import { SectionHeader } from '@/components/common/SectionHeader';
+import { ImageUploadField, DatePickerField, DiscountTierCard } from './common';
+import { useImageValidation } from '@/hooks/seller/useImageValidation';
 
 interface DiscountTier {
   id: string;
@@ -91,28 +86,12 @@ export function GroupBuyRegistration() {
   const [discountTiers, setDiscountTiers] = useState<DiscountTier[]>([]);
 
   const selectedProduct = MOCK_PRODUCTS.find((p) => p.id === selectedProductId);
+  const { validateImageFile, validateMultipleFiles } = useImageValidation();
 
   const handleOptionToggle = (option: string) => {
     setSelectedOptions((prev) =>
       prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option],
     );
-  };
-
-  // 파일 검증 함수
-  const validateImageFile = (file: File): string | null => {
-    // 파일 크기 검증 (5MB 제한)
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      return `파일 크기는 5MB를 초과할 수 없습니다. (${file.name})`;
-    }
-
-    // 파일 타입 검증
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
-      return `지원하지 않는 파일 형식입니다. (${file.name})`;
-    }
-
-    return null;
   };
 
   const handleMainImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,7 +101,7 @@ export function GroupBuyRegistration() {
     const error = validateImageFile(file);
     if (error) {
       alert(error);
-      e.target.value = ''; // input 초기화
+      e.target.value = '';
       return;
     }
 
@@ -133,31 +112,11 @@ export function GroupBuyRegistration() {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    const errors: string[] = [];
-    const validFiles: File[] = [];
+    const { errors, validFiles } = validateMultipleFiles(files, formData.detailImages.length);
 
-    // 각 파일 검증
-    files.forEach((file) => {
-      const error = validateImageFile(file);
-      if (error) {
-        errors.push(error);
-      } else {
-        validFiles.push(file);
-      }
-    });
-
-    // 에러가 있으면 알림
     if (errors.length > 0) {
       alert(errors.join('\n'));
-      e.target.value = ''; // input 초기화
-      return;
-    }
-
-    // 최대 10개 파일 제한
-    const maxFiles = 10;
-    if (formData.detailImages.length + validFiles.length > maxFiles) {
-      alert(`최대 ${maxFiles}개의 이미지만 업로드할 수 있습니다.`);
-      e.target.value = ''; // input 초기화
+      e.target.value = '';
       return;
     }
 
@@ -317,95 +276,34 @@ export function GroupBuyRegistration() {
               />
             </FormField>
 
-            <FormField label="대표 이미지 업로드" required>
-              <div className="cursor-pointer rounded-lg border-2 border-dashed border-bg-300 p-6 text-center">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleMainImageUpload}
-                  className="hidden"
-                  id="main-image-upload"
-                />
-                <label
-                  htmlFor="main-image-upload"
-                  className="flex cursor-pointer flex-col items-center justify-center"
-                >
-                  <Upload className="mb-2 h-8 w-8 text-text-300" />
-                  <span className="text-sm text-text-300">대표 이미지를 업로드하세요</span>
-                </label>
-                {formData.mainImage && (
-                  <div className="mt-2 flex items-center justify-center gap-2">
-                    <ImageIcon className="h-4 w-4 text-text-300" />
-                    <span className="text-sm text-text-200">{formData.mainImage.name}</span>
-                  </div>
-                )}
-              </div>
-            </FormField>
+            <ImageUploadField
+              label="대표 이미지 업로드"
+              required
+              placeholder="대표 이미지를 업로드하세요"
+              uploadedFiles={formData.mainImage ? [formData.mainImage] : []}
+              onUpload={handleMainImageUpload}
+              id="main-image-upload"
+            />
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <FormField label="시작일" required>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={
-                        FORM_STYLES.input.base +
-                        ' flex w-full items-center justify-between font-normal'
-                      }
-                    >
-                      {formData.startDate ? (
-                        format(formData.startDate, 'yyyy-MM-dd')
-                      ) : (
-                        <span className="text-text-300">시작일 선택</span>
-                      )}
-                      <CalendarIcon className="ml-2 h-4 w-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={formData.startDate}
-                      onSelect={(date) => setFormData((prev) => ({ ...prev, startDate: date }))}
-                      captionLayout="dropdown"
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormField>
-              <FormField label="종료일" required>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={
-                        FORM_STYLES.input.base +
-                        ' flex w-full items-center justify-between font-normal'
-                      }
-                    >
-                      {formData.endDate ? (
-                        format(formData.endDate, 'yyyy-MM-dd')
-                      ) : (
-                        <span className="text-text-300">종료일 선택</span>
-                      )}
-                      <CalendarIcon className="ml-2 h-4 w-4 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={formData.endDate}
-                      onSelect={(date) => setFormData((prev) => ({ ...prev, endDate: date }))}
-                      captionLayout="dropdown"
-                      disabled={(date) =>
-                        date < new Date() ||
-                        (formData.startDate ? date < formData.startDate : false)
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormField>
+              <DatePickerField
+                label="시작일"
+                required
+                value={formData.startDate}
+                onSelect={(date) => setFormData((prev) => ({ ...prev, startDate: date }))}
+                placeholder="시작일 선택"
+                disabled={(date) => date < new Date()}
+              />
+              <DatePickerField
+                label="종료일"
+                required
+                value={formData.endDate}
+                onSelect={(date) => setFormData((prev) => ({ ...prev, endDate: date }))}
+                placeholder="종료일 선택"
+                disabled={(date) =>
+                  date < new Date() || (formData.startDate ? date < formData.startDate : false)
+                }
+              />
             </div>
           </div>
         </section>
@@ -414,51 +312,15 @@ export function GroupBuyRegistration() {
         <section>
           <SectionHeader title="상세 페이지" description="상세 이미지를 등록해주세요" />
           <div className="mt-8">
-            <FormField label="상세 이미지 업로드">
-            <div className="cursor-pointer rounded-lg border-2 border-dashed border-bg-300 p-6 text-center">
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleDetailImageUpload}
-                className="hidden"
-                id="detail-images-upload"
-              />
-              <label
-                htmlFor="detail-images-upload"
-                className="flex cursor-pointer flex-col items-center justify-center"
-              >
-                <Upload className="mb-2 h-8 w-8 text-text-300" />
-                <span className="text-sm text-text-300">상세 이미지를 업로드하세요</span>
-              </label>
-            </div>
-            {formData.detailImages.length > 0 && (
-              <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">
-                {formData.detailImages.map((image, index) => (
-                  <div key={index} className="relative">
-                    <div className="aspect-square rounded-lg bg-bg-200 p-2">
-                      <div className="flex h-full items-center justify-center">
-                        <ImageIcon className="h-8 w-8 text-text-300" />
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          detailImages: prev.detailImages.filter((_, i) => i !== index),
-                        }))
-                      }
-                      className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                    <p className="mt-1 truncate text-xs text-text-200">{image.name}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </FormField>
+            <ImageUploadField
+              label="상세 이미지 업로드"
+              multiple
+              placeholder="상세 이미지를 업로드하세요"
+              uploadedFiles={formData.detailImages}
+              onUpload={handleDetailImageUpload}
+              onRemove={removeDetailImage}
+              id="detail-images-upload"
+            />
           </div>
         </section>
 
@@ -470,62 +332,13 @@ export function GroupBuyRegistration() {
           />
           <div className="mt-8 space-y-6">
             {discountTiers.map((tier, index) => (
-              <div
+              <DiscountTierCard
                 key={tier.id}
-                className="relative rounded-2xl border border-bg-300 bg-bg-100 p-6"
-              >
-                <div className="absolute right-4 top-4">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeDiscountTier(tier.id)}
-                    className="h-8 w-8 text-text-300 hover:bg-bg-200"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-                <h3 className="mb-4 text-lg font-semibold text-text-100">할인 단계 {index + 1}</h3>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <FormField label="최소 참여 인원" required>
-                    <div className="relative">
-                      <Input
-                        type="number"
-                        value={tier.minParticipants}
-                        onChange={(e) =>
-                          updateDiscountTier(tier.id, 'minParticipants', Number(e.target.value))
-                        }
-                        placeholder="10"
-                        className={FORM_STYLES.input.base + ' pr-12'}
-                        min="1"
-                        required
-                      />
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-300">
-                        명
-                      </span>
-                    </div>
-                  </FormField>
-                  <FormField label="할인율" required>
-                    <div className="relative">
-                      <Input
-                        type="number"
-                        value={tier.discountRate}
-                        onChange={(e) =>
-                          updateDiscountTier(tier.id, 'discountRate', Number(e.target.value))
-                        }
-                        placeholder="10"
-                        className={FORM_STYLES.input.base + ' pr-8'}
-                        min="0"
-                        max="100"
-                        required
-                      />
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-300">
-                        %
-                      </span>
-                    </div>
-                  </FormField>
-                </div>
-              </div>
+                tier={tier}
+                index={index}
+                onRemove={removeDiscountTier}
+                onUpdate={updateDiscountTier}
+              />
             ))}
             <Button
               type="button"
