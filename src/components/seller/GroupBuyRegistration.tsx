@@ -48,61 +48,54 @@ interface GroupBuyFormData {
   discountTiers: DiscountTier[];
 }
 
+// OptionSelector: 공구 등록에서 옵션 선택만 하는 체크박스 UI
+function OptionSelector({
+  options,
+  selectedOptions,
+  onToggle,
+}: {
+  options: readonly string[];
+  selectedOptions: string[];
+  onToggle: (option: string) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      {options.map((option) => (
+        <label key={option} className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={selectedOptions.includes(option)}
+            onChange={() => onToggle(option)}
+            className={FORM_STYLES.checkbox.base}
+          />
+          <span className="text-sm text-text-100">{option}</span>
+        </label>
+      ))}
+    </div>
+  );
+}
+
 export function GroupBuyRegistration() {
-  const [formData, setFormData] = useState<GroupBuyFormData>({
-    products: [],
+  // 상품 1개만 선택
+  const [selectedProductId, setSelectedProductId] = useState('');
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [maxQuantityPerPerson, setMaxQuantityPerPerson] = useState(1);
+  const [formData, setFormData] = useState<Omit<GroupBuyFormData, 'products' | 'discountTiers'>>({
     title: '',
     description: '',
     mainImage: null,
     startDate: undefined,
     endDate: undefined,
     detailImages: [],
-    discountTiers: [],
   });
+  const [discountTiers, setDiscountTiers] = useState<DiscountTier[]>([]);
 
-  const handleInputChange = (field: keyof GroupBuyFormData, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const selectedProduct = MOCK_PRODUCTS.find((p) => p.id === selectedProductId);
 
-  // 상품(옵션) 관리 로직을 useFormArray로 대체
-  const productArray = useFormArray<GroupBuyProduct>(formData.products);
-
-  // 기존 addProduct, removeProduct, updateProduct 대체
-  const handleProductChange = (id: string, field: keyof GroupBuyProduct, value: any) => {
-    productArray.update(
-      (p) => p.id === id,
-      (p) => ({ ...p, [field]: value }),
+  const handleOptionToggle = (option: string) => {
+    setSelectedOptions((prev) =>
+      prev.includes(option) ? prev.filter((o) => o !== option) : [...prev, option],
     );
-  };
-  const handleProductRemove = (id: string) => {
-    productArray.remove((p) => p.id === id);
-  };
-  const handleAddProduct = () => {
-    productArray.add({
-      id: Date.now().toString(),
-      productId: '',
-      selectedOptions: [],
-      maxQuantityPerPerson: 1,
-    });
-  };
-
-  const handleOptionToggle = (productId: string, option: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      products: prev.products.map((product) =>
-        product.id === productId
-          ? {
-              ...product,
-              selectedOptions: product.selectedOptions.includes(option)
-                ? product.selectedOptions.filter((o) => o !== option)
-                : [...product.selectedOptions, option],
-            }
-          : product,
-      ),
-    }));
   };
 
   // 파일 검증 함수
@@ -133,7 +126,7 @@ export function GroupBuyRegistration() {
       return;
     }
 
-    handleInputChange('mainImage', file);
+    setFormData((prev) => ({ ...prev, mainImage: file }));
   };
 
   const handleDetailImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,36 +180,31 @@ export function GroupBuyRegistration() {
       minParticipants: 0,
       discountRate: 0,
     };
-    setFormData((prev) => ({
-      ...prev,
-      discountTiers: [...prev.discountTiers, newTier],
-    }));
+    setDiscountTiers((prev) => [...prev, newTier]);
   };
 
   const removeDiscountTier = (tierId: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      discountTiers: prev.discountTiers.filter((tier) => tier.id !== tierId),
-    }));
+    setDiscountTiers((prev) => prev.filter((tier) => tier.id !== tierId));
   };
 
   const updateDiscountTier = (tierId: string, field: keyof DiscountTier, value: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      discountTiers: prev.discountTiers.map((tier) =>
-        tier.id === tierId ? { ...tier, [field]: value } : tier,
-      ),
-    }));
+    setDiscountTiers((prev) =>
+      prev.map((tier) => (tier.id === tierId ? { ...tier, [field]: value } : tier)),
+    );
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('공구 등록:', formData);
+    // 실제 등록 데이터 구조 예시
+    const submitData = {
+      ...formData,
+      productId: selectedProductId,
+      selectedOptions,
+      maxQuantityPerPerson,
+      discountTiers,
+    };
+    console.log('공구 등록:', submitData);
     // TODO: API 호출
-  };
-
-  const getSelectedProduct = (productId: string) => {
-    return MOCK_PRODUCTS.find((p) => p.id === productId);
   };
 
   return (
@@ -240,103 +228,64 @@ export function GroupBuyRegistration() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-12">
+      <form onSubmit={handleSubmit} className="space-y-16">
         {/* 상품 선택 */}
         <section>
-          <SectionHeader title="상품 선택" description="공구할 상품들을 선택해주세요" />
-          <div className="space-y-8">
-            {productArray.items.map((product, index) => {
-              const selectedProduct = getSelectedProduct(product.productId);
-              return (
-                <div
-                  key={product.id}
-                  className="relative rounded-2xl border border-bg-300 bg-bg-100 p-8"
-                >
-                  <div className="absolute right-6 top-6">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleProductRemove(product.id)}
-                      className="h-8 w-8 text-text-300 hover:bg-bg-200"
+          <SectionHeader title="상품 선택" description="공동구매를 진행할 상품을 선택해주세요" />
+          <div className="mt-8 space-y-8">
+            <FormField label="등록된 상품 선택" required>
+              <Select
+                value={selectedProductId}
+                onValueChange={(value) => {
+                  setSelectedProductId(value);
+                  setSelectedOptions([]); // 상품 바뀌면 옵션 초기화
+                }}
+              >
+                <SelectTrigger className="h-12 rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300">
+                  <SelectValue placeholder="상품을 선택해주세요" />
+                </SelectTrigger>
+                <SelectContent className="z-[80] max-h-60 bg-bg-100">
+                  {MOCK_PRODUCTS.map((mockProduct) => (
+                    <SelectItem
+                      key={mockProduct.id}
+                      value={mockProduct.id}
+                      className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
                     >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <h3 className="mb-6 text-lg font-semibold text-text-100">상품 {index + 1}</h3>
-                  <div className="space-y-6">
-                    <FormField label="등록된 상품 선택" required>
-                      <Select
-                        value={product.productId}
-                        onValueChange={(value) => {
-                          handleProductChange(product.id, 'productId', value);
-                          handleProductChange(product.id, 'selectedOptions', []);
-                        }}
-                      >
-                        <SelectTrigger className="h-12 rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300">
-                          <SelectValue placeholder="상품을 선택해주세요" />
-                        </SelectTrigger>
-                        <SelectContent className="z-[80] max-h-60 bg-bg-100">
-                          {MOCK_PRODUCTS.map((mockProduct) => (
-                            <SelectItem
-                              key={mockProduct.id}
-                              value={mockProduct.id}
-                              className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
-                            >
-                              {mockProduct.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormField>
+                      {mockProduct.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormField>
 
-                    {selectedProduct && (
-                      <>
-                        <FormField label="상품 옵션 선택" required>
-                          <OptionList
-                            options={selectedProduct.options}
-                            selectedOptions={product.selectedOptions}
-                            onOptionToggle={(option) => handleOptionToggle(product.id, option)}
-                          />
-                        </FormField>
+            {selectedProduct && (
+              <FormField label="상품 옵션 선택" required>
+                <OptionSelector
+                  options={selectedProduct.options}
+                  selectedOptions={selectedOptions}
+                  onToggle={handleOptionToggle}
+                />
+              </FormField>
+            )}
 
-                        <FormField label="1인당 최대 구매 수량" required>
-                          <Input
-                            type="number"
-                            value={product.maxQuantityPerPerson}
-                            onChange={(e) =>
-                              handleProductChange(
-                                product.id,
-                                'maxQuantityPerPerson',
-                                Number(e.target.value),
-                              )
-                            }
-                            placeholder="1"
-                            className={FORM_STYLES.input.base}
-                            min="1"
-                            required
-                          />
-                        </FormField>
-                      </>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-            <Button
-              type="button"
-              onClick={handleAddProduct}
-              className={FORM_STYLES.button.pinkOutline + ' mt-2 h-12 w-full'}
-            >
-              상품 추가하기
-            </Button>
+            <FormField label="1인당 최대 구매 수량" required>
+              <Input
+                type="number"
+                value={maxQuantityPerPerson}
+                onChange={(e) => setMaxQuantityPerPerson(Number(e.target.value))}
+                placeholder="1"
+                className={FORM_STYLES.input.base}
+                min="1"
+                required
+              />
+            </FormField>
           </div>
         </section>
 
         {/* 공구 기본 정보 */}
         <section>
           <SectionHeader title="공구 기본 정보" description="공구의 기본 정보를 입력해주세요" />
-          <div className="space-y-6">
+          <div className="mt-8 space-y-6">
             <FormField
               label="공구 제목"
               required
@@ -344,7 +293,7 @@ export function GroupBuyRegistration() {
             >
               <Input
                 value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                 placeholder="EX) 수분 진정 토너 공동구매"
                 className={FORM_STYLES.input.base}
                 maxLength={100}
@@ -359,7 +308,7 @@ export function GroupBuyRegistration() {
             >
               <Textarea
                 value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
+                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                 placeholder="공구에 대한 상세한 설명을 입력해주세요"
                 className={FORM_STYLES.textarea.base}
                 rows={4}
@@ -416,7 +365,7 @@ export function GroupBuyRegistration() {
                     <Calendar
                       mode="single"
                       selected={formData.startDate}
-                      onSelect={(date) => handleInputChange('startDate', date)}
+                      onSelect={(date) => setFormData((prev) => ({ ...prev, startDate: date }))}
                       captionLayout="dropdown"
                       disabled={(date) => date < new Date()}
                       initialFocus
@@ -446,10 +395,11 @@ export function GroupBuyRegistration() {
                     <Calendar
                       mode="single"
                       selected={formData.endDate}
-                      onSelect={(date) => handleInputChange('endDate', date)}
+                      onSelect={(date) => setFormData((prev) => ({ ...prev, endDate: date }))}
                       captionLayout="dropdown"
                       disabled={(date) =>
-                        date < new Date() || (formData.startDate && date < formData.startDate)
+                        date < new Date() ||
+                        (formData.startDate ? date < formData.startDate : false)
                       }
                       initialFocus
                     />
@@ -463,7 +413,8 @@ export function GroupBuyRegistration() {
         {/* 상세 페이지 */}
         <section>
           <SectionHeader title="상세 페이지" description="상세 이미지를 등록해주세요" />
-          <FormField label="상세 이미지 업로드">
+          <div className="mt-8">
+            <FormField label="상세 이미지 업로드">
             <div className="cursor-pointer rounded-lg border-2 border-dashed border-bg-300 p-6 text-center">
               <input
                 type="file"
@@ -492,7 +443,12 @@ export function GroupBuyRegistration() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => removeDetailImage(index)}
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          detailImages: prev.detailImages.filter((_, i) => i !== index),
+                        }))
+                      }
                       className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white"
                     >
                       <X className="h-3 w-3" />
@@ -503,6 +459,7 @@ export function GroupBuyRegistration() {
               </div>
             )}
           </FormField>
+          </div>
         </section>
 
         {/* 할인 단계 설정 */}
@@ -511,8 +468,8 @@ export function GroupBuyRegistration() {
             title="할인 단계 설정"
             description="참여 인원에 따른 할인 단계를 설정해주세요"
           />
-          <div className="space-y-6">
-            {formData.discountTiers.map((tier, index) => (
+          <div className="mt-8 space-y-6">
+            {discountTiers.map((tier, index) => (
               <div
                 key={tier.id}
                 className="relative rounded-2xl border border-bg-300 bg-bg-100 p-6"

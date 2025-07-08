@@ -78,8 +78,8 @@ export const FORM_STYLES = {
   card: {
     base: 'w-full rounded-2xl border-0 bg-bg-100 py-6 shadow-none lg:px-8',
     content: 'p-0',
-    // 판매자 대시보드 카드 스타일
     seller: 'border-bg-300 bg-bg-100',
+    option: 'w-full rounded-2xl border border-none bg-bg-100 p-8 shadow-sm',
   },
 
   // 호버 스타일

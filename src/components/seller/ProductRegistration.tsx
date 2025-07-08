@@ -134,7 +134,7 @@ export function ProductRegistration() {
       {/* 타이틀 */}
       <h1 className="mb-10 text-center text-3xl font-semibold text-text-100">상품 등록</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-12">
+      <form onSubmit={handleSubmit} className="space-y-16">
         {/* 상품 기본 정보 */}
         <section>
           <SectionHeader
@@ -142,7 +142,7 @@ export function ProductRegistration() {
             description="판매할 상품의 기본 정보를 입력해주세요"
           />
 
-          <div className="space-y-6">
+          <div className="mt-8 space-y-6">
             <FormField label="상품명" required>
               <Input
                 value={formData.name}
@@ -170,8 +170,7 @@ export function ProductRegistration() {
             </FormField>
 
             {/* 카테고리 */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-text-100">카테고리</label>
+            <FormField label="카테고리" required>
               <div className="flex gap-2">
                 <Select
                   value={formData.categoryMain}
@@ -240,23 +239,32 @@ export function ProductRegistration() {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+            </FormField>
           </div>
         </section>
 
         {/* 옵션 관리 */}
         <section>
-          <SectionHeader title="옵션 관리" description="상품의 옵션을 추가/수정하세요" />
-
-          <OptionList
-            options={optionArray.items}
-            onChange={handleOptionChange}
-            onRemove={handleOptionRemove}
-            onImageUpload={handleOptionImageUpload}
+          <SectionHeader
+            title="상품 옵션 설정"
+            description="판매할 상품의 다양한 옵션을 설정해주세요"
           />
-          <Button type="button" onClick={handleAddOption} className="mt-4">
-            옵션 추가
-          </Button>
+
+          <div className="mt-8">
+            <OptionList
+              options={optionArray.items}
+              onChange={handleOptionChange}
+              onRemove={handleOptionRemove}
+              onImageUpload={handleOptionImageUpload}
+            />
+            <Button
+              type="button"
+              onClick={handleAddOption}
+              className={FORM_STYLES.button.submit + ' mt-4 w-full'}
+            >
+              옵션 추가하기
+            </Button>
+          </div>
         </section>
 
         {/* 화장품 정보제공고시 */}
@@ -266,7 +274,7 @@ export function ProductRegistration() {
             description="화장품 판매에 따른 필수 정보입니다. 정확하게 입력해주세요."
           />
 
-          <div className="space-y-6">
+          <div className="mt-8 space-y-6">
             <div className="flex gap-2">
               <FormField label="내용물의 용량 또는 중량" required className="flex-1">
                 <Input
