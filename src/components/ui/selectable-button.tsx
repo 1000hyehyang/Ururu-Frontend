@@ -58,7 +58,7 @@ export function SelectableButtonGroup({
   gridCols = 'grid-cols-2',
 }: SelectableButtonGroupProps) {
   return (
-    <div className={cn(`grid gap-2 md:grid-cols-3 lg:grid-cols-4`, gridCols, className)}>
+    <div className={cn(`grid gap-2 md:grid-cols-3 xl:grid-cols-4`, gridCols, className)}>
       {options.map((option) => (
         <SelectableButton
           key={option.value}

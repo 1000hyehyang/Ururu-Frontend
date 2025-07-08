@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <FullLayout>
-      <div className="container mx-auto max-w-[1248px] px-6 py-8 md:px-9 md:py-10 xl:px-12">
+      <div className="container mx-auto max-w-[1280px] px-6 py-8 md:px-9 md:py-10 xl:px-12">
         {/* 히어로 섹션 */}
         <section className="mb-12">
           {/* 모바일/태블릿: 히어로 캐러셀만 */}

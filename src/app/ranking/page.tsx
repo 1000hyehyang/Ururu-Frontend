@@ -11,7 +11,7 @@ export default function RankingPage() {
 
   return (
     <FullLayout>
-      <div className="container mx-auto max-w-[1248px] px-6 py-8 md:px-9 md:py-10 xl:px-12">
+      <div className="container mx-auto max-w-[1280px] px-6 py-8 md:px-9 md:py-10 xl:px-12">
         {/* 페이지 헤더 */}
         <div className="mb-8">
           <h1 className="mb-6 text-2xl font-semibold text-text-100 md:text-3xl">랭킹 TOP 100</h1>

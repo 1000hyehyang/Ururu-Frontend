@@ -18,7 +18,7 @@ export default function HistoryPage() {
         showFooter={true}
         showBottomNav={true}
       >
-        <div className="mx-auto w-full max-w-[1248px] px-6 py-8 md:px-9 md:py-10 xl:px-12">
+        <div className="mx-auto w-full max-w-[1280px] px-6 py-8 md:px-9 md:py-10 xl:px-12">
           <HistoryPageHeader />
           <div className="flex items-center justify-center py-20">
             <div className="text-sm text-text-200">로딩 중...</div>
@@ -36,7 +36,7 @@ export default function HistoryPage() {
       showFooter={true}
       showBottomNav={true}
     >
-      <div className="mx-auto w-full max-w-[1248px] px-6 py-8 md:px-9 md:py-10 xl:px-12">
+      <div className="mx-auto w-full max-w-[1280px] px-6 py-8 md:px-9 md:py-10 xl:px-12">
         <HistoryPageHeader />
 
         {hasProducts ? <HistoryProductGrid products={historyProducts} /> : <EmptyHistoryState />}

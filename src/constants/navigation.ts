@@ -1,4 +1,4 @@
-import { Home, Menu, History, User } from 'lucide-react';
+import { Home, Menu, History, User, Video, Gift } from 'lucide-react';
 
 export interface NavItem {
   href: string;
@@ -13,14 +13,14 @@ export interface BottomNavItem extends NavItem {
 export const DESKTOP_NAV_ITEMS: NavItem[] = [
   { href: '/', label: '홈' },
   { href: '/ranking', label: '랭킹' },
-  { href: '/short', label: '숏구' },
+  { href: '/shorts', label: '숏구' },
   { href: '/event', label: '이벤트' },
 ];
 
 // 모바일/태블릿 메인 네비게이션 아이템
 export const MOBILE_NAV_ITEMS: NavItem[] = [
   { href: '/ranking', label: '랭킹' },
-  { href: '/short', label: '숏구' },
+  { href: '/shorts', label: '숏구' },
   { href: '/event', label: '이벤트' },
 ];
 

@@ -12,7 +12,7 @@ export default function ProductDetailPage() {
       showFooter={true}
       showBottomNav={false}
     >
-      <div className="mx-auto flex w-full max-w-[1248px] flex-col gap-10 px-6 py-10 pb-24 md:px-9 md:py-12 md:pb-28 xl:flex-row xl:items-start xl:gap-12 xl:px-12 xl:pb-10">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-10 px-6 py-10 pb-24 md:px-9 md:py-12 md:pb-28 xl:flex-row xl:items-start xl:gap-12 xl:px-12 xl:pb-10">
         {/* 왼쪽: 상세/리뷰/컨텐츠 */}
         <section className="w-full xl:w-[60%]">
           <DetailMain product={mockProductData} />
