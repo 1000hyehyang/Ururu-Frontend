@@ -9,9 +9,10 @@ interface SidebarItemProps {
     href?: string;
   };
   className?: string;
+  onClick?: () => void;
 }
 
-export function SidebarItem({ item, className = '' }: SidebarItemProps) {
+export function SidebarItem({ item, className = '', onClick }: SidebarItemProps) {
   const content = (
     <>
       <SidebarIcon iconName={item.icon} />
@@ -25,6 +26,7 @@ export function SidebarItem({ item, className = '' }: SidebarItemProps) {
         href={item.href}
         className={`flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-text-200 hover:bg-bg-200 md:text-base ${className}`}
         aria-label={`${item.label} 메뉴로 이동`}
+        onClick={onClick}
       >
         {content}
       </Link>
@@ -37,6 +39,7 @@ export function SidebarItem({ item, className = '' }: SidebarItemProps) {
       role="button"
       tabIndex={0}
       aria-label={`${item.label} 메뉴로 이동`}
+      onClick={onClick}
     >
       {content}
     </div>
