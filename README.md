@@ -20,10 +20,12 @@ npm install
 `.env.local` 파일을 루트에 생성해주세요.
 
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:8080
+# API 설정
+NEXT_PUBLIC_API_URL=http://localhost:8080/api
 ```
 
 > 프론트엔드에서 로컬 백엔드 API를 호출하려면, 위 예시처럼 `.env.local` 파일을 설정해 주세요.
+> 소셜 로그인 기능은 백엔드에서 관리되므로 프론트엔드에 추가 키 설정이 필요하지 않습니다.
 
 ## 4. 개발 서버 실행
 

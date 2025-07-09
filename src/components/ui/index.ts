@@ -28,3 +28,4 @@ export {
 export { Popover, PopoverContent, PopoverTrigger, PopoverAnchor } from './popover';
 export { SelectableButton, SelectableButtonGroup } from './selectable-button';
 export { Separator } from './separator';
+export { Skeleton } from './skeleton';

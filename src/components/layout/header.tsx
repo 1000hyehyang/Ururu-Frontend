@@ -5,12 +5,15 @@ import { Search, Bell, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
-import { useUIStore } from '@/store';
+import { useUIStore, useAuthStore } from '@/store';
 import { useCartBadge } from '@/hooks/useCartBadge';
+import { useLogout } from '@/hooks/useLogout';
 
 // 태블릿/모바일 헤더 컴포넌트
 function MobileHeader() {
   const { searchOpen, toggleSearch } = useUIStore();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const { handleLogout } = useLogout();
   const { cartItemCount } = useCartBadge();
 
   return (

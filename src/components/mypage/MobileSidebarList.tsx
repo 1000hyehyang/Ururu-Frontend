@@ -1,13 +1,24 @@
+'use client';
+
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
 import { SidebarItem } from '@/components/common';
 import { myPageData } from '@/data/mypage';
+import { useLogout } from '@/hooks/useLogout';
 
 export function MobileSidebarList() {
   const { navigationSections } = myPageData;
+  const { handleLogout } = useLogout();
+
+  const handleItemClick = (item: any) => {
+    if (item.label === '로그아웃') {
+      handleLogout();
+    }
+    // 다른 메뉴 아이템들은 href가 있으면 Link로 처리되거나 별도 핸들러 필요
+  };
 
   return (
-    <aside className="mt-4 flex w-full flex-col gap-6 bg-bg-100 lg:hidden">
+    <div className="lg:hidden">
       {navigationSections.map((section, idx) => (
         <React.Fragment key={section.title}>
           <div className="flex w-full flex-col items-start gap-3">
@@ -19,6 +30,6 @@ export function MobileSidebarList() {
           {idx < navigationSections.length - 1 && <Separator className="my-2 bg-bg-300" />}
         </React.Fragment>
       ))}
-    </aside>
+    </div>
   );
 }

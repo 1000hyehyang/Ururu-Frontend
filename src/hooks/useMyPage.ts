@@ -10,11 +10,13 @@ export const useMyPage = () => {
 
   // 뷰티 프로필이 있는지 확인
   const hasBeautyProfile = useMemo(() => {
+    if (!profileData) return false;
     return Boolean(profileData.skinType && profileData.skinTone);
-  }, [profileData.skinType, profileData.skinTone]);
+  }, [profileData]);
 
   // 뷰티 프로필 요약 정보 생성
   const summaryInfo = useMemo(() => {
+    if (!profileData) return null;
     return createSummaryInfo(profileData, hasBeautyProfile);
   }, [profileData, hasBeautyProfile, createSummaryInfo]);
 

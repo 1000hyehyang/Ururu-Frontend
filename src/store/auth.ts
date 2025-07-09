@@ -38,6 +38,10 @@ interface AuthState {
   brandGuide: string;
   brandGuideType: 'success' | 'error' | 'guide';
 
+  // 인증 상태 관련 추가
+  isLoggedIn?: boolean;
+  userInfo?: any;
+
   setLoginType: (type: 'buyer' | 'seller') => void;
   setLoginFormData: (data: Partial<LoginFormData>) => void;
   setSignupFormData: (data: Partial<SignupFormData>) => void;
@@ -45,6 +49,9 @@ interface AuthState {
   setBrandGuide: (guide: string, type: 'success' | 'error' | 'guide') => void;
   resetLoginForm: () => void;
   resetSignupForm: () => void;
+  setIsLoggedIn: (loggedIn: boolean) => void;
+  setUserInfo: (user: any | null) => void;
+  logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -76,6 +83,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   brandGuide: '',
   brandGuideType: 'guide',
+
+  // 인증 상태 관련 초기값
+  isLoggedIn: false,
+  userInfo: null,
 
   // 액션들
   setLoginType: (type) => set({ loginType: type }),
@@ -140,5 +151,23 @@ export const useAuthStore = create<AuthState>((set) => ({
       },
       brandGuide: '',
       brandGuideType: 'guide',
+    }),
+
+  setIsLoggedIn: (loggedIn) =>
+    set((state) => ({
+      isLoggedIn: loggedIn,
+      userInfo: loggedIn ? state.userInfo : null, // 로그아웃 시 사용자 정보도 초기화
+    })),
+
+  setUserInfo: (user) =>
+    set({
+      userInfo: user,
+      isLoggedIn: user !== null, // 사용자 정보가 있으면 로그인 상태 true
+    }),
+
+  logout: () =>
+    set({
+      isLoggedIn: false,
+      userInfo: null,
     }),
 }));

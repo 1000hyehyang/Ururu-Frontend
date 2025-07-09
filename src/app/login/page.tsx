@@ -7,10 +7,12 @@ import { User, Store } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAuthStore } from '@/store';
+import { useSocialLogin } from '@/hooks/useSocialLogin';
 import { FORM_STYLES } from '@/constants/form-styles';
 
 export default function LoginPage() {
   const { loginType, loginFormData, setLoginType, setLoginFormData } = useAuthStore();
+  const { isLoading, error, handleKakaoLogin, handleGoogleLogin, clearError } = useSocialLogin();
 
   const handleInputChange = (field: string, value: string) => {
     setLoginFormData({ [field]: value });
@@ -92,11 +94,26 @@ export default function LoginPage() {
           {/* 소셜 로그인 (구매자 로그인일 때만 표시) */}
           {loginType === 'buyer' && (
             <div className="min-h-[320px] space-y-4" role="region" aria-label="소셜 로그인">
+              {/* 에러 메시지 */}
+              {error && (
+                <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                  {error}
+                  <button
+                    onClick={clearError}
+                    className="ml-2 text-red-400 hover:text-red-600"
+                    aria-label="에러 메시지 닫기"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
               <div className="space-y-3">
                 {/* 카카오 로그인 */}
                 <button
                   type="button"
-                  className="flex h-12 w-full items-center justify-center gap-3 rounded-lg bg-[#FEE500] text-sm font-medium text-[#3C1E1E] shadow transition hover:brightness-95"
+                  onClick={handleKakaoLogin}
+                  disabled={isLoading}
+                  className="flex h-12 w-full items-center justify-center gap-3 rounded-lg bg-[#FEE500] text-sm font-medium text-[#3C1E1E] shadow transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label="카카오 계정으로 로그인"
                 >
                   <Image
@@ -112,7 +129,9 @@ export default function LoginPage() {
                 {/* 구글 로그인 */}
                 <button
                   type="button"
-                  className="flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-bg-300 bg-bg-100 text-sm font-medium text-text-200 shadow transition hover:bg-bg-200"
+                  onClick={handleGoogleLogin}
+                  disabled={isLoading}
+                  className="flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-bg-300 bg-bg-100 text-sm font-medium text-text-200 shadow transition hover:bg-bg-200 disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label="구글 계정으로 로그인"
                 >
                   <Image

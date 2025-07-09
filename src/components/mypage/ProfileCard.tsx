@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -7,11 +9,27 @@ import { myPageData, beautyProfileData } from '@/data/mypage';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { useAuthStore } from '@/store';
 
 export function ProfileCard() {
-  const { profile, profileActions } = myPageData;
+  const userInfo = useAuthStore((state) => state.userInfo);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  // main 브랜치 구조에 맞춰 실제 사용자 정보로 profile 객체 생성
+  const profile = {
+    nickname: userInfo?.name || userInfo?.nickname || '우르르',
+    avatar: userInfo?.profileImage || '/profile-image.svg',
+    badges: ['민감성', '여름쿨톤'], // TODO: 실제 사용자 뱃지 정보로 교체
+    points: 12345, // TODO: 실제 사용자 포인트 정보로 교체
+  };
+
+  const { profileActions } = myPageData;
   const profileData = beautyProfileData.withProfile;
   const hasBeautyProfile = profileData.skinType && profileData.skinTone;
+
+  // 프로필 이미지가 없거나 기본값인 경우 fallback 사용
+  const hasCustomAvatar = userInfo?.profileImage && userInfo.profileImage !== '/profile-image.svg';
+
 
   return (
     <Card className="w-full rounded-2xl border-0 bg-bg-100 px-4 py-6 shadow-sm md:px-8">
@@ -20,8 +38,12 @@ export function ProfileCard() {
           {/* 아바타/닉네임/뱃지 */}
           <div className="flex items-center gap-4 md:gap-6">
             <Avatar className="h-12 w-12 bg-bg-300 md:h-16 md:w-16">
-              <AvatarImage src={profile.avatar} />
-              <AvatarFallback>{profile.nickname[0]}</AvatarFallback>
+              {hasCustomAvatar ? (
+                <AvatarImage src={profile.avatar} alt={`${profile.nickname}의 프로필 이미지`} />
+              ) : null}
+              <AvatarFallback className="bg-bg-300 text-text-200">
+                {profile.nickname[0]}
+              </AvatarFallback>
             </Avatar>
             <div>
               <div className="mb-1 text-lg font-semibold text-text-100 md:text-2xl">
@@ -40,7 +62,7 @@ export function ProfileCard() {
             </div>
           </div>
           {/* 포인트 */}
-          <div className="flex flex-col items-center">
+          <div className="flex items-center gap-2 md:gap-3">
             <span className="mb-1 flex h-6 w-6 items-center justify-center rounded-full border border-primary-200 text-base font-bold text-primary-200 md:h-8 md:w-8 md:text-lg">
               P
             </span>
