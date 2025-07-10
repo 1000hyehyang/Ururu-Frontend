@@ -1,8 +1,9 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function AuthError() {
+function AuthErrorContent() {
   const params = useSearchParams();
   const router = useRouter();
   const message = params.get('message') || '로그인 중 오류가 발생했습니다.';
@@ -20,5 +21,32 @@ export default function AuthError() {
         </button>
       </div>
     </div>
+  );
+}
+
+function AuthErrorFallback() {
+  const router = useRouter();
+
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-red-600">로그인 실패</h2>
+        <p className="mt-2 text-gray-600">로그인 중 오류가 발생했습니다.</p>
+        <button
+          onClick={() => router.push('/login')}
+          className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        >
+          다시 시도
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function AuthError() {
+  return (
+    <Suspense fallback={<AuthErrorFallback />}>
+      <AuthErrorContent />
+    </Suspense>
   );
 }
