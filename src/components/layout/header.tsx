@@ -12,7 +12,7 @@ import { useLogout } from '@/hooks/useLogout';
 // 태블릿/모바일 헤더 컴포넌트
 function MobileHeader() {
   const { searchOpen, toggleSearch } = useUIStore();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const { handleLogout } = useLogout();
   const { cartItemCount } = useCartBadge();
 

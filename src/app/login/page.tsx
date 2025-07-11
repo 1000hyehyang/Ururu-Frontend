@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { useAuthStore } from '@/store';
 import { SocialLogin } from '@/components/auth/SocialLogin';
 import { SellerLogin } from '@/components/auth/SellerLogin';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginPageContent() {
   const { loginType, setLoginType, isLoading, error, isAuthenticated, user } = useAuthStore();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -169,5 +169,22 @@ export default function LoginPage() {
         </div>
       </div>
     </CustomLayout>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-primary-300"></div>
+            <p className="mt-2 text-sm text-text-200">로딩 중...</p>
+          </div>
+        </div>
+      }
+    >
+      <LoginPageContent />
+    </Suspense>
   );
 }
