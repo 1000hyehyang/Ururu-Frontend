@@ -6,21 +6,19 @@ import { ProfileCard } from '@/components/mypage/ProfileCard';
 import { BeautyProfileSummary } from '@/components/mypage/beauty-profile';
 import { MobileSidebarList } from '@/components/mypage/MobileSidebarList';
 import { useMyPage } from '@/hooks/useMyPage';
-import { useAuthGuard } from '@/hooks';
+import { useAuthStore } from '@/store';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
-export default function MyPage() {
-  // 모든 훅은 최상단에서 호출
-  const { isLoggedIn, isLoading } = useAuthGuard();
+function MyPageContent() {
   const { hasBeautyProfile, summaryInfo } = useMyPage();
+  const { user } = useAuthStore();
 
-  // 로딩 중이거나 로그인하지 않은 경우 로딩 화면 표시
-  if (isLoading || !isLoggedIn) {
+  // 사용자 정보가 없는 경우
+  if (!user) {
     return (
       <MyPageLayout>
-        <div className="flex flex-1 flex-col gap-6 py-4 md:py-6">
-          <div className="flex items-center justify-center py-16">
-            <div className="text-text-200">로딩 중...</div>
-          </div>
+        <div className="flex flex-1 items-center justify-center py-20">
+          <div className="text-sm text-text-200">사용자 정보를 불러올 수 없습니다.</div>
         </div>
       </MyPageLayout>
     );
@@ -29,7 +27,7 @@ export default function MyPage() {
   return (
     <MyPageLayout>
       {/* 프로필 카드 */}
-      <ProfileCard />
+      <ProfileCard user={user} />
 
       {/* 뷰티 프로필 요약 카드 */}
       {hasBeautyProfile && <BeautyProfileSummary summaryInfo={summaryInfo} />}
@@ -37,5 +35,13 @@ export default function MyPage() {
       {/* 모바일/태블릿: 사이드바 리스트 */}
       <MobileSidebarList />
     </MyPageLayout>
+  );
+}
+
+export default function MyPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <MyPageContent />
+    </AuthGuard>
   );
 }

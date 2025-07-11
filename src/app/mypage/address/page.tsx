@@ -6,8 +6,9 @@ import Link from 'next/link';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { addressListData } from '@/data/address';
 import { cn } from '@/lib/utils';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
-export default function AddressListPage() {
+function AddressListPageContent() {
   return (
     <MyPageLayout>
       <div className="flex flex-1 flex-col gap-6 py-4 md:py-6">
@@ -34,5 +35,13 @@ export default function AddressListPage() {
         </div>
       </div>
     </MyPageLayout>
+  );
+}
+
+export default function AddressListPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <AddressListPageContent />
+    </AuthGuard>
   );
 }

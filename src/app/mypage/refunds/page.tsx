@@ -5,8 +5,9 @@ import { RefundStatusTabs, RefundCard } from '@/components/refunds';
 import { EmptyState, PageHeader } from '@/components/common';
 import { allRefunds, refundStatusSummary } from '@/data/refunds';
 import { RefundStatusFilter } from '@/types/refund';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
-export default function RefundsPage() {
+function RefundsPageContent() {
   const [activeFilter, setActiveFilter] = useState<RefundStatusFilter>('all');
 
   const filteredRefunds = useMemo(() => {
@@ -42,5 +43,13 @@ export default function RefundsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function RefundsPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <RefundsPageContent />
+    </AuthGuard>
   );
 }

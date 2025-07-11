@@ -29,5 +29,11 @@ export const formatDate = (date: Date) => {
 
 // 가격 포맷 함수 (천 단위 콤마)
 export const formatPrice = (price: number) => {
-  return price.toLocaleString('ko-KR');
+  return new Intl.NumberFormat('ko-KR').format(price);
+};
+
+export const formatMailOrderNumber = (value: string) => {
+  // 특수문자 제거 (하이픈만 허용)
+  const cleaned = value.replace(/[^\w가-힣\-]/g, '');
+  return cleaned;
 };

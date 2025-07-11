@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PageHeader, CardSkeleton } from '@/components/common';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { useAddress } from '@/hooks/useAddress';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
 function AddressRegisterSkeleton() {
   return (
@@ -43,10 +44,18 @@ function AddressRegisterContent() {
   );
 }
 
-export default function AddressRegisterPage() {
+function AddressRegisterPageContent() {
   return (
     <Suspense fallback={<AddressRegisterSkeleton />}>
       <AddressRegisterContent />
     </Suspense>
+  );
+}
+
+export default function AddressRegisterPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <AddressRegisterPageContent />
+    </AuthGuard>
   );
 }

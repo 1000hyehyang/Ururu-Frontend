@@ -8,8 +8,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PageHeader } from '@/components/common';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { useProfileEdit } from '@/hooks/useProfileEdit';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
-export default function ProfileEditPage() {
+function ProfileEditPageContent() {
   const {
     nickname,
     gender,
@@ -66,5 +67,13 @@ export default function ProfileEditPage() {
         </CardContent>
       </Card>
     </MyPageLayout>
+  );
+}
+
+export default function ProfileEditPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <ProfileEditPageContent />
+    </AuthGuard>
   );
 }

@@ -3,30 +3,50 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store';
+import { CustomLayout } from '@/components/layout';
 
 export default function AuthSuccessPage() {
+  const { login, checkAuth } = useAuthStore();
   const router = useRouter();
-  const setIsLoggedIn = useAuthStore((state) => state.setIsLoggedIn);
-  const setUserInfo = useAuthStore((state) => state.setUserInfo);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const checkAuthStatus = async () => {
       try {
-        const res = await fetch('/api/members/me', { credentials: 'include' });
-        if (!res.ok) throw new Error('인증 정보 없음');
-        const data = await res.json();
-        setIsLoggedIn(true);
-        setUserInfo(data.data);
-        router.replace('/mypage');
-      } catch {
-        setIsLoggedIn(false);
-        setUserInfo(null);
-        router.replace('/login');
+        // 인증 상태 확인
+        await checkAuth();
+
+        // 성공 시 적절한 페이지로 리다이렉트
+        // checkAuth에서 이미 user 정보를 store에 저장했으므로
+        // store의 user 정보를 확인하여 리다이렉트
+        const { user } = useAuthStore.getState();
+
+        if (user) {
+          if (user.user_type === 'SELLER') {
+            router.push('/seller');
+          } else {
+            router.push('/mypage');
+          }
+        } else {
+          throw new Error('Invalid auth response structure');
+        }
+      } catch (error) {
+        console.error('Auth status check failed:', error);
+        router.push('/login?error=auth_failed');
       }
     };
-    fetchUser();
-  }, [router, setIsLoggedIn, setUserInfo]);
 
-  // 아무것도 렌더링하지 않음
-  return null;
+    checkAuthStatus();
+  }, [router, checkAuth]);
+
+  return (
+    <CustomLayout showTopBar={false} showSearchBar={false} showMainNav={false} showFooter={false}>
+      <div className="flex min-h-screen items-center justify-center bg-bg-100">
+        <div className="text-center">
+          <div className="mb-4 text-6xl">✅</div>
+          <h1 className="mb-2 text-xl font-semibold text-text-100">로그인 성공!</h1>
+          <p className="text-text-200">잠시 후 자동으로 이동됩니다...</p>
+        </div>
+      </div>
+    </CustomLayout>
+  );
 }

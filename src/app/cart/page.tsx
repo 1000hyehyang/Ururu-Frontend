@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { NoFooterLayout } from '@/components/layout/layouts';
 import { CartItem as CartItemComponent, CartSelectAll, CartSummary } from '@/components/cart';
 import { useCart } from '@/hooks/useCart';
-import { useAuthGuard } from '@/hooks';
+import { useAuthStore } from '@/store';
 import { mockCartData, calculateCartSummary } from '@/data/cart';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 import type { CartItem } from '@/types/cart';
 
 // 빈 장바구니 컴포넌트
@@ -46,8 +48,8 @@ function CartList({
   );
 }
 
-export default function CartPage() {
-  const { isLoggedIn, isLoading } = useAuthGuard();
+function CartPageContent() {
+  // 장바구니 훅을 먼저 호출 (React Hook 규칙)
   const {
     cartItems,
     toggleSelectAll,
@@ -60,63 +62,59 @@ export default function CartPage() {
 
   const summary = calculateCartSummary(cartItems);
 
-  // 로딩 중이거나 로그인하지 않은 경우 로딩 화면 표시
-  if (isLoading || !isLoggedIn) {
-    return (
-      <NoFooterLayout>
-        <div className="container mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-12">
-          <div className="flex items-center justify-center py-16">
-            <div className="text-text-200">로딩 중...</div>
-          </div>
-        </div>
-      </NoFooterLayout>
-    );
-  }
-
   const handlePurchase = () => {
     // TODO: 결제 페이지로 이동
     console.log('구매하기 클릭');
   };
 
+  if (cartItems.length === 0) {
+    return <EmptyCart />;
+  }
+
   return (
     <NoFooterLayout>
-      <div className="container mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-12">
-        <h1 className="mb-8 text-2xl font-bold text-text-100">장바구니</h1>
+      <div className="container mx-auto max-w-4xl px-6 py-8 md:px-8 md:py-12">
+        {/* 페이지 타이틀 */}
+        <h1 className="mb-8 text-center text-2xl font-semibold text-text-100 md:text-3xl">
+          장바구니
+        </h1>
 
-        {cartItems.length === 0 ? (
-          <EmptyCart />
-        ) : (
-          <div className="grid gap-8 lg:grid-cols-3">
-            {/* 장바구니 목록 */}
-            <div className="lg:col-span-2">
-              <CartSelectAll
-                isAllSelected={isAllSelected}
-                isPartiallySelected={isPartiallySelected}
-                onToggleSelectAll={toggleSelectAll}
-                selectedCount={summary.selectedCount}
-                totalCount={cartItems.length}
-              />
-              <CartList
-                cartItems={cartItems}
-                onToggleSelect={toggleSelectItem}
-                onUpdateQuantity={updateQuantity}
-                onRemove={removeItem}
-              />
-            </div>
+        <div className="space-y-6">
+          {/* 전체 선택 */}
+          <CartSelectAll
+            isAllSelected={isAllSelected}
+            isPartiallySelected={isPartiallySelected}
+            onToggleSelectAll={toggleSelectAll}
+            selectedCount={summary.selectedCount}
+            totalCount={cartItems.length}
+          />
 
-            {/* 결제 요약 */}
-            <div className="lg:col-span-1">
-              <CartSummary
-                totalProductPrice={summary.totalProductPrice}
-                shippingFee={summary.shippingFee}
-                totalPrice={summary.totalPrice}
-                selectedCount={summary.selectedCount}
-                onPurchase={handlePurchase}
-              />
-            </div>
-          </div>
-        )}
+          {/* 상품 리스트 */}
+          <CartList
+            cartItems={cartItems}
+            onToggleSelect={toggleSelectItem}
+            onUpdateQuantity={updateQuantity}
+            onRemove={removeItem}
+          />
+
+          {/* 결제 요약 */}
+          <CartSummary
+            totalProductPrice={summary.totalProductPrice}
+            shippingFee={summary.shippingFee}
+            totalPrice={summary.totalPrice}
+            selectedCount={summary.selectedCount}
+            onPurchase={handlePurchase}
+          />
+        </div>
       </div>
     </NoFooterLayout>
+  );
+}
+
+export default function CartPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <CartPageContent />
+    </AuthGuard>
   );
 }

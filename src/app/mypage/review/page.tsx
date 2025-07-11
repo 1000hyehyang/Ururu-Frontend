@@ -8,8 +8,9 @@ import { PageHeader } from '@/components/common';
 import { Plus, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { getAllCategoryIds, getReviewOptionsByCategoryId } from '@/data/review-options';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
-export default function ReviewPage() {
+function ReviewPageContent() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(1);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -101,5 +102,13 @@ export default function ReviewPage() {
         </Card>
       </div>
     </MyPageLayout>
+  );
+}
+
+export default function ReviewPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <ReviewPageContent />
+    </AuthGuard>
   );
 }

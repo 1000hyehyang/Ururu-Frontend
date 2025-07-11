@@ -4,8 +4,9 @@ import React from 'react';
 import { MyPageLayout } from '@/components/mypage/MyPageLayout';
 import { ReviewWriteForm } from '@/components/mypage/review';
 import { useSafeSearchParams } from '@/hooks';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
-export default function ReviewWritePage() {
+function ReviewWritePageContent() {
   const searchParams = useSafeSearchParams();
   const categoryId = searchParams.get('categoryId');
 
@@ -16,5 +17,13 @@ export default function ReviewWritePage() {
     <MyPageLayout>
       <ReviewWriteForm categoryId={parsedCategoryId} />
     </MyPageLayout>
+  );
+}
+
+export default function ReviewWritePage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <ReviewWritePageContent />
+    </AuthGuard>
   );
 }

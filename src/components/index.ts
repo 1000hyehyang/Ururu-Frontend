@@ -8,3 +8,4 @@ export * from './mypage';
 export * from './order';
 export * from './product';
 export * from './ui';
+export * from './auth/AuthProvider';

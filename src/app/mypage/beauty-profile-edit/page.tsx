@@ -8,8 +8,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { NoticeBanner, PageHeader } from '@/components/common';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { useBeautyProfileEdit } from '@/hooks/useBeautyProfileEdit';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
-export default function BeautyProfileEditPage() {
+function BeautyProfileEditPageContent() {
   const {
     beautyProfileData,
     handleInputChange,
@@ -61,5 +62,13 @@ export default function BeautyProfileEditPage() {
         </CardContent>
       </Card>
     </MyPageLayout>
+  );
+}
+
+export default function BeautyProfileEditPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <BeautyProfileEditPageContent />
+    </AuthGuard>
   );
 }

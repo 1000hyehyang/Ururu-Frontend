@@ -8,6 +8,7 @@ import {
 } from '@/components/common';
 import { MOCK_POINT_BALANCE, MOCK_POINT_EARN_METHODS, MOCK_POINT_HISTORY } from '@/data/point';
 import { formatPrice } from '@/lib/format-utils';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
 function NoticeCard() {
   return <NoticeBanner message="다양한 활동을 통해 포인트를 적립할 수 있어요!" className="mb-4" />;
@@ -40,7 +41,7 @@ function PointHistoryList() {
   return <PointHistorySection history={MOCK_POINT_HISTORY} />;
 }
 
-export default function PointPage() {
+function PointPageContent() {
   return (
     <MyPageLayout>
       <div className="flex flex-1 flex-col gap-6 py-4 md:py-6">
@@ -50,5 +51,13 @@ export default function PointPage() {
         <PointHistoryList />
       </div>
     </MyPageLayout>
+  );
+}
+
+export default function PointPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <PointPageContent />
+    </AuthGuard>
   );
 }

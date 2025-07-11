@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -9,27 +7,31 @@ import { myPageData, beautyProfileData } from '@/data/mypage';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { useAuthStore } from '@/store';
+import type { UserInfo } from '@/types/auth';
 
-export function ProfileCard() {
-  const userInfo = useAuthStore((state) => state.userInfo);
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+interface ProfileCardProps {
+  user: UserInfo | null;
+}
 
-  // main 브랜치 구조에 맞춰 실제 사용자 정보로 profile 객체 생성
-  const profile = {
-    nickname: userInfo?.name || userInfo?.nickname || '우르르',
-    avatar: userInfo?.profileImage || '/profile-image.svg',
-    badges: ['민감성', '여름쿨톤'], // TODO: 실제 사용자 뱃지 정보로 교체
-    points: 12345, // TODO: 실제 사용자 포인트 정보로 교체
-  };
-
-  const { profileActions } = myPageData;
+export function ProfileCard({ user }: ProfileCardProps) {
+  const { profile, profileActions } = myPageData;
   const profileData = beautyProfileData.withProfile;
   const hasBeautyProfile = profileData.skinType && profileData.skinTone;
 
-  // 프로필 이미지가 없거나 기본값인 경우 fallback 사용
-  const hasCustomAvatar = userInfo?.profileImage && userInfo.profileImage !== '/profile-image.svg';
+  // 사용자 정보 디버깅
+  console.log('ProfileCard - 사용자 정보:', user);
 
+  // 사용자 정보가 없으면 기본값 사용
+  const displayName = user?.nickname || profile.nickname;
+  const displayAvatar = user?.profile_image || profile.avatar;
+  const userType = user?.user_type || 'MEMBER';
+
+  console.log('ProfileCard - 표시 정보:', {
+    displayName,
+    displayAvatar,
+    userType,
+    originalUser: user,
+  });
 
   return (
     <Card className="w-full rounded-2xl border-0 bg-bg-100 px-4 py-6 shadow-sm md:px-8">
@@ -38,18 +40,19 @@ export function ProfileCard() {
           {/* 아바타/닉네임/뱃지 */}
           <div className="flex items-center gap-4 md:gap-6">
             <Avatar className="h-12 w-12 bg-bg-300 md:h-16 md:w-16">
-              {hasCustomAvatar ? (
-                <AvatarImage src={profile.avatar} alt={`${profile.nickname}의 프로필 이미지`} />
-              ) : null}
-              <AvatarFallback className="bg-bg-300 text-text-200">
-                {profile.nickname[0]}
-              </AvatarFallback>
+              <AvatarImage src={displayAvatar || undefined} />
+              <AvatarFallback>{displayName[0]}</AvatarFallback>
             </Avatar>
             <div>
               <div className="mb-1 text-lg font-semibold text-text-100 md:text-2xl">
-                {profile.nickname}
+                {displayName}
               </div>
               <div className="flex gap-1 md:gap-2">
+                {/* 사용자 타입에 따른 뱃지 */}
+                <Badge className="rounded-full border border-primary-300 bg-primary-100 px-1.5 py-0.5 text-[10px] font-semibold text-primary-300 md:px-3 md:py-1 md:text-xs">
+                  {userType === 'SELLER' ? '판매자' : '구매자'}
+                </Badge>
+                {/* 기존 뱃지들 */}
                 {profile.badges.map((badge) => (
                   <Badge
                     key={badge}
@@ -62,7 +65,7 @@ export function ProfileCard() {
             </div>
           </div>
           {/* 포인트 */}
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex flex-col items-center">
             <span className="mb-1 flex h-6 w-6 items-center justify-center rounded-full border border-primary-200 text-base font-bold text-primary-200 md:h-8 md:w-8 md:text-lg">
               P
             </span>

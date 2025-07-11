@@ -1,26 +1,45 @@
 'use client';
 
 import { CustomLayout } from '@/components/layout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { User, Store } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAuthStore } from '@/store';
-import { useSocialLogin } from '@/hooks/useSocialLogin';
-import { FORM_STYLES } from '@/constants/form-styles';
+import { SocialLogin } from '@/components/auth/SocialLogin';
+import { SellerLogin } from '@/components/auth/SellerLogin';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function LoginPage() {
-  const { loginType, loginFormData, setLoginType, setLoginFormData } = useAuthStore();
-  const { isLoading, error, handleKakaoLogin, handleGoogleLogin, clearError } = useSocialLogin();
+  const { loginType, setLoginType, isLoading, error, isAuthenticated, user } = useAuthStore();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleInputChange = (field: string, value: string) => {
-    setLoginFormData({ [field]: value });
+  // URL 파라미터에서 로그인 타입 확인
+  useEffect(() => {
+    const type = searchParams.get('type');
+    if (type === 'seller') {
+      setLoginType('seller');
+    }
+  }, [searchParams, setLoginType]);
+
+  // 로그인 성공 시 리다이렉트
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.user_type === 'SELLER') {
+        router.push('/seller');
+      } else {
+        router.push('/mypage');
+      }
+    }
+  }, [isAuthenticated, user, router]);
+
+  const handleLoginSuccess = () => {
+    // 로그인 성공 시 리다이렉트는 useEffect에서 처리
   };
 
-  const handleSellerLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: 실제 로그인 API 연동 예정
+  const handleLoginError = (error: string) => {
+    console.error('Login error:', error);
   };
 
   return (
@@ -91,59 +110,25 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {/* 에러 메시지 */}
+          {error && (
+            <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
+          )}
+
           {/* 소셜 로그인 (구매자 로그인일 때만 표시) */}
           {loginType === 'buyer' && (
             <div className="min-h-[320px] space-y-4" role="region" aria-label="소셜 로그인">
-              {/* 에러 메시지 */}
-              {error && (
-                <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                  {error}
-                  <button
-                    onClick={clearError}
-                    className="ml-2 text-red-400 hover:text-red-600"
-                    aria-label="에러 메시지 닫기"
-                  >
-                    ✕
-                  </button>
-                </div>
-              )}
               <div className="space-y-3">
-                {/* 카카오 로그인 */}
-                <button
-                  type="button"
-                  onClick={handleKakaoLogin}
-                  disabled={isLoading}
-                  className="flex h-12 w-full items-center justify-center gap-3 rounded-lg bg-[#FEE500] text-sm font-medium text-[#3C1E1E] shadow transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                  aria-label="카카오 계정으로 로그인"
-                >
-                  <Image
-                    src="/kakao-talk.svg"
-                    alt="카카오"
-                    width={20}
-                    height={20}
-                    className="h-5 w-5"
-                    aria-hidden="true"
-                  />
-                  카카오 계정으로 로그인하기
-                </button>
-                {/* 구글 로그인 */}
-                <button
-                  type="button"
-                  onClick={handleGoogleLogin}
-                  disabled={isLoading}
-                  className="flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-bg-300 bg-bg-100 text-sm font-medium text-text-200 shadow transition hover:bg-bg-200 disabled:cursor-not-allowed disabled:opacity-50"
-                  aria-label="구글 계정으로 로그인"
-                >
-                  <Image
-                    src="/google-logo.svg"
-                    alt="구글"
-                    width={20}
-                    height={20}
-                    className="h-5 w-5"
-                    aria-hidden="true"
-                  />
-                  구글 계정으로 로그인하기
-                </button>
+                <SocialLogin
+                  provider="kakao"
+                  onSuccess={handleLoginSuccess}
+                  onError={handleLoginError}
+                />
+                <SocialLogin
+                  provider="google"
+                  onSuccess={handleLoginSuccess}
+                  onError={handleLoginError}
+                />
               </div>
               {/* 약관 동의 문구 */}
               <div className="mt-6 text-center">
@@ -157,70 +142,8 @@ export default function LoginPage() {
 
           {/* 판매자 로그인 폼 */}
           {loginType === 'seller' && (
-            <form
-              onSubmit={handleSellerLogin}
-              className="min-h-[320px] space-y-5"
-              role="form"
-              aria-label="판매자 로그인 폼"
-            >
-              <div>
-                <label htmlFor="email" className="mb-2 block text-sm font-medium text-text-100">
-                  이메일
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="이메일을 입력하세요"
-                  value={loginFormData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="h-12 rounded-lg border-bg-300 bg-bg-100 px-4 py-3 text-base text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-0"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="mb-2 block text-sm font-medium text-text-100">
-                  비밀번호
-                </label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="비밀번호를 입력하세요"
-                  value={loginFormData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  className="h-12 rounded-lg border-bg-300 bg-bg-100 px-4 py-3 text-base text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-offset-0"
-                  required
-                />
-              </div>
-
-              {/* 로그인 유지 & 비밀번호 찾기 */}
-              <div className="flex items-center justify-between">
-                <label className={FORM_STYLES.checkbox.container}>
-                  <input
-                    type="checkbox"
-                    className={FORM_STYLES.checkbox.base}
-                    aria-label="로그인 유지"
-                  />
-                  <span className={FORM_STYLES.checkbox.label}>로그인 유지</span>
-                </label>
-                <button
-                  type="button"
-                  className="text-sm text-text-200 transition-colors hover:text-primary-300"
-                  aria-label="비밀번호 찾기"
-                >
-                  비밀번호 찾기
-                </button>
-              </div>
-
-              {/* 로그인 버튼 */}
-              <Button
-                type="submit"
-                size="lg"
-                className="h-12 w-full rounded-lg border border-primary-300 bg-bg-100 text-primary-300 transition-colors hover:bg-primary-100"
-                aria-label="판매자 센터로 이동"
-              >
-                판매자 센터로 이동
-              </Button>
+            <div className="min-h-[320px] space-y-5" role="region" aria-label="판매자 로그인">
+              <SellerLogin onSuccess={handleLoginSuccess} onError={handleLoginError} />
 
               {/* 약관 동의 문구 */}
               <div className="mt-6 text-center">
@@ -241,7 +164,7 @@ export default function LoginPage() {
                   회원가입
                 </Link>
               </div>
-            </form>
+            </div>
           )}
         </div>
       </div>
