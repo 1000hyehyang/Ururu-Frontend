@@ -6,27 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 import { OrderItem, PointUsage, PaymentSummary, DeliveryAddress } from '@/components/order';
-import { useAuthGuard } from '@/hooks';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 import { mockCartData } from '@/data/cart';
 import { mockAddressData } from '@/data/address';
 import type { CartItem as CartItemType } from '@/types/cart';
 
-export default function OrderPage() {
-  const { isLoggedIn, isLoading } = useAuthGuard();
-
-  // 로딩 중이거나 로그인하지 않은 경우 로딩 화면 표시
-  if (isLoading || !isLoggedIn) {
-    return (
-      <NoFooterLayout>
-        <div className="container mx-auto max-w-6xl px-6 py-8 md:px-8 md:py-12">
-          <div className="flex items-center justify-center py-16">
-            <div className="text-text-200">로딩 중...</div>
-          </div>
-        </div>
-      </NoFooterLayout>
-    );
-  }
-
+function OrderPageContent() {
   // 배송지 관련 상태
   const [deliveryType, setDeliveryType] = useState<'existing' | 'new'>('new');
   const [selectedAddressId, setSelectedAddressId] = useState<string>('1');
@@ -125,5 +110,13 @@ export default function OrderPage() {
         </div>
       </div>
     </NoFooterLayout>
+  );
+}
+
+export default function OrderPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <OrderPageContent />
+    </AuthGuard>
   );
 }

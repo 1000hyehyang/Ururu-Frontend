@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
 import { SidebarItem } from '@/components/common';
@@ -15,14 +17,14 @@ export function Sidebar() {
   };
 
   // 아이템에 onClick 핸들러 추가
-  const processedSections = navigationSections.map(section => ({
+  const processedSections = navigationSections.map((section) => ({
     ...section,
-    items: section.items.map(item => {
+    items: section.items.map((item) => {
       if (item.label === '로그아웃') {
         return { ...item, onClick: handleLogoutClick };
       }
       return item;
-    })
+    }),
   }));
 
   return (
