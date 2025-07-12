@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import type { CategoryRanking } from '@/data/home';
 import { categoryItems } from '@/data/categories';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { CenteredSectionHeader } from '@/components/common/CenteredSectionHeader';
 import { CategoryTabs } from './CategoryTabs';
 import { MobileProductList } from './MobileProductList';
 import { DesktopProductGrid } from './DesktopProductGrid';
@@ -49,7 +49,7 @@ export function CategoryRankingSection({
   return (
     <section className={`w-full ${className}`}>
       {/* 섹션 헤더 */}
-      <SectionHeader
+      <CenteredSectionHeader
         title="카테고리 랭킹"
         description="카테고리별 인기 상품을 확인해보세요"
         className="mb-6"

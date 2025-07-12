@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { Product } from '@/types/product';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { CenteredSectionHeader } from '@/components/common/CenteredSectionHeader';
 import { ProductRankingItem } from './ProductRankingItem';
 
 interface RealtimeBestSectionProps {
@@ -16,7 +16,7 @@ export function RealtimeBestSection({ products, className = '' }: RealtimeBestSe
   return (
     <section className={`w-full ${className} flex h-full flex-col`}>
       {/* 섹션 헤더 */}
-      <SectionHeader title="실시간 베스트" className="mb-6" />
+      <CenteredSectionHeader title="실시간 베스트" className="mb-6" />
 
       {/* 모바일/태블릿: 세로 리스트 */}
       <div className="block space-y-4 md:hidden">

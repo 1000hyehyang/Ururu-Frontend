@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { CenteredSectionHeader } from '@/components/common/CenteredSectionHeader';
 import { shortFormItems } from '@/data/home';
 
 interface ShortFormSectionProps {
@@ -13,7 +13,7 @@ export function ShortFormSection({ className = '' }: ShortFormSectionProps) {
   return (
     <section className={`w-full ${className}`}>
       {/* 섹션 헤더 */}
-      <SectionHeader title="숏폼에서 보던 그 제품" />
+      <CenteredSectionHeader title="숏폼에서 보던 그 제품" />
 
       {/* 이미지 4개 가로 배치 */}
       <div className="grid grid-cols-2 gap-6 md:grid-cols-4">

@@ -19,4 +19,5 @@ export {
   ListSkeleton,
 } from './LoadingSkeleton';
 export { SectionHeader } from './SectionHeader';
+export { CenteredSectionHeader } from './CenteredSectionHeader';
 export { EmptyPage } from './EmptyPage';
