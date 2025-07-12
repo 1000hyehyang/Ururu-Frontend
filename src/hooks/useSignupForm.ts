@@ -18,6 +18,7 @@ export const useSignupForm = () => {
   const handleInputChange = useCallback(
     (field: FormFieldType, value: string) => {
       setSignupFormData({ [field]: value } as Partial<SignupFormData>);
+
       if (field === 'brand') {
         setBrandGuide('', 'guide');
       }
@@ -101,17 +102,6 @@ export const useSignupForm = () => {
     );
   }, [signupFormData, agreements]);
 
-  // 폼 제출 핸들러
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (isFormValid()) {
-        // TODO: 실제 회원가입 API 연동 예정
-      }
-    },
-    [isFormValid, signupFormData],
-  );
-
   return {
     // 상태
     signupFormData,
@@ -123,7 +113,6 @@ export const useSignupForm = () => {
     handleInputChange,
     handleAgreementChange,
     handleBrandDuplicateCheck,
-    handleSubmit,
 
     // 유효성 검사
     isFormValid: isFormValid(),

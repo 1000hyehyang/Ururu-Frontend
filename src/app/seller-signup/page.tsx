@@ -13,7 +13,7 @@ import {
   checkPasswordHasNumber,
   checkPasswordHasSpecial,
 } from '@/lib/password-utils';
-import { formatPhoneNumber, formatBusinessNumber, formatMailOrderNumber } from '@/lib/format-utils';
+import { formatPhoneNumber, formatBusinessNumber } from '@/lib/format-utils';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { useSignupForm } from '@/hooks/useSignupForm';
 import { useSellerSignup, useAvailabilityCheck } from '@/hooks/useAuth';
@@ -31,7 +31,6 @@ export default function SellerSignUpPage() {
     handleInputChange,
     handleAgreementChange,
     handleBrandDuplicateCheck,
-    handleSubmit,
     isFormValid,
   } = useSignupForm();
 
@@ -341,12 +340,9 @@ export default function SellerSignUpPage() {
                 id="mailOrderNumber"
                 type="text"
                 placeholder="2024-서울강남-12"
-                value={formatMailOrderNumber(signupFormData.mailOrderNumber)}
+                value={signupFormData.mailOrderNumber}
                 onChange={(e) =>
-                  handleInputChange(
-                    'mailOrderNumber' as FormFieldType,
-                    formatMailOrderNumber(e.target.value),
-                  )
+                  handleInputChange('mailOrderNumber' as FormFieldType, e.target.value)
                 }
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
