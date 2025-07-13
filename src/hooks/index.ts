@@ -18,6 +18,7 @@ export { useBeautyProfileUtils } from './useBeautyProfileUtils';
 export { useDropdown } from './useDropdown';
 export { useImageCarousel } from './useImageCarousel';
 export { useAuthGuard } from './useAuthGuard';
+export * from './usePostcode';
 
 // 인증 관련 훅들
 export {
