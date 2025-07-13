@@ -22,6 +22,7 @@ interface ProfileFormFieldsProps {
   };
   nicknameGuide: string;
   nicknameGuideType: 'success' | 'error' | 'base';
+  isNicknameChanged: boolean;
   onNicknameChange: (value: string) => void;
   onNicknameCheck: () => void;
   onGenderChange: (value: string) => void;
@@ -39,6 +40,7 @@ export function ProfileFormFields({
   agreements,
   nicknameGuide,
   nicknameGuideType,
+  isNicknameChanged,
   onNicknameChange,
   onNicknameCheck,
   onGenderChange,
@@ -70,10 +72,15 @@ export function ProfileFormFields({
           />
           <button
             type="button"
-            className={FORM_STYLES.button.pinkOutline + ' h-12 min-w-[120px] rounded-lg'}
+            disabled={!isNicknameChanged}
+            className={`${
+              isNicknameChanged
+                ? FORM_STYLES.button.pinkOutline
+                : 'cursor-not-allowed bg-bg-200 text-text-300 text-sm font-medium'
+            } h-12 min-w-[120px] rounded-lg`}
             onClick={onNicknameCheck}
           >
-            중복 확인
+            {isNicknameChanged ? '중복 확인' : '변경 없음'}
           </button>
         </div>
       </FormField>

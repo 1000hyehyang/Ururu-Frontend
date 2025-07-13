@@ -35,6 +35,9 @@ export const FORM_STYLES = {
       selected: 'border-primary-300 bg-primary-100 text-primary-300',
       unselected: 'border-bg-300 bg-bg-100 text-text-300 hover:bg-bg-200',
     },
+    // 다이얼로그 버튼 스타일
+    dialog:
+      'border border-primary-300 bg-primary-300 text-text-on text-sm font-medium hover:opacity-80 transition-opacity shadow-none',
   },
 
   // 헬퍼 텍스트 스타일
