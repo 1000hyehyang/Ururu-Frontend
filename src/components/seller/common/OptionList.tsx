@@ -11,7 +11,7 @@ interface Option {
   name: string;
   price: number;
   image: File | null;
-  stock: number;
+  fullIngredients: string;
 }
 
 interface OptionListProps {
@@ -61,7 +61,6 @@ function OptionCard({
             onChange={(e) => onChange(option.id, 'name', e.target.value.slice(0, 20))}
             placeholder="EX) 07 킥로즈"
             maxLength={20}
-            required
             className={FORM_STYLES.input.base + ' ' + FORM_STYLES.input.focus}
           />
           <div className="mt-1 text-right text-xs text-text-300">
@@ -82,7 +81,6 @@ function OptionCard({
                 onChange(option.id, 'price', Number(value));
               }}
               placeholder="10,000"
-              required
               className={FORM_STYLES.input.base + ' ' + FORM_STYLES.input.focus}
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-300">원</span>
@@ -106,10 +104,9 @@ function OptionCard({
             전성분 <span className={FORM_STYLES.label.required}>*</span>
           </label>
           <Input
-            value={option.stock || ''}
-            onChange={(e) => onChange(option.id, 'stock', e.target.value)}
+            value={option.fullIngredients || ''}
+            onChange={(e) => onChange(option.id, 'fullIngredients', e.target.value)}
             placeholder="전성분을 표기해주세요"
-            required
             className={FORM_STYLES.input.base + ' ' + FORM_STYLES.input.focus}
           />
         </div>

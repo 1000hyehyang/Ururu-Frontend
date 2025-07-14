@@ -7,8 +7,11 @@ export interface SelectedOption {
 }
 
 export interface ProductOption {
-  label: string;
-  value: string;
+  id: string;
+  name: string;
+  price: number;
+  image: File | null;
+  fullIngredients: string;
 }
 
 export interface RewardTier {
@@ -47,6 +50,22 @@ export interface Product {
   options: ProductOption[];
 }
 
+export interface Category {
+  value: number;
+  label: string;
+  children: Category[];
+}
+
+export interface Tag {
+  value: number;
+  label: string;
+}
+
+export interface ProductMetadataResponse {
+  categories: Category[];
+  tags: Tag[];
+}
+
 // 진행률 계산 유틸리티 함수
 export const calculateProgress = (participants: number, targetParticipants: number): number => {
   if (targetParticipants <= 0) return 0;
@@ -58,3 +77,42 @@ export const calculateDiscountRate = (originalPrice: number, currentPrice: numbe
   if (originalPrice <= 0) return 0;
   return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
 };
+
+export interface CreateProductRequest {
+  name: string;
+  description: string;
+  categoryIds: number[];
+  tagCategoryIds: number[];
+  productOptions: Array<{
+    name: string;
+    price: number;
+    fullIngredients: string;
+  }>;
+  productNotice: Record<string, any>;
+}
+
+export interface ProductFormData {
+  name: string;
+  description: string;
+  categoryMain: string;
+  categoryMiddle: string;
+  categorySub: string;
+  options: ProductOption[];
+  capacity: string;
+  capacityUnit: string;
+  specification: string;
+  expiryDate: string;
+  usage: string;
+  manufacturer: string;
+  seller: string;
+  country: string;
+  functionalTest: 'yes' | 'no';
+  precautions: string;
+  qualityStandard: string;
+  customerService: string;
+}
+
+export interface ProductRegistrationProps {
+  categories: Category[];
+  tags: Tag[];
+}

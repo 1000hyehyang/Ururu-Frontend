@@ -17,38 +17,24 @@ import { PRODUCT_CATEGORY_DATA, CAPACITY_UNITS } from '@/data/seller';
 import { useFormArray } from '@/hooks/seller/useFormArray';
 import { OptionList } from './common/OptionList';
 import { SectionHeader } from '@/components/common/SectionHeader';
+import type {
+  Category,
+  Tag,
+  CreateProductRequest,
+  ProductFormData,
+  ProductOption,
+  ProductRegistrationProps,
+} from '@/types/product';
+import { Badge } from '@/components/ui/badge';
+import { X } from 'lucide-react';
+import { useEffect } from 'react';
+import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
+import { ProductService } from '@/services/productService';
+import { SuccessDialog } from '@/components/common/SuccessDialog';
+import { ErrorDialog } from '@/components/common/ErrorDialog';
+import { validateProductForm } from '@/lib/product/validation';
 
-interface ProductOption {
-  id: string;
-  name: string;
-  price: number;
-  image: File | null;
-  stock: number;
-}
-
-interface ProductFormData {
-  name: string;
-  description: string;
-  categoryMain: string;
-  categoryMiddle: string;
-  categorySub: string;
-  options: ProductOption[];
-  // 화장품 정보제공고시
-  capacity: string;
-  capacityUnit: string;
-  specification: string;
-  expiryDate: string;
-  usage: string;
-  manufacturer: string;
-  seller: string;
-  country: string;
-  functionalTest: 'yes' | 'no';
-  precautions: string;
-  qualityStandard: string;
-  customerService: string;
-}
-
-export function ProductRegistration() {
+export function ProductRegistration({ categories, tags }: ProductRegistrationProps) {
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
@@ -100,37 +86,194 @@ export function ProductRegistration() {
       name: '',
       price: 0,
       image: null,
-      stock: 0,
+      fullIngredients: '',
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const handleSuccessDialogClose = () => setSubmitSuccess(false);
+  const handleErrorDialogClose = () => setSubmitError(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('상품 등록:', formData);
-    // TODO: API 호출
+    setSubmitLoading(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+    try {
+      const validationError = validateProductForm(formData, optionArray, selectedTags);
+      if (validationError) {
+        setSubmitError(validationError);
+        setSubmitLoading(false);
+        return;
+      }
+      // 카테고리 ID 배열 생성 (예시: 마지막 선택된 카테고리까지)
+      const categoryIds: number[] = [];
+      const findCategoryId = (label: string, cats: Category[]): number | null => {
+        for (const cat of cats) {
+          if (cat.label === label) return cat.value;
+          if (cat.children) {
+            const found = findCategoryId(label, cat.children);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      if (formData.categoryMain) {
+        const id = findCategoryId(formData.categoryMain, categories);
+        if (id) categoryIds.push(id);
+      }
+      if (formData.categoryMiddle) {
+        const main = categories.find((c) => c.label === formData.categoryMain);
+        if (main && main.children) {
+          const id = findCategoryId(formData.categoryMiddle, main.children);
+          if (id) categoryIds.push(id);
+        }
+      }
+      if (formData.categorySub) {
+        const main = categories.find((c) => c.label === formData.categoryMain);
+        const middle = main?.children?.find((c) => c.label === formData.categoryMiddle);
+        if (middle && middle.children) {
+          const id = findCategoryId(formData.categorySub, middle.children);
+          if (id) categoryIds.push(id);
+        }
+      }
+      // 태그 ID 배열
+      const tagCategoryIds = selectedTags.map((tag) => tag.value);
+      // 옵션
+      const productOptions = optionArray.items.map((opt) => ({
+        name: opt.name,
+        price: opt.price,
+        fullIngredients: opt.fullIngredients,
+      }));
+      // 옵션 이미지
+      const optionImages = optionArray.items
+        .map((opt) => opt.image)
+        .filter((img): img is File => !!img);
+      // 상품 공시
+      const productNotice = {
+        capacity: formData.capacity + (formData.capacityUnit ? `/${formData.capacityUnit}` : ''),
+        spec: formData.specification,
+        expiry: formData.expiryDate,
+        usage: formData.usage,
+        manufacturer: formData.manufacturer,
+        responsibleSeller: formData.seller,
+        countryOfOrigin: formData.country,
+        functionalCosmetics: formData.functionalTest === 'yes' ? true : false,
+        caution: formData.precautions,
+        warranty: formData.qualityStandard,
+        customerServiceNumber: formData.customerService,
+      };
+      const product: CreateProductRequest = {
+        name: formData.name,
+        description: formData.description,
+        categoryIds,
+        tagCategoryIds,
+        productOptions,
+        productNotice,
+      };
+      await ProductService.createProduct(product, optionImages);
+      setSubmitSuccess(true);
+    } catch (err: any) {
+      setSubmitError(err?.message || '상품 등록에 실패했습니다.');
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  // 카테고리/태그 로딩/에러 상태 관리
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // 카테고리 변경 핸들러
+  const handleCategoryMainChange = (value: string) => {
+    handleInputChange('categoryMain', value);
+    handleInputChange('categoryMiddle', '');
+    handleInputChange('categorySub', '');
+  };
+
+  const handleCategoryMiddleChange = (value: string) => {
+    handleInputChange('categoryMiddle', value);
+    handleInputChange('categorySub', '');
+  };
+
+  const handleCategorySubChange = (value: string) => {
+    handleInputChange('categorySub', value);
+  };
+
+  // 카테고리 제거 핸들러
+  const handleRemoveCategory = (type: 'main' | 'middle' | 'sub') => {
+    if (type === 'main') {
+      handleInputChange('categoryMain', '');
+      handleInputChange('categoryMiddle', '');
+      handleInputChange('categorySub', '');
+    } else if (type === 'middle') {
+      handleInputChange('categoryMiddle', '');
+      handleInputChange('categorySub', '');
+    } else if (type === 'sub') {
+      handleInputChange('categorySub', '');
+    }
+  };
+
+  // 태그 변경 핸들러
+  const handleTagsChange = (newTags: Tag[]) => {
+    setSelectedTags(newTags);
+  };
+
+  // API 데이터에서 카테고리 가져오기
+  const getMainCategories = () => {
+    return categories.map((cat: Category) => cat.label);
   };
 
   const getMiddleCategories = () => {
-    return formData.categoryMain
-      ? PRODUCT_CATEGORY_DATA.middle[
-          formData.categoryMain as keyof typeof PRODUCT_CATEGORY_DATA.middle
-        ] || []
-      : [];
+    if (!formData.categoryMain) return [];
+    const mainCategory = categories.find((cat: Category) => cat.label === formData.categoryMain);
+    return mainCategory?.children?.map((cat: Category) => cat.label) || [];
   };
 
   const getSubCategories = () => {
-    return formData.categoryMiddle
-      ? PRODUCT_CATEGORY_DATA.sub[
-          formData.categoryMiddle as keyof typeof PRODUCT_CATEGORY_DATA.sub
-        ] || []
-      : [];
+    if (!formData.categoryMiddle) return [];
+    const mainCategory = categories.find((cat: Category) => cat.label === formData.categoryMain);
+    const middleCategory = mainCategory?.children?.find(
+      (cat: Category) => cat.label === formData.categoryMiddle,
+    );
+    return middleCategory?.children?.map((cat: Category) => cat.label) || [];
+  };
+
+  // 태그 비동기 로딩/에러/선택 상태 관리
+  const [tagList, setTagList] = useState<Tag[]>([]);
+  const [tagLoading, setTagLoading] = useState(false);
+  const [tagError, setTagError] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    setTagLoading(true);
+    setTagError(null);
+    // 비동기 태그 데이터 로딩 (실제 API 연동 시 ProductService.getProductMetadata() 등 사용)
+    Promise.resolve(tags)
+      .then((data) => setTagList(data))
+      .catch((e) => setTagError('태그를 불러오지 못했습니다.'))
+      .finally(() => setTagLoading(false));
+  }, [tags]);
+
+  const handleTagToggle = (tag: Tag) => {
+    setSelectedTags((prev) => {
+      if (prev.find((t) => t.value === tag.value)) {
+        return prev.filter((t) => t.value !== tag.value);
+      }
+      if (prev.length >= 3) return prev;
+      return [...prev, tag];
+    });
+  };
+  const handleTagRemove = (tag: Tag) => {
+    setSelectedTags((prev) => prev.filter((t) => t.value !== tag.value));
   };
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-0">
       {/* 타이틀 */}
       <h1 className="mb-10 text-center text-3xl font-semibold text-text-100">상품 등록</h1>
-
       <form onSubmit={handleSubmit} className="space-y-16">
         {/* 상품 기본 정보 */}
         <section>
@@ -146,7 +289,6 @@ export function ProductRegistration() {
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 placeholder="EX) 컬러그램 누디 블러 틴트 20 COLOR"
                 className={FORM_STYLES.input.base}
-                required
               />
             </FormField>
 
@@ -162,80 +304,128 @@ export function ProductRegistration() {
                 className={FORM_STYLES.textarea.base}
                 rows={2}
                 maxLength={200}
-                required
               />
             </FormField>
 
             {/* 카테고리 */}
             <FormField label="카테고리" required>
-              <div className="flex gap-2">
-                <Select
-                  value={formData.categoryMain}
-                  onValueChange={(value) => {
-                    handleInputChange('categoryMain', value);
-                    handleInputChange('categoryMiddle', '');
-                    handleInputChange('categorySub', '');
-                  }}
-                >
-                  <SelectTrigger className="h-12 w-1/3 rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300">
-                    <SelectValue placeholder="대분류" />
-                  </SelectTrigger>
-                  <SelectContent className="z-[80] max-h-60 bg-bg-100">
-                    {PRODUCT_CATEGORY_DATA.main.map((category) => (
-                      <SelectItem
-                        key={category}
-                        value={category}
-                        className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
-                      >
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select
-                  value={formData.categoryMiddle}
-                  onValueChange={(value) => {
-                    handleInputChange('categoryMiddle', value);
-                    handleInputChange('categorySub', '');
-                  }}
-                  disabled={!formData.categoryMain}
-                >
-                  <SelectTrigger className="h-12 w-1/3 rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300 disabled:cursor-not-allowed disabled:opacity-60">
-                    <SelectValue placeholder="중분류" />
-                  </SelectTrigger>
-                  <SelectContent className="z-[80] max-h-60 bg-bg-100">
-                    {getMiddleCategories().map((category) => (
-                      <SelectItem
-                        key={category}
-                        value={category}
-                        className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
-                      >
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select
-                  value={formData.categorySub}
-                  onValueChange={(value) => handleInputChange('categorySub', value)}
-                  disabled={!formData.categoryMiddle}
-                >
-                  <SelectTrigger className="h-12 w-1/3 rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300 disabled:cursor-not-allowed disabled:opacity-60">
-                    <SelectValue placeholder="소분류" />
-                  </SelectTrigger>
-                  <SelectContent className="z-[80] max-h-60 bg-bg-100">
-                    {getSubCategories().map((category) => (
-                      <SelectItem
-                        key={category}
-                        value={category}
-                        className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
-                      >
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {isLoading ? (
+                <LoadingSkeleton className="h-12 w-full" />
+              ) : error ? (
+                <div className="text-sm text-red-500">카테고리 정보를 불러오지 못했습니다.</div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2">
+                    <Select value={formData.categoryMain} onValueChange={handleCategoryMainChange}>
+                      <SelectTrigger className="h-12 w-1/3 rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300">
+                        <SelectValue placeholder="대분류" />
+                      </SelectTrigger>
+                      <SelectContent className="z-[80] max-h-60 overflow-auto scroll-smooth bg-bg-100">
+                        {getMainCategories().map((category: string) => (
+                          <SelectItem
+                            key={category}
+                            value={category}
+                            className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
+                          >
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Select
+                      value={formData.categoryMiddle}
+                      onValueChange={handleCategoryMiddleChange}
+                      disabled={!formData.categoryMain || getMiddleCategories().length === 0}
+                    >
+                      <SelectTrigger className="h-12 w-1/3 rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300 disabled:cursor-not-allowed disabled:opacity-60">
+                        <SelectValue
+                          placeholder={
+                            formData.categoryMain && getMiddleCategories().length === 0
+                              ? '다음 분류가 없습니다.'
+                              : '중분류'
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent className="z-[80] max-h-60 overflow-auto scroll-smooth bg-bg-100">
+                        {getMiddleCategories().length > 0 &&
+                          getMiddleCategories().map((category: string) => (
+                            <SelectItem
+                              key={category}
+                              value={category}
+                              className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
+                            >
+                              {category}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <Select
+                      value={formData.categorySub}
+                      onValueChange={handleCategorySubChange}
+                      disabled={!formData.categoryMiddle || getSubCategories().length === 0}
+                    >
+                      <SelectTrigger className="h-12 w-1/3 rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300 disabled:cursor-not-allowed disabled:opacity-60">
+                        <SelectValue
+                          placeholder={
+                            formData.categoryMiddle && getSubCategories().length === 0
+                              ? '다음 분류가 없습니다.'
+                              : '소분류'
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent className="z-[80] max-h-60 overflow-auto scroll-smooth bg-bg-100">
+                        {getSubCategories().length > 0 &&
+                          getSubCategories().map((category: string) => (
+                            <SelectItem
+                              key={category}
+                              value={category}
+                              className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
+                            >
+                              {category}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+            </FormField>
+
+            {/* 태그 */}
+            <FormField label={`태그 (${selectedTags.length}/3)`} required>
+              {isLoading ? (
+                <LoadingSkeleton className="h-12 w-full" />
+              ) : error ? (
+                <div className="text-sm text-red-500">태그 정보를 불러오지 못했습니다.</div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <div
+                    className="grid grid-cols-5 gap-2"
+                    role="group"
+                    aria-label="태그 선택 그리드"
+                  >
+                    {Array.from({ length: 20 }, (_, i) => tags[i] || null).map((tag, idx) =>
+                      tag ? (
+                        <button
+                          key={tag.value}
+                          type="button"
+                          className={`${FORM_STYLES.button.selectable.base} w-full ${
+                            selectedTags.some((t) => t.value === tag.value)
+                              ? 'border-primary-300 bg-primary-100 text-primary-300'
+                              : 'border-bg-300 text-text-300 hover:bg-bg-200'
+                          }`}
+                          aria-pressed={selectedTags.some((t) => t.value === tag.value)}
+                          onClick={() => handleTagToggle(tag)}
+                        >
+                          <span className="block w-full truncate text-center">{tag.label}</span>
+                        </button>
+                      ) : (
+                        <div key={idx} />
+                      ),
+                    )}
+                  </div>
+                </div>
+              )}
             </FormField>
           </div>
         </section>
@@ -276,10 +466,13 @@ export function ProductRegistration() {
               <FormField label="내용물의 용량 또는 중량" required className="flex-1">
                 <Input
                   value={formData.capacity}
-                  onChange={(e) => handleInputChange('capacity', e.target.value)}
-                  placeholder=""
+                  onChange={(e) =>
+                    handleInputChange('capacity', e.target.value.replace(/[^0-9]/g, ''))
+                  }
+                  placeholder="예: 50, 100, 200 등 숫자만 입력"
                   className={FORM_STYLES.input.base}
-                  required
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                 />
               </FormField>
               <FormField label="단위" required className="w-32">
@@ -310,7 +503,6 @@ export function ProductRegistration() {
                 onChange={(e) => handleInputChange('specification', e.target.value)}
                 placeholder="EX) 모든 피부"
                 className={FORM_STYLES.input.base}
-                required
               />
             </FormField>
             <FormField label="사용기한(또는 개봉 후 사용기간)" required>
@@ -319,7 +511,6 @@ export function ProductRegistration() {
                 onChange={(e) => handleInputChange('expiryDate', e.target.value)}
                 placeholder="EX) 제조일로부터 24개월"
                 className={FORM_STYLES.input.base}
-                required
               />
             </FormField>
             <FormField label="사용법" required>
@@ -329,7 +520,6 @@ export function ProductRegistration() {
                 placeholder="EX) 적당량의 내용을 손에 덜어 얼굴에 부드럽게 펴 발라줍니다."
                 className={FORM_STYLES.textarea.base}
                 rows={2}
-                required
               />
             </FormField>
             <FormField label="화장품제조업자" required>
@@ -338,7 +528,6 @@ export function ProductRegistration() {
                 onChange={(e) => handleInputChange('manufacturer', e.target.value)}
                 placeholder=""
                 className={FORM_STYLES.input.base}
-                required
               />
             </FormField>
             <FormField label="화장품책임판매업자" required>
@@ -347,7 +536,6 @@ export function ProductRegistration() {
                 onChange={(e) => handleInputChange('seller', e.target.value)}
                 placeholder=""
                 className={FORM_STYLES.input.base}
-                required
               />
             </FormField>
             <FormField label="제조국" required>
@@ -356,7 +544,6 @@ export function ProductRegistration() {
                 onChange={(e) => handleInputChange('country', e.target.value)}
                 placeholder="대한민국"
                 className={FORM_STYLES.input.base}
-                required
               />
             </FormField>
             <FormField label="기능성 화장품 식품의약품안전처 심사필 여부" required>
@@ -369,7 +556,6 @@ export function ProductRegistration() {
                     checked={formData.functionalTest === 'yes'}
                     onChange={(e) => handleInputChange('functionalTest', e.target.value)}
                     className="custom-radio"
-                    required
                   />
                   <span className="text-sm text-text-100">있음</span>
                 </label>
@@ -381,7 +567,6 @@ export function ProductRegistration() {
                     checked={formData.functionalTest === 'no'}
                     onChange={(e) => handleInputChange('functionalTest', e.target.value)}
                     className="custom-radio"
-                    required
                   />
                   <span className="text-sm text-text-100">없음</span>
                 </label>
@@ -394,7 +579,6 @@ export function ProductRegistration() {
                 placeholder=""
                 className={FORM_STYLES.textarea.base}
                 rows={2}
-                required
               />
             </FormField>
             <FormField label="품질보증기준" required>
@@ -404,16 +588,24 @@ export function ProductRegistration() {
                 placeholder="EX) 본 상품에 이상이 있을 경우 공정거래위원회 고시 '소비자분쟁 해결기준'에 의해 보상해 드립니다."
                 className={FORM_STYLES.textarea.base}
                 rows={2}
-                required
               />
             </FormField>
-            <FormField label="소비자상담 전화번호" required>
+            <FormField
+              label="소비자상담 전화번호"
+              required
+              helperText="번호는 하이픈(-)을 포함해서 입력해주세요. 예: 0000-0000"
+            >
               <Input
                 value={formData.customerService}
-                onChange={(e) => handleInputChange('customerService', e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // 숫자와 하이픈만 허용하는 정규식
+                  const filteredValue = value.replace(/[^0-9-]/g, '');
+                  handleInputChange('customerService', filteredValue);
+                }}
                 placeholder="0000-0000"
                 className={FORM_STYLES.input.base}
-                required
+                maxLength={13}
               />
             </FormField>
           </div>
@@ -424,9 +616,22 @@ export function ProductRegistration() {
           <Button
             type="submit"
             className="h-12 w-full rounded-lg bg-primary-300 text-sm font-medium text-text-on transition hover:opacity-80 focus:ring-primary-300 active:opacity-90"
+            disabled={submitLoading}
           >
-            등록하기
+            {submitLoading ? '등록 중...' : '등록하기'}
           </Button>
+          <ErrorDialog
+            isOpen={!!submitError}
+            onClose={handleErrorDialogClose}
+            title="상품 등록 실패"
+            message={submitError || ''}
+          />
+          <SuccessDialog
+            isOpen={submitSuccess}
+            onClose={handleSuccessDialogClose}
+            title="상품 등록 완료"
+            message="상품이 성공적으로 등록되었습니다."
+          />
         </div>
       </form>
     </div>

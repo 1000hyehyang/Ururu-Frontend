@@ -38,7 +38,7 @@ export function ImageUploadField({
       >
         <input
           type="file"
-          accept={accept}
+          accept="image/png,image/jpeg,image/jpg"
           multiple={multiple}
           onChange={onUpload}
           className="hidden"
