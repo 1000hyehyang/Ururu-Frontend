@@ -7,7 +7,6 @@ export interface AddressData {
   zonecode: string;
   address1: string;
   address2: string;
-  addressDetail: string;
 }
 
 // 배송지 목록 mock 데이터
@@ -20,7 +19,6 @@ export const addressListData: AddressData[] = [
     address1: '서울특별시 서초구 강남대로 327, 2층 (서초동, 대륭서초타워)',
     address2: '서울특별시 서초구 서초동 1337-20, 대륭서초타워 2층',
     phone: '010-0000-0000',
-    addressDetail: '',
   },
   {
     id: 2,
@@ -30,7 +28,6 @@ export const addressListData: AddressData[] = [
     address1: '서울특별시 강남구 테헤란로 501, 3층 (삼성동, 브이플렉스)',
     address2: '서울특별시 강남구 삼성동 159-1, 브이플렉스 3층',
     phone: '010-1234-5678',
-    addressDetail: '개발팀',
   },
   {
     id: 3,
@@ -40,7 +37,6 @@ export const addressListData: AddressData[] = [
     address1: '경기도 성남시 분당구 판교로 242, 판교디지털센터 A동 3층',
     address2: '경기도 성남시 분당구 삼평동 681, 판교디지털센터 A3층',
     phone: '010-9876-5432',
-    addressDetail: '',
   },
 ];
 
@@ -54,7 +50,6 @@ export const mockAddressData: Record<number, AddressData> = {
     zonecode: '06627',
     address1: '서울특별시 서초구 강남대로 327, 2층 (서초동, 대륭서초타워)',
     address2: '서울특별시 서초구 서초동 1337-20, 대륭서초타워 2층',
-    addressDetail: '',
   },
   2: {
     id: 2,
@@ -64,7 +59,6 @@ export const mockAddressData: Record<number, AddressData> = {
     zonecode: '06123',
     address1: '서울특별시 강남구 테헤란로 501, 3층 (삼성동, 브이플렉스)',
     address2: '서울특별시 강남구 삼성동 159-1, 브이플렉스 3층',
-    addressDetail: '개발팀',
   },
   3: {
     id: 3,
@@ -74,6 +68,5 @@ export const mockAddressData: Record<number, AddressData> = {
     zonecode: '13529',
     address1: '경기도 성남시 분당구 판교로 242, 판교디지털센터 A동 3층',
     address2: '경기도 성남시 분당구 삼평동 681, 판교디지털센터 A3층',
-    addressDetail: '',
   },
 };

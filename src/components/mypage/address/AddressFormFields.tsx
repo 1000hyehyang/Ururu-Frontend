@@ -15,7 +15,7 @@ interface AddressFormFieldsProps {
     zonecode: string;
     address1: string;
     address2: string;
-    addressDetail: string;
+    // addressDetail: string; // 삭제
   };
   onInputChange: (field: string, value: string | boolean) => void;
   showDefaultCheckbox?: boolean;
@@ -133,19 +133,7 @@ export function AddressFormFields({
           required
         />
       </FormField>
-
-      {/* 상세주소 */}
-      <FormField label="상세주소" required>
-        <Input
-          type="text"
-          placeholder="상세주소를 입력해주세요"
-          value={addressData.addressDetail}
-          onChange={(e) => onInputChange('addressDetail', e.target.value)}
-          className={FORM_STYLES.input.base + ' ' + FORM_STYLES.input.focus}
-          maxLength={100}
-          required
-        />
-      </FormField>
+      {/* 상세주소 FormField 완전 삭제 */}
     </div>
   );
 }

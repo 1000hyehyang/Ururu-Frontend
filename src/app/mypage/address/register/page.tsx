@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { MyPageLayout } from '@/components/mypage/MyPageLayout';
 import { AddressFormFields } from '@/components/mypage/address';
 import { Card, CardContent } from '@/components/ui/card';
-import { PageHeader, CardSkeleton } from '@/components/common';
+import { PageHeader, CardSkeleton, ErrorDialog } from '@/components/common';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { useAddress } from '@/hooks/useAddress';
 import { AuthGuard } from '@/components/auth/AuthGuard';
@@ -19,7 +19,17 @@ function AddressRegisterSkeleton() {
 }
 
 function AddressRegisterContent() {
-  const { addressData, isEditMode, handleInputChange, handleSubmit } = useAddress();
+  const {
+    addressData,
+    isEditMode,
+    handleInputChange,
+    handleSubmit,
+    isErrorDialogOpen,
+    errorDialogTitle,
+    errorDialogMessage,
+    errorDialogDetails,
+    onCloseErrorDialog,
+  } = useAddress();
 
   return (
     <MyPageLayout>
@@ -40,6 +50,13 @@ function AddressRegisterContent() {
           </form>
         </CardContent>
       </Card>
+      <ErrorDialog
+        isOpen={isErrorDialogOpen}
+        onClose={onCloseErrorDialog}
+        title={errorDialogTitle}
+        message={errorDialogMessage}
+        errorDetails={errorDialogDetails}
+      />
     </MyPageLayout>
   );
 }

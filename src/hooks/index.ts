@@ -13,6 +13,7 @@ export { useReviewWrite } from './useReviewWrite';
 export { useSafeNavigation, useSafeRouter, useSafeSearchParams } from './useSafeNavigation';
 export { useSignupForm } from './useSignupForm';
 export { useAddress } from './useAddress';
+export { useAddressList } from './useAddressList';
 export { useBeautyProfileEdit } from './useBeautyProfileEdit';
 export { useBeautyProfileUtils } from './useBeautyProfileUtils';
 export { useDropdown } from './useDropdown';

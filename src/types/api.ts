@@ -45,3 +45,21 @@ export interface SocialLoginRequest {
   provider: string;
   code: string;
 }
+
+// 배송지 관련 타입
+export interface ShippingAddress {
+  id: number;
+  member_id: number;
+  label: string;
+  phone: string;
+  zonecode: string;
+  address1: string;
+  address2: string;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ShippingAddressResponse {
+  addresses: ShippingAddress[];
+}
