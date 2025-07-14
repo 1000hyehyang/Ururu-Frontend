@@ -122,7 +122,7 @@ export const DetailMain = ({ product }: DetailMainProps) => {
       </div>
 
       {/* 모바일/태블릿용 주문 섹션 - 썸네일 하단, 탭 메뉴 위 */}
-      <div className="mt-6 w-full max-w-[480px] md:max-w-none xl:hidden">
+      <div className="mt-6 w-full max-w-none xl:hidden">
         <MobileOrderSection product={product} />
       </div>
 

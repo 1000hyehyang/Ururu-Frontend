@@ -26,7 +26,7 @@ export const PRODUCT_STYLES = {
 
   // 탭 관련 스타일
   tab: {
-    container: 'flex w-full max-w-[480px] rounded-lg bg-bg-200 p-1 md:max-w-none',
+    container: 'flex w-full rounded-lg bg-bg-200 p-1 max-w-none',
     active: 'bg-bg-100 text-text-100 shadow-sm',
     inactive: 'text-text-200 hover:text-text-100',
   },
