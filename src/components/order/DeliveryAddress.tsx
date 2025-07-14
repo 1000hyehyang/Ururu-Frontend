@@ -23,7 +23,6 @@ interface DeliveryAddressProps {
     zonecode: string;
     address1: string;
     address2: string;
-    addressDetail: string;
   };
   onDeliveryTypeChange: (type: 'existing' | 'new') => void;
   onAddressIdChange: (id: string) => void;

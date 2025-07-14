@@ -22,7 +22,6 @@ function OrderPageContent() {
     zonecode: '',
     address1: '',
     address2: '',
-    addressDetail: '',
   });
 
   // 기존 배송지 선택 시 폼 데이터 자동 업데이트
@@ -37,7 +36,6 @@ function OrderPageContent() {
         zonecode: selectedAddress.zonecode,
         address1: selectedAddress.address1,
         address2: selectedAddress.address2,
-        addressDetail: selectedAddress.addressDetail || '',
       });
     }
   };

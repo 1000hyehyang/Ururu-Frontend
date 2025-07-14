@@ -6,11 +6,11 @@ export const useProductOptions = (product: Product) => {
 
   // 옵션 선택 핸들러
   const handleSelectOption = (value: string) => {
-    const option = product.options.find((opt) => opt.value === value);
+    const option = product.options.find((opt) => opt.id === value);
     if (!option) return;
     // 이미 선택된 옵션이면 무시
     if (selectedOptions.some((o) => o.value === value)) return;
-    setSelectedOptions((prev) => [...prev, { value, label: option.label, quantity: 1 }]);
+    setSelectedOptions((prev) => [...prev, { value, label: option.name, quantity: 1 }]);
   };
 
   // 옵션 삭제

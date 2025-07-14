@@ -39,11 +39,11 @@ export const OptionSelect = ({
         </SelectTrigger>
         <SelectContent className="z-[80] max-h-60 bg-bg-100">
           {product.options.map((option) => {
-            const isSelected = selectedOptions.some((selected) => selected.value === option.value);
+            const isSelected = selectedOptions.some((selected) => selected.value === option.id);
             return (
               <SelectItem
-                key={option.value}
-                value={option.value}
+                key={option.id}
+                value={option.id}
                 disabled={isSelected}
                 className={`text-sm ${
                   isSelected
@@ -51,7 +51,7 @@ export const OptionSelect = ({
                     : 'cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300'
                 }`}
               >
-                {option.label}
+                {option.name}
               </SelectItem>
             );
           })}

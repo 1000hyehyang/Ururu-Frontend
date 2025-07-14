@@ -35,8 +35,20 @@ export const mockHistoryProducts: Product[] = [
       { participants: 1000, discount: '70% 할인', achieved: false },
     ],
     options: [
-      { label: '[태닝 시나모롤]03 베어 그레이프 기획', value: 'option1' },
-      { label: '[태닝 포차코] 23 피치 피치 미 기획', value: 'option2' },
+      {
+        id: 'option1',
+        name: '[태닝 시나모롤]03 베어 그레이프 기획',
+        price: 0,
+        image: null,
+        fullIngredients: '',
+      },
+      {
+        id: 'option2',
+        name: '[태닝 포차코] 23 피치 피치 미 기획',
+        price: 0,
+        image: null,
+        fullIngredients: '',
+      },
     ],
   },
   {
@@ -70,7 +82,9 @@ export const mockHistoryProducts: Product[] = [
       { participants: 200, discount: '30% 할인', achieved: true },
       { participants: 500, discount: '40% 할인', achieved: false },
     ],
-    options: [{ label: '미키마우스 립케어 세트', value: 'option1' }],
+    options: [
+      { id: 'option1', name: '미키마우스 립케어 세트', price: 0, image: null, fullIngredients: '' },
+    ],
   },
   {
     id: '3',
@@ -103,7 +117,15 @@ export const mockHistoryProducts: Product[] = [
       { participants: 500, discount: '40% 할인', achieved: true },
       { participants: 1000, discount: '50% 할인', achieved: false },
     ],
-    options: [{ label: '아쿠아 콜라겐 마스크팩 30매', value: 'option1' }],
+    options: [
+      {
+        id: 'option1',
+        name: '아쿠아 콜라겐 마스크팩 30매',
+        price: 0,
+        image: null,
+        fullIngredients: '',
+      },
+    ],
   },
   {
     id: '4',
@@ -136,7 +158,15 @@ export const mockHistoryProducts: Product[] = [
       { participants: 300, discount: '40% 할인', achieved: true },
       { participants: 800, discount: '50% 할인', achieved: false },
     ],
-    options: [{ label: '킬커버 파운데이션 + 프라이머 세트', value: 'option1' }],
+    options: [
+      {
+        id: 'option1',
+        name: '킬커버 파운데이션 + 프라이머 세트',
+        price: 0,
+        image: null,
+        fullIngredients: '',
+      },
+    ],
   },
   {
     id: '5',
@@ -169,7 +199,15 @@ export const mockHistoryProducts: Product[] = [
       { participants: 500, discount: '40% 할인', achieved: true },
       { participants: 1000, discount: '50% 할인', achieved: false },
     ],
-    options: [{ label: '더마랩 프로바이오틱 마스크팩 20매', value: 'option1' }],
+    options: [
+      {
+        id: 'option1',
+        name: '더마랩 프로바이오틱 마스크팩 20매',
+        price: 0,
+        image: null,
+        fullIngredients: '',
+      },
+    ],
   },
   {
     id: '6',
@@ -202,6 +240,14 @@ export const mockHistoryProducts: Product[] = [
       { participants: 200, discount: '40% 할인', achieved: true },
       { participants: 600, discount: '50% 할인', achieved: false },
     ],
-    options: [{ label: '플레이 컬러 아이즈 팔레트', value: 'option1' }],
+    options: [
+      {
+        id: 'option1',
+        name: '플레이 컬러 아이즈 팔레트',
+        price: 0,
+        image: null,
+        fullIngredients: '',
+      },
+    ],
   },
 ];

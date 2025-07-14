@@ -15,7 +15,6 @@ interface AddressFormFieldsProps {
     zonecode: string;
     address1: string;
     address2: string;
-    // addressDetail: string; // 삭제
   };
   onInputChange: (field: string, value: string | boolean) => void;
   showDefaultCheckbox?: boolean;
