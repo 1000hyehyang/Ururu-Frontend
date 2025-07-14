@@ -55,25 +55,27 @@ export const ProductDetailImages: React.FC<ProductDetailImagesProps> = ({
               priority={index < 2}
             />
 
-            {/* 첫 번째 이미지에만 블러 효과와 버튼 적용 */}
+            {/* 첫 번째 이미지에만 블러 효과 적용 */}
             {index === 0 && hasMoreImages && !showAllImages && (
               <>
                 {/* 블러 효과 오버레이 */}
-                <div className={PRODUCT_STYLES.blur} />
-
-                {/* 펼치기 버튼 */}
-                <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
-                  <LoadMoreButton
-                    isLoading={isLoading}
-                    onLoadMore={handleLoadMore}
-                    onShowLess={handleShowLess}
-                    showAll={showAllImages}
-                  />
-                </div>
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-50 via-slate-50/80 to-transparent" />
               </>
             )}
           </div>
         ))}
+
+        {/* 펼치기 버튼 */}
+        {hasMoreImages && !showAllImages && (
+          <div className="flex justify-center py-6">
+            <LoadMoreButton
+              isLoading={isLoading}
+              onLoadMore={handleLoadMore}
+              onShowLess={handleShowLess}
+              showAll={showAllImages}
+            />
+          </div>
+        )}
 
         {/* 접기 버튼 */}
         {showAllImages && hasMoreImages && (
