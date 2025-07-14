@@ -1,15 +1,14 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { Product } from '@/types/product';
 import { Button } from '@/components/ui/button';
-import { X, Share } from 'lucide-react';
-import Image from 'next/image';
+import { Share, ChevronDown, ChevronUp } from 'lucide-react';
 import { useProductOptions, useProductDrawer, useProductActions } from '@/hooks';
 import { OptionCard } from './OptionCard';
 import { OptionSelect } from './OptionSelect';
-import { ActionButtons } from './ActionButtons';
 import { PRODUCT_STYLES } from '@/constants/product-styles';
+import { useRouter } from 'next/navigation';
 
 interface OrderFloatingBarProps {
   product: Product;
@@ -27,21 +26,48 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
   } = useProductOptions(product);
 
   const { handleShare, handlePurchase } = useProductActions();
+  const router = useRouter();
+
+  // Drawer 열림/닫힘에 따라 body 스크롤 제어
+  useEffect(() => {
+    if (isDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // 컴포넌트 언마운트 시 스크롤 복원
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isDrawerOpen]);
+
+  const handleToggleDrawer = () => {
+    if (isDrawerOpen) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
+  };
 
   const handleBuyNow = () => {
-    openDrawer();
+    if (isDrawerOpen && selectedOptions.length > 0) {
+      closeDrawer();
+      alert('바로구매 하러 가볼게요!');
+    } else {
+      openDrawer();
+    }
   };
 
   const handleAddToCart = () => {
-    openDrawer();
+    if (isDrawerOpen && selectedOptions.length > 0) {
+      alert('장바구니에 성공적으로 담았습니다!');
+    } else {
+      openDrawer();
+    }
   };
 
   const handleCloseDrawer = () => {
-    closeDrawer();
-  };
-
-  const handlePurchaseAndClose = () => {
-    handlePurchase();
     closeDrawer();
   };
 
@@ -82,51 +108,31 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
         <div className={PRODUCT_STYLES.container.drawerContent}>
           {/* Drawer 헤더 */}
           <div className={PRODUCT_STYLES.drawer.header}>
-            <h3 className={PRODUCT_STYLES.drawer.title}>옵션 선택</h3>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={PRODUCT_STYLES.button.close}
-              onClick={handleCloseDrawer}
+            <button
+              type="button"
+              aria-label={isDrawerOpen ? '옵션 닫기' : '옵션 열기'}
+              tabIndex={0}
+              onClick={handleToggleDrawer}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleToggleDrawer()}
+              className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-bg-200 focus:outline-none focus:ring-2 focus:ring-primary-300 md:h-10 md:w-10"
             >
-              <X className="h-5 w-5 md:h-6 md:w-6" />
-            </Button>
+              {isDrawerOpen ? (
+                <ChevronDown className="h-6 w-6 text-text-300" />
+              ) : (
+                <ChevronUp className="h-6 w-6 text-text-300" />
+              )}
+            </button>
           </div>
 
           {/* Drawer 내용 */}
           <div
-            className={PRODUCT_STYLES.drawer.content}
+            className="max-h-[60vh] overflow-y-auto px-4 py-4"
             style={{
               WebkitOverflowScrolling: 'touch',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
             }}
           >
-            {/* 상품 정보 */}
-            <div className={PRODUCT_STYLES.drawer.productInfo}>
-              <Image
-                src={product.mainImage}
-                alt={product.name}
-                width={80}
-                height={80}
-                className={PRODUCT_STYLES.image.drawer}
-              />
-              <div className="flex-1">
-                <h4 className={PRODUCT_STYLES.drawer.productName}>{product.name}</h4>
-                <div className={PRODUCT_STYLES.drawer.productPrice}>
-                  <span className={PRODUCT_STYLES.drawer.productDiscount}>
-                    {product.discountRate}%
-                  </span>
-                  <span className={PRODUCT_STYLES.drawer.productOriginal}>
-                    {product.originalPrice.toLocaleString()}원
-                  </span>
-                  <span className={PRODUCT_STYLES.drawer.productCurrent}>
-                    {product.price.toLocaleString()}원
-                  </span>
-                </div>
-              </div>
-            </div>
-
             {/* 옵션 선택 */}
             <div className="mb-6">
               <h5 className={PRODUCT_STYLES.drawer.optionTitle}>옵션 선택</h5>
@@ -140,7 +146,19 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
 
             {/* 선택된 옵션들 */}
             {selectedOptions.length > 0 && (
-              <div className="mb-6 flex flex-col gap-3">
+              <div
+                className="mb-6 flex max-h-40 flex-col gap-3 overflow-y-auto"
+                style={{
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                }}
+              >
+                <style jsx>{`
+                  div::-webkit-scrollbar {
+                    display: none;
+                  }
+                `}</style>
                 {selectedOptions.map((opt) => (
                   <OptionCard
                     key={opt.value}
@@ -164,14 +182,8 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
             </div>
           </div>
 
-          {/* Drawer 하단 버튼 */}
-          <div className={PRODUCT_STYLES.drawer.footer}>
-            <ActionButtons
-              onAddToCart={handleAddToCart}
-              onBuyNow={handlePurchaseAndClose}
-              size="large"
-            />
-          </div>
+          {/* Drawer 하단 여백 */}
+          <div className={PRODUCT_STYLES.drawer.footer} />
         </div>
       </div>
     </>

@@ -57,35 +57,29 @@ export const PRODUCT_STYLES = {
 
   // Drawer 관련 스타일
   drawer: {
-    header: 'flex items-center justify-between border-b border-bg-200 px-4 py-4 md:px-6 md:py-5',
-    title: 'text-lg font-semibold text-text-100 md:text-xl',
-    content: 'max-h-[60vh] overflow-y-auto px-4 py-4 md:px-6 md:py-5',
-    productInfo: 'mb-6 flex items-start gap-4 rounded-lg bg-bg-100 p-4 shadow-sm md:p-5',
-    productName: 'mb-2 line-clamp-2 text-sm font-medium text-text-100 md:text-base',
-    productPrice: 'flex items-center gap-2',
-    productDiscount: 'text-lg font-bold text-primary-300 md:text-xl',
-    productOriginal: 'text-sm text-text-300 line-through md:text-base',
-    productCurrent: 'text-lg font-bold text-primary-300 md:text-xl',
-    optionTitle: 'mb-3 text-base font-medium text-text-100 md:text-lg',
-    totalInfo: 'mb-6 flex items-center justify-between border-t border-bg-200 pt-4 md:pt-5',
-    totalText: 'text-sm text-text-100 md:text-base',
+    header: 'flex items-center justify-center border-b border-bg-200 px-4 py-2',
+    content: 'max-h-[60vh] overflow-y-auto px-4 py-4',
+    optionTitle: 'mb-3 text-base font-medium text-text-100',
+    totalInfo: 'mb-6 flex items-center justify-between border-t border-bg-200 pt-4',
+    totalText: 'text-sm text-text-100',
     totalBold: 'font-semibold',
-    totalPrice: 'text-lg font-semibold text-text-100 md:text-xl',
-    footer: 'border-t border-bg-200 px-4 py-4 md:px-6 md:py-5',
+    totalPrice: 'text-lg font-semibold text-text-100',
+    footer: 'border-t border-bg-200 px-4 py-4',
+    selectedOptionsArea: 'mb-6 flex flex-col gap-3 max-h-40 overflow-y-auto',
   },
 
   // 컨테이너 관련 스타일
   container: {
     main: 'w-full',
     floating:
-      'fixed bottom-0 left-0 right-0 z-50 flex h-16 w-full items-center justify-between bg-bg-100 px-4 shadow-lg md:h-20 md:px-6 xl:hidden',
+      'fixed bottom-0 left-0 right-0 z-50 flex h-16 w-full items-center justify-between bg-bg-100 px-4 shadow-lg xl:hidden',
     drawer:
-      'fixed bottom-0 left-0 right-0 z-[70] w-full transform transition-transform duration-300 ease-in-out xl:hidden',
-    drawerContent: 'w-full max-w-none rounded-t-3xl bg-bg-100 md:max-w-none',
+      'fixed bottom-0 left-0 right-0 z-70 w-full transform transition-transform duration-300 ease-in-out xl:hidden',
+    drawerContent: 'w-full z-70 max-w-none rounded-t-3xl bg-bg-100',
   },
 
   // 오버레이 스타일
-  overlay: 'fixed inset-0 z-[60] bg-black bg-opacity-50 transition-opacity duration-300 xl:hidden',
+  overlay: 'fixed inset-0 z-[69] bg-black bg-opacity-50 transition-opacity duration-300 xl:hidden',
 
   // 블러 효과 스타일
   blur: 'pointer-events-none absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent',

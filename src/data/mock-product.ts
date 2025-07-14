@@ -47,6 +47,8 @@ export const mockProductData: Product = {
   options: [
     { label: '[태닝 시나모롤]03 베어 그레이프 기획', value: 'option1' },
     { label: '[태닝 포차코] 23 피치 피치 미 기획', value: 'option2' },
-    { label: '[NEW태닝 시나모롤]32태니구아바 기획', value: 'option3' },
+    { label: '[NEW태닝 포차코] 31 탠드 코코 ', value: 'option3' },
+    { label: '[NEW태닝 시나모롤]32태니구아바 기획', value: 'option4' },
+    { label: '[NEW태닝 포차코] 33 알로하 쥬시 ', value: 'option5' },
   ],
 };
