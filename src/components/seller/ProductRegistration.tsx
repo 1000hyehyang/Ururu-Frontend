@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,6 +36,7 @@ import { ErrorDialog } from '@/components/common/ErrorDialog';
 import { validateProductForm } from '@/lib/product/validation';
 
 export function ProductRegistration({ categories, tags }: ProductRegistrationProps) {
+  const router = useRouter();
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
@@ -93,7 +95,10 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const handleSuccessDialogClose = () => setSubmitSuccess(false);
+  const handleSuccessDialogClose = () => {
+    setSubmitSuccess(false);
+    router.push('/seller/products');
+  };
   const handleErrorDialogClose = () => setSubmitError(null);
 
   const handleSubmit = async (e: React.FormEvent) => {

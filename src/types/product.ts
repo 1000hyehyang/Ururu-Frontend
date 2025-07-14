@@ -1,4 +1,5 @@
 // 상품 관련 공통 타입 정의
+import type { ApiResponse } from './api';
 
 export interface SelectedOption {
   value: string;
@@ -116,3 +117,75 @@ export interface ProductRegistrationProps {
   categories: Category[];
   tags: Tag[];
 }
+
+// 상품 관리 API 관련 타입
+export interface SellerProductCategory {
+  id: number;
+  name: string;
+  depth: number;
+  path: string;
+  orderIndex: number;
+}
+
+export interface SellerProductTagCategory {
+  id: number;
+  tagCategoryName: string;
+}
+
+export interface SellerProduct {
+  id: number;
+  name: string;
+  description: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'PENDING';
+  createdAt: string;
+  updatedAt: string;
+  categories: SellerProductCategory[];
+  tagCategories: SellerProductTagCategory[];
+}
+
+export interface Pageable {
+  offset: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  unpaged: boolean;
+  paged: boolean;
+  pageNumber: number;
+  pageSize: number;
+}
+
+export interface Sort {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+}
+
+export interface SellerProductListResponse {
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  last: boolean;
+  size: number;
+  content: SellerProduct[];
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  pageable: Pageable;
+  empty: boolean;
+}
+
+// API 응답 래퍼 타입은 api.ts에서 import하여 사용
+
+// 상품 목록 API 응답 타입
+export type SellerProductListApiResponse = ApiResponse<SellerProductListResponse>;
+
+// 판매자 상품 통계 타입
+export interface SellerProductStats {
+  totalCount: number;
+  activeCount: number;
+  inactiveCount: number;
+}
+
+export type SellerProductStatsApiResponse = ApiResponse<SellerProductStats>;
