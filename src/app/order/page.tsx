@@ -37,7 +37,7 @@ function OrderPageContent() {
         zonecode: selectedAddress.zonecode,
         address1: selectedAddress.address1,
         address2: selectedAddress.address2,
-        addressDetail: selectedAddress.addressDetail,
+        addressDetail: selectedAddress.addressDetail || '',
       });
     }
   };
