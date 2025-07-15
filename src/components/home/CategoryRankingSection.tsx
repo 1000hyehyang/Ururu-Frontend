@@ -1,41 +1,87 @@
 'use client';
 
-import React, { useState } from 'react';
-import type { CategoryRanking } from '@/data/home';
+import React, { useEffect, useState } from 'react';
 import { categoryItems } from '@/data/categories';
 import { CenteredSectionHeader } from '@/components/common/CenteredSectionHeader';
 import { CategoryTabs } from './CategoryTabs';
 import { MobileProductList } from './MobileProductList';
 import { DesktopProductGrid } from './DesktopProductGrid';
+import { fetchGroupBuyCategoryTop6 } from '@/services/groupbuyService';
+import type { GroupBuyTop3 } from '@/types/groupbuy';
+import type { Product } from '@/types/product';
 
-interface CategoryRankingSectionProps {
-  categories: CategoryRanking[];
-  className?: string;
+// 카테고리명과 API categoryId 매핑
+const CATEGORY_ID_MAP: Record<string, number> = {
+  스킨케어: 2,
+  마스크팩: 15,
+  클렌징: 25,
+  선케어: 44,
+  메이크업: 63,
+  향수: 81,
+  바디케어: 113,
+};
+
+function convertToProduct(item: GroupBuyTop3): Product {
+  return {
+    id: String(item.id),
+    name: item.title,
+    mainImage: item.thumbnailUrl,
+    thumbnails: [],
+    detailImages: [],
+    price: item.displayFinalPrice,
+    originalPrice: item.startPrice,
+    discountRate: item.maxDiscountRate,
+    point: 0,
+    participants: item.orderCount,
+    targetParticipants: 0,
+    remainingDays: Math.max(
+      0,
+      Math.ceil((new Date(item.endsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
+    ),
+    category: { main: '', sub: '' },
+    shippingInfo: { type: '', description: '', shippingFee: '' },
+    rewardTiers: [],
+    options: [],
+  };
 }
 
-export function CategoryRankingSection({
-  categories,
-  className = '',
-}: CategoryRankingSectionProps) {
-  // 대분류 카테고리 목록
-  const mainCategories = categoryItems.map((cat) => cat.title);
-  // 카테고리별 데이터 매핑 (mock 데이터 없으면 빈 배열)
-  const rankingsByCategory = mainCategories.map((cat) => {
-    const found = categories.find((r) => r.category === cat);
-    return {
-      category: cat,
-      products: found?.products ?? [],
-    };
-  });
-
+export function CategoryRankingSection({ className = '' }: { className?: string }) {
+  const mainCategories = categoryItems
+    .map((cat) => cat.title)
+    .filter((title) => CATEGORY_ID_MAP[title]);
   const [activeCategory, setActiveCategory] = useState(0);
   const [mobilePage, setMobilePage] = useState(0);
-  const MOBILE_PAGE_SIZE = 3;
+  const [productsByCategory, setProductsByCategory] = useState<Record<number, Product[]>>({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const activeCategoryData = rankingsByCategory[activeCategory];
+  const MOBILE_PAGE_SIZE = 3;
+  const activeCategoryTitle = mainCategories[activeCategory];
+  const activeCategoryId = CATEGORY_ID_MAP[activeCategoryTitle];
+  const activeProducts = productsByCategory[activeCategoryId] || [];
+
+  useEffect(() => {
+    // 이미 불러온 카테고리는 캐시
+    if (productsByCategory[activeCategoryId] !== undefined) return;
+    setLoading(true);
+    setError(null);
+    fetchGroupBuyCategoryTop6(activeCategoryId)
+      .then((res) => {
+        setProductsByCategory((prev) => ({
+          ...prev,
+          [activeCategoryId]: res.data.map(convertToProduct),
+        }));
+      })
+      .catch(() => {
+        setError('카테고리 랭킹 데이터를 불러오지 못했습니다.');
+      })
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCategoryId]);
 
   const handleCategoryChange = (index: number) => {
     setActiveCategory(index);
+    setMobilePage(0);
   };
 
   const handleMobilePageReset = () => {
@@ -48,33 +94,38 @@ export function CategoryRankingSection({
 
   return (
     <section className={`w-full ${className}`}>
-      {/* 섹션 헤더 */}
       <CenteredSectionHeader
         title="카테고리 랭킹"
         description="카테고리별 인기 상품을 확인해보세요"
         className="mb-6"
       />
-
-      {/* 카테고리 탭 */}
       <CategoryTabs
-        categories={rankingsByCategory}
+        categories={mainCategories.map((cat) => ({ category: cat, products: [] }))}
         activeCategory={activeCategory}
         onCategoryChange={handleCategoryChange}
         onMobilePageReset={handleMobilePageReset}
       />
-
-      {/* 상품 리스트 */}
       <div>
-        {/* 모바일/태블릿: 3개씩 슬라이드 & 화살표 */}
-        <MobileProductList
-          products={activeCategoryData.products}
-          currentPage={mobilePage}
-          pageSize={MOBILE_PAGE_SIZE}
-          onPageChange={handleMobilePageChange}
-        />
-
-        {/* 데스크탑: 2열 3행(6개) 리스트 */}
-        <DesktopProductGrid products={activeCategoryData.products} />
+        {loading && <div className="text-center text-sm text-text-200">로딩 중...</div>}
+        {error && <div className="text-center text-sm text-red-400">{error}</div>}
+        {!loading && !error && activeProducts.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-8 md:py-12">
+            <div className="mb-4 text-6xl">🏆</div>
+            <h2 className="mb-2 text-xl font-semibold text-text-100">랭킹 데이터가 없습니다</h2>
+            <p className="text-text-200">다른 카테고리를 선택해보세요!</p>
+          </div>
+        )}
+        {!loading && !error && activeProducts.length > 0 && (
+          <>
+            <MobileProductList
+              products={activeProducts}
+              currentPage={mobilePage}
+              pageSize={MOBILE_PAGE_SIZE}
+              onPageChange={handleMobilePageChange}
+            />
+            <DesktopProductGrid products={activeProducts} />
+          </>
+        )}
       </div>
     </section>
   );
