@@ -7,7 +7,8 @@ import { ProductGrid } from '@/components/product';
 import { useRanking } from '@/hooks/useRanking';
 
 export default function RankingPage() {
-  const { categories, selectedCategory, rankingProducts, handleCategoryChange } = useRanking();
+  const { categories, selectedCategory, rankingProducts, loading, error, handleCategoryChange } =
+    useRanking();
 
   return (
     <FullLayout>
@@ -31,11 +32,18 @@ export default function RankingPage() {
 
         {/* 랭킹 상품 그리드 */}
         <div className="mb-8">
-          <ProductGrid products={rankingProducts.map((item) => item.product)} showRanking={true} />
+          {loading && <div className="text-center text-sm text-text-200">로딩 중...</div>}
+          {error && <div className="text-center text-sm text-red-400">{error}</div>}
+          {!loading && !error && (
+            <ProductGrid
+              products={rankingProducts.map((item) => item.product)}
+              showRanking={true}
+            />
+          )}
         </div>
 
         {/* 빈 상태 처리 */}
-        {rankingProducts.length === 0 && (
+        {!loading && !error && rankingProducts.length === 0 && (
           <div className="flex flex-col items-center justify-center py-16">
             <div className="mb-4 text-6xl">🏆</div>
             <h2 className="mb-2 text-xl font-semibold text-text-100">랭킹 데이터가 없습니다</h2>
