@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +18,7 @@ import { StatusBadge } from '@/components/common/StatusBadge';
 import { Pagination } from '@/components/seller/common/Pagination';
 
 export function ProductManagement() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [productData, setProductData] = useState<SellerProductListResponse | null>(null);
@@ -52,6 +54,14 @@ export function ProductManagement() {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
+  };
+
+  const handleRegisterProduct = () => {
+    router.push('/seller/products/new');
+  };
+
+  const handleViewProduct = (productId: number) => {
+    router.push(`/seller/products/${productId}`);
   };
 
   const getStatusBadge = (status: string) => {
@@ -152,7 +162,7 @@ export function ProductManagement() {
                 description="첫 번째 상품을 등록해보세요"
               />
               <div className="text-center">
-                <Button className={FORM_STYLES.button.submit}>
+                <Button onClick={handleRegisterProduct} className={FORM_STYLES.button.submit}>
                   <Plus className="mr-2 h-4 w-4" />
                   상품 등록하기
                 </Button>
@@ -208,20 +218,20 @@ export function ProductManagement() {
                     {/* 하단: 버튼 3개(좌) */}
                     <div className="mt-4 flex gap-2">
                       <Button
-                        onClick={() => console.log('View product:', product.id)}
-                        className="h-10 rounded-lg border border-primary-300 bg-bg-100 px-6 text-base text-primary-300 shadow-none transition-colors hover:bg-primary-100 active:bg-primary-100 active:text-primary-300"
+                        onClick={() => handleViewProduct(product.id)}
+                        className="h-10 rounded-lg border border-primary-300 bg-bg-100 px-6 text-sm text-primary-300 shadow-none transition-colors hover:bg-primary-100 active:bg-primary-100 active:text-primary-300"
                       >
                         상세보기
                       </Button>
                       <Button
                         onClick={() => console.log('Edit product:', product.id)}
-                        className="h-10 rounded-lg border border-primary-300 bg-bg-100 px-6 text-base text-primary-300 shadow-none transition-colors hover:bg-primary-100 active:bg-primary-100 active:text-primary-300"
+                        className="h-10 rounded-lg border border-primary-300 bg-bg-100 px-6 text-sm text-primary-300 shadow-none transition-colors hover:bg-primary-100 active:bg-primary-100 active:text-primary-300"
                       >
                         수정하기
                       </Button>
                       <Button
                         onClick={() => console.log('Delete product:', product.id)}
-                        className="h-10 rounded-lg border border-primary-200 bg-bg-100 px-6 text-base text-primary-200 shadow-none transition-colors hover:bg-primary-100 active:bg-primary-100 active:text-primary-200"
+                        className="h-10 rounded-lg border border-bg-300 bg-bg-100 px-6 text-sm text-text-300 shadow-none transition-colors hover:border-primary-200 hover:text-primary-200"
                       >
                         삭제하기
                       </Button>

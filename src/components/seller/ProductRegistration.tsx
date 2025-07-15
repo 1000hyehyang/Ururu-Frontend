@@ -158,7 +158,7 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
         .filter((img): img is File => !!img);
       // 상품 공시
       const productNotice = {
-        capacity: formData.capacity + (formData.capacityUnit ? `/${formData.capacityUnit}` : ''),
+        capacity: formData.capacity + (formData.capacityUnit ? formData.capacityUnit : ''),
         spec: formData.specification,
         expiry: formData.expiryDate,
         usage: formData.usage,
@@ -471,13 +471,20 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
               <FormField label="내용물의 용량 또는 중량" required className="flex-1">
                 <Input
                   value={formData.capacity}
-                  onChange={(e) =>
-                    handleInputChange('capacity', e.target.value.replace(/[^0-9]/g, ''))
-                  }
-                  placeholder="예: 50, 100, 200 등 숫자만 입력"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // 숫자와 소수점만 허용
+                    const filteredValue = value.replace(/[^0-9.]/g, '');
+                    // 소수점이 2개 이상이면 첫 번째 것만 유지
+                    const parts = filteredValue.split('.');
+                    const processedValue =
+                      parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : filteredValue;
+                    handleInputChange('capacity', processedValue);
+                  }}
+                  placeholder="예: 50, 100.5, 200 등 숫자 입력"
                   className={FORM_STYLES.input.base}
-                  inputMode="numeric"
-                  pattern="[0-9]*"
+                  inputMode="decimal"
+                  pattern="[0-9.]*"
                 />
               </FormField>
               <FormField label="단위" required className="w-32">

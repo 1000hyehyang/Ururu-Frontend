@@ -136,7 +136,7 @@ export interface SellerProduct {
   id: number;
   name: string;
   description: string;
-  status: 'ACTIVE' | 'INACTIVE' | 'PENDING';
+  status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
   updatedAt: string;
   categories: SellerProductCategory[];
@@ -189,3 +189,49 @@ export interface SellerProductStats {
 }
 
 export type SellerProductStatsApiResponse = ApiResponse<SellerProductStats>;
+
+// 상품 상세 조회 API 관련 타입
+export interface SellerProductOption {
+  id: number;
+  name: string;
+  price: number;
+  imageUrl: string;
+  fullIngredients: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SellerProductNotice {
+  id: number;
+  capacity: string;
+  spec: string;
+  expiry: string;
+  usage: string;
+  manufacturer: string;
+  responsibleSeller: string;
+  countryOfOrigin: string;
+  functionalCosmetics: boolean;
+  caution: string;
+  warranty: string;
+  customerServiceNumber: string;
+}
+
+export interface SellerProductTag {
+  id: number;
+  tagCategoryName: string;
+}
+
+export interface SellerProductDetail {
+  id: number;
+  name: string;
+  description: string;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
+  categories: SellerProductCategory[];
+  productOptions: SellerProductOption[];
+  productNotice: SellerProductNotice;
+  productTags: SellerProductTag[];
+}
+
+export type SellerProductDetailApiResponse = ApiResponse<SellerProductDetail>;

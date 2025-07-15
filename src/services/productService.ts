@@ -6,6 +6,8 @@ import type {
   SellerProductListApiResponse,
   SellerProductListResponse,
   SellerProduct,
+  SellerProductDetailApiResponse,
+  SellerProductDetail,
 } from '@/types/product';
 
 /**
@@ -104,5 +106,24 @@ export class ProductService {
     }
 
     return response.data.data.content;
+  }
+
+  /**
+   * 판매자 상품 상세 조회
+   * @param productId 상품 ID
+   * @returns {Promise<SellerProductDetail>}
+   */
+  static async getSellerProductDetail(productId: number): Promise<SellerProductDetail> {
+    const response = await api.get<SellerProductDetailApiResponse>(`/products/${productId}`);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || '상품 상세 조회에 실패했습니다.');
+    }
+
+    if (!response.data.data) {
+      throw new Error('응답 데이터가 없습니다.');
+    }
+
+    return response.data.data;
   }
 }
