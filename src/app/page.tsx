@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import { FullLayout } from '@/components/layout';
 import {
   HeroCarousel,
@@ -86,7 +87,9 @@ export default function Home() {
       </div>
 
       {/* 탈퇴한 회원 알림 */}
-      <WithdrawnMemberAlert />
+      <Suspense fallback={null}>
+        <WithdrawnMemberAlert />
+      </Suspense>
     </FullLayout>
   );
 }

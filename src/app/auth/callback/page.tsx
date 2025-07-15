@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/store';
 import { CustomLayout } from '@/components/layout';
 
-export default function AuthCallbackPage() {
+const AuthCallbackContent = () => {
   const { login, checkAuth } = useAuthStore();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -56,14 +56,32 @@ export default function AuthCallbackPage() {
   }, [router, searchParams, checkAuth]);
 
   return (
-    <CustomLayout showTopBar={false} showSearchBar={false} showMainNav={false} showFooter={false}>
-      <div className="flex min-h-screen items-center justify-center bg-bg-100">
-        <div className="text-center">
-          <div className="mb-4 text-6xl">⏳</div>
-          <h1 className="mb-2 text-xl font-semibold text-text-100">로그인 처리 중...</h1>
-          <p className="text-text-200">잠시 후 자동으로 이동됩니다...</p>
-        </div>
+    <div className="flex min-h-screen items-center justify-center bg-bg-100">
+      <div className="text-center">
+        <div className="mb-4 text-6xl">⏳</div>
+        <h1 className="mb-2 text-xl font-semibold text-text-100">로그인 처리 중...</h1>
+        <p className="text-text-200">잠시 후 자동으로 이동됩니다...</p>
       </div>
+    </div>
+  );
+};
+
+export default function AuthCallbackPage() {
+  return (
+    <CustomLayout showTopBar={false} showSearchBar={false} showMainNav={false} showFooter={false}>
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center bg-bg-100">
+            <div className="text-center">
+              <div className="mb-4 text-6xl">⏳</div>
+              <h1 className="mb-2 text-xl font-semibold text-text-100">로그인 처리 중...</h1>
+              <p className="text-text-200">잠시 후 자동으로 이동됩니다...</p>
+            </div>
+          </div>
+        }
+      >
+        <AuthCallbackContent />
+      </Suspense>
     </CustomLayout>
   );
 }
