@@ -31,7 +31,24 @@ export default function AuthSuccessPage() {
         }
       } catch (error) {
         console.error('Auth status check failed:', error);
-        router.push('/login?error=auth_failed');
+
+        // 에러 메시지에 "탈퇴" 관련 문구가 포함되어 있는지 확인
+        const errorMessage = error instanceof Error ? error.message : '';
+        if (
+          errorMessage.includes('탈퇴') ||
+          errorMessage.includes('withdrawn') ||
+          errorMessage.includes('이미 사용 중인 정보')
+        ) {
+          // 메인 페이지로 이동
+          router.push('/');
+
+          // 탈퇴한 회원 알림 (약간의 지연을 두어 페이지 이동 후 표시)
+          setTimeout(() => {
+            alert('탈퇴한 회원입니다. 다시 가입해주세요.');
+          }, 100);
+        } else {
+          router.push('/login?error=auth_failed');
+        }
       }
     };
 

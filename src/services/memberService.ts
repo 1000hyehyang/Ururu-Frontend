@@ -87,3 +87,8 @@ export async function deleteShippingAddress(addressId: number) {
   const response = await api.delete(`/members/shipping-addresses/${addressId}`);
   return response.data.data;
 }
+
+export async function deleteMe() {
+  const response = await api.delete('/members/me');
+  return response.data.data;
+}

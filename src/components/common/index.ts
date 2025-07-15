@@ -13,6 +13,7 @@ export { PageHeader } from './PageHeader';
 export { EmptyState } from './EmptyState';
 export { ErrorDialog } from './ErrorDialog';
 export { SuccessDialog } from './SuccessDialog';
+export { WithdrawnMemberAlert } from './WithdrawnMemberAlert';
 export {
   LoadingSkeleton,
   CardSkeleton,
