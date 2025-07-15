@@ -25,6 +25,7 @@ export const ProductCard = ({ product, rank, className = '' }: ProductCardProps)
   const [imageError, setImageError] = useState(false);
 
   const handleImageError = () => {
+    console.error('이미지 로드 실패:', product.mainImage);
     setImageError(true);
   };
 
@@ -34,6 +35,20 @@ export const ProductCard = ({ product, rank, className = '' }: ProductCardProps)
       PRODUCT_STYLES.rankBadge.default
     );
   };
+
+  // 상품 데이터와 이미지 URL을 콘솔에 출력 (디버깅용)
+  console.log('ProductCard 상품 데이터:', {
+    id: product.id,
+    name: product.name,
+    mainImage: product.mainImage,
+    thumbnails: product.thumbnails,
+    price: product.price,
+    originalPrice: product.originalPrice,
+    discountRate: product.discountRate,
+  });
+
+  // 이미지 URL이 유효한지 확인
+  const isValidImageUrl = product.mainImage && product.mainImage.trim() !== '';
 
   return (
     <Link href={`/product/${product.id}`} className="block">
@@ -52,12 +67,12 @@ export const ProductCard = ({ product, rank, className = '' }: ProductCardProps)
 
         {/* 상품 이미지 - 정사각형 */}
         <div className="relative aspect-square w-full">
-          {!imageError ? (
+          {!imageError && isValidImageUrl ? (
             <Image
               src={product.mainImage}
-              alt={product.name}
-              width={280}
-              height={280}
+              alt={product.name || '상품 이미지'}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
               className={PRODUCT_STYLES.image.card}
               priority={false}
               onError={handleImageError}
@@ -65,7 +80,9 @@ export const ProductCard = ({ product, rank, className = '' }: ProductCardProps)
             />
           ) : (
             <div className={PRODUCT_STYLES.image.error}>
-              <span className={PRODUCT_STYLES.image.errorText}>이미지 로드 실패</span>
+              <span className={PRODUCT_STYLES.image.errorText}>
+                {!isValidImageUrl ? '이미지 없음' : '이미지 로드 실패'}
+              </span>
             </div>
           )}
         </div>
@@ -76,22 +93,27 @@ export const ProductCard = ({ product, rank, className = '' }: ProductCardProps)
             <Clock className={PRODUCT_STYLES.card.deadlineIcon} />
             <p className={PRODUCT_STYLES.card.deadlineText}>
               <span>공동 구매 마감까지 </span>
-              <span className={PRODUCT_STYLES.card.deadlineBold}>{product.remainingDays}일</span>
+              <span className={PRODUCT_STYLES.card.deadlineBold}>
+                {product.remainingDays || 0}일
+              </span>
               <span> 남았어요!</span>
             </p>
           </div>
 
           {/* 상품명 */}
-          <p className={PRODUCT_STYLES.card.productName}>{product.name}</p>
+          <p className={PRODUCT_STYLES.card.productName}>{product.name || '상품명 없음'}</p>
 
           {/* 가격 정보 */}
           <div className={PRODUCT_STYLES.card.priceContainer}>
-            <span className={PRODUCT_STYLES.card.discountRate}>{product.discountRate}%</span>
+            <span className={PRODUCT_STYLES.card.discountRate}>{product.discountRate || 0}%</span>
             <span className={PRODUCT_STYLES.card.originalPrice}>
-              {product.originalPrice.toLocaleString()}원
+              {typeof product.originalPrice === 'number'
+                ? product.originalPrice.toLocaleString()
+                : '-'}
+              원
             </span>
             <span className={PRODUCT_STYLES.card.currentPrice}>
-              {product.price.toLocaleString()}원
+              {typeof product.price === 'number' ? product.price.toLocaleString() : '-'}원
             </span>
           </div>
         </CardContent>

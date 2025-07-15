@@ -1,6 +1,7 @@
 export { HeroCarousel } from './HeroCarousel';
 export { RealtimeBestSection } from './RealtimeBestSection';
 export { PersonalizedSection } from './PersonalizedSection';
+export { default as PersonalizedSectionClient } from './PersonalizedSectionClient';
 export { CategoryRankingSection } from './CategoryRankingSection';
 export { ShortFormSection } from './ShortFormSection';
 export { ProductRankingItem } from './ProductRankingItem';

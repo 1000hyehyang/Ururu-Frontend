@@ -19,6 +19,12 @@ const nextConfig = {
         hostname: 'i.pinimg.com',
         pathname: '/**',
       },
+      // S3 버킷 도메인 추가
+      {
+        protocol: 'https',
+        hostname: 'ururu-bucket.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/**',
+      },
     ],
   },
   async rewrites() {
@@ -44,6 +50,9 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI_DEV || 'http://localhost:3000/auth/success',
     NEXT_PUBLIC_GOOGLE_REDIRECT_URI_PROD:
       process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI_PROD || 'https://www.ururu.shop/auth/success',
+    // API 기본 URL 추가
+    NEXT_PUBLIC_API_BASE_URL:
+      process.env.NODE_ENV === 'production' ? 'https://api.ururu.shop' : 'http://localhost:8080',
   },
 };
 
