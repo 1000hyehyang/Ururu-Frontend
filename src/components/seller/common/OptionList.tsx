@@ -5,18 +5,11 @@ import { Button } from '@/components/ui/button';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { X } from 'lucide-react';
 import { ImageUploadField } from './ImageUploadField';
-
-interface Option {
-  id: string;
-  name: string;
-  price: number;
-  image: File | null;
-  fullIngredients: string;
-}
+import type { ProductEditOption } from '@/types/product';
 
 interface OptionListProps {
-  options: Option[];
-  onChange: (id: string, field: keyof Option, value: any) => void;
+  options: ProductEditOption[];
+  onChange: (id: string, field: keyof ProductEditOption, value: any) => void;
   onRemove: (id: string) => void;
   onImageUpload: (id: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -28,12 +21,14 @@ function OptionCard({
   onRemove,
   onImageUpload,
 }: {
-  option: Option;
+  option: ProductEditOption;
   index: number;
-  onChange: (id: string, field: keyof Option, value: any) => void;
+  onChange: (id: string, field: keyof ProductEditOption, value: any) => void;
   onRemove: (id: string) => void;
   onImageUpload: (id: string, e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
+  const optionId = option.id !== null ? String(option.id) : `new-${index}`;
+
   return (
     <Card className={FORM_STYLES.card.option + ' mb-8'}>
       <CardContent className={FORM_STYLES.card.content + ' relative p-4'}>
@@ -44,7 +39,7 @@ function OptionCard({
             type="button"
             variant="ghost"
             size="icon"
-            onClick={() => onRemove(option.id)}
+            onClick={() => onRemove(optionId)}
             className="absolute right-4 top-4"
             aria-label="옵션 삭제"
           >
@@ -58,7 +53,7 @@ function OptionCard({
           </label>
           <Input
             value={option.name}
-            onChange={(e) => onChange(option.id, 'name', e.target.value.slice(0, 20))}
+            onChange={(e) => onChange(optionId, 'name', e.target.value.slice(0, 20))}
             placeholder="EX) 07 킥로즈"
             maxLength={20}
             className={FORM_STYLES.input.base + ' ' + FORM_STYLES.input.focus}
@@ -78,7 +73,7 @@ function OptionCard({
               value={option.price ? option.price.toLocaleString() : ''}
               onChange={(e) => {
                 const value = e.target.value.replace(/[^0-9]/g, '');
-                onChange(option.id, 'price', Number(value));
+                onChange(optionId, 'price', Number(value));
               }}
               placeholder="10,000"
               className={FORM_STYLES.input.base + ' ' + FORM_STYLES.input.focus}
@@ -93,8 +88,9 @@ function OptionCard({
             required
             placeholder="대표 이미지를 업로드하세요"
             uploadedFiles={option.image ? [option.image] : []}
-            onUpload={(e) => onImageUpload(option.id, e)}
-            id={`option-image-upload-${option.id}`}
+            existingImageUrl={option.imageUrl}
+            onUpload={(e) => onImageUpload(optionId, e)}
+            id={`option-image-upload-${optionId}`}
             variant="option"
           />
         </div>
@@ -105,7 +101,7 @@ function OptionCard({
           </label>
           <Input
             value={option.fullIngredients || ''}
-            onChange={(e) => onChange(option.id, 'fullIngredients', e.target.value)}
+            onChange={(e) => onChange(optionId, 'fullIngredients', e.target.value)}
             placeholder="전성분을 표기해주세요"
             className={FORM_STYLES.input.base + ' ' + FORM_STYLES.input.focus}
           />
@@ -120,7 +116,7 @@ export function OptionList({ options, onChange, onRemove, onImageUpload }: Optio
     <div>
       {options.map((option, idx) => (
         <OptionCard
-          key={option.id}
+          key={option.id !== null ? String(option.id) : `new-${idx}`}
           option={option}
           index={idx}
           onChange={onChange}

@@ -15,6 +15,16 @@ export interface ProductOption {
   fullIngredients: string;
 }
 
+// 상품 수정용 옵션 타입 (기존 옵션은 숫자 id, 새 옵션은 null)
+export interface ProductEditOption {
+  id: number | null;
+  name: string;
+  price: number;
+  image: File | null;
+  imageUrl?: string; // 기존 이미지 URL (수정 시에만 사용)
+  fullIngredients: string;
+}
+
 export interface RewardTier {
   participants: number;
   discount: string;
@@ -98,7 +108,7 @@ export interface ProductFormData {
   categoryMain: string;
   categoryMiddle: string;
   categorySub: string;
-  options: ProductOption[];
+  options?: ProductEditOption[];
   capacity: string;
   capacityUnit: string;
   specification: string;
@@ -116,6 +126,24 @@ export interface ProductFormData {
 export interface ProductRegistrationProps {
   categories: Category[];
   tags: Tag[];
+}
+
+export interface ProductEditProps {
+  productId: string;
+}
+
+export interface UpdateProductRequest {
+  name: string;
+  description: string;
+  categoryIds: number[];
+  tagCategoryIds: number[];
+  productOptions: Array<{
+    id: number | null;
+    name: string;
+    price: number;
+    fullIngredients: string;
+  }>;
+  productNotice: Record<string, any>;
 }
 
 // 상품 관리 API 관련 타입

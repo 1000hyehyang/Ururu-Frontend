@@ -8,10 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
 import { StatusBadge } from '@/components/common/StatusBadge';
-import { ScrollToTopButton } from '@/components/common';
+import { ScrollToTopButton, ErrorDialog, ConfirmDialog } from '@/components/common';
 import { FORM_STYLES } from '@/constants/form-styles';
 import { ProductService } from '@/services/productService';
-import type { SellerProductDetail } from '@/types/product';
+import { useProductStore } from '@/store';
+import type { SellerProductDetail, Tag } from '@/types/product';
 import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
 
 interface ProductDetailProps {
@@ -20,9 +21,18 @@ interface ProductDetailProps {
 
 export function ProductDetail({ productId }: ProductDetailProps) {
   const router = useRouter();
+  const { setCurrentProduct, setCurrentProductTags } = useProductStore();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [product, setProduct] = useState<SellerProductDetail | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; productName: string }>({
+    isOpen: false,
+    productName: '',
+  });
+  const [deleteError, setDeleteError] = useState<{ isOpen: boolean; message: string }>({
+    isOpen: false,
+    message: '',
+  });
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -31,6 +41,16 @@ export function ProductDetail({ productId }: ProductDetailProps) {
       try {
         const data = await ProductService.getSellerProductDetail(productId);
         setProduct(data);
+        setCurrentProduct(data); // 스토어에 상품 데이터 저장
+
+        // 상품의 태그 정보를 Tag 형태로 변환하여 스토어에 저장
+        if (data.productTags) {
+          const productTags: Tag[] = data.productTags.map((tag) => ({
+            value: tag.id,
+            label: tag.tagCategoryName,
+          }));
+          setCurrentProductTags(productTags);
+        }
       } catch (err: any) {
         setError(err.message || '상품 상세 정보를 불러오는데 실패했습니다.');
       } finally {
@@ -47,8 +67,36 @@ export function ProductDetail({ productId }: ProductDetailProps) {
     router.push(`/seller/products/${productId}/edit`);
   };
   const handleDelete = () => {
-    // TODO: 삭제 확인 다이얼로그 및 삭제 로직 구현
-    console.log('Delete product:', productId);
+    if (product) {
+      setDeleteConfirm({
+        isOpen: true,
+        productName: product.name,
+      });
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    const productName = deleteConfirm.productName;
+
+    try {
+      // 실제 삭제 API 호출
+      await ProductService.deleteProduct(productId);
+
+      // 삭제 후 목록으로 이동
+      router.push('/seller/products');
+    } catch (error: any) {
+      console.error('Delete failed:', error);
+      setDeleteError({
+        isOpen: true,
+        message: `"${productName}" ${error.message || '상품 삭제에 실패했습니다.'}`,
+      });
+    } finally {
+      setDeleteConfirm({ isOpen: false, productName: '' });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirm({ isOpen: false, productName: '' });
   };
 
   const getStatusBadge = (status: string) => {
@@ -185,13 +233,15 @@ export function ProductDetail({ productId }: ProductDetailProps) {
               key={option.id}
               className="flex items-center gap-6 border-b border-bg-200 pb-4 last:border-b-0 last:pb-0"
             >
-              {option.imageUrl && (
-                <img
-                  src={option.imageUrl}
-                  alt={option.name}
-                  className="h-20 w-20 rounded-lg object-cover"
-                />
-              )}
+              <img
+                src={
+                  option.imageUrl === '/images/default-product-option.jpg'
+                    ? 'https://ururu-bucket.s3.ap-northeast-2.amazonaws.com/groupbuy/thumbnail/default_thumbnail.png'
+                    : option.imageUrl
+                }
+                alt={option.name}
+                className="h-20 w-20 rounded-lg object-cover"
+              />
               <div className="flex-1">
                 <div className="flex items-center gap-4">
                   <span className="text-base font-semibold text-text-100">{option.name}</span>
@@ -301,6 +351,26 @@ export function ProductDetail({ productId }: ProductDetailProps) {
       </div>
 
       <ScrollToTopButton />
+
+      {/* 삭제 확인 모달창 */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="상품 삭제 확인"
+        message={`"${deleteConfirm.productName}"\n\n상품을 삭제하시겠습니까? 삭제하면 복구가 불가능합니다.`}
+        confirmText="삭제하기"
+        cancelText="취소"
+        variant="danger"
+      />
+
+      {/* 삭제 에러 모달창 */}
+      <ErrorDialog
+        isOpen={deleteError.isOpen}
+        onClose={() => setDeleteError({ isOpen: false, message: '' })}
+        title="상품 삭제 실패"
+        message={deleteError.message}
+      />
     </div>
   );
 }

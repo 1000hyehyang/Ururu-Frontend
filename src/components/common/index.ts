@@ -12,6 +12,7 @@ export { PointHistorySection } from './PointHistorySection';
 export { PageHeader } from './PageHeader';
 export { EmptyState } from './EmptyState';
 export { ErrorDialog } from './ErrorDialog';
+export { ConfirmDialog } from './ConfirmDialog';
 export { SuccessDialog } from './SuccessDialog';
 export { WithdrawnMemberAlert } from './WithdrawnMemberAlert';
 export {

@@ -3,6 +3,7 @@ import type { ApiResponse } from '@/types/api';
 import type {
   ProductMetadataResponse,
   CreateProductRequest,
+  UpdateProductRequest,
   SellerProductListApiResponse,
   SellerProductListResponse,
   SellerProduct,
@@ -124,6 +125,56 @@ export class ProductService {
       throw new Error('응답 데이터가 없습니다.');
     }
 
+    return response.data.data;
+  }
+
+  /**
+   * 상품 조회 (수정용)
+   * @param productId 상품 ID
+   * @returns {Promise<any>}
+   */
+  static async getProduct(productId: number): Promise<any> {
+    const response = await api.get(`/products/${productId}`);
+    if (!response.data.success) {
+      throw new Error(response.data.message || '상품 조회에 실패했습니다.');
+    }
+    return response.data.data;
+  }
+
+  /**
+   * 상품 수정
+   * @param productId 상품 ID
+   * @param product 상품 정보(JSON 직렬화)
+   * @param optionImages 옵션 이미지 파일 배열
+   */
+  static async updateProduct(
+    productId: number,
+    product: UpdateProductRequest,
+    optionImages: File[],
+  ): Promise<any> {
+    const formData = new FormData();
+    // Content-Type 명시적으로 지정
+    formData.append('product', new Blob([JSON.stringify(product)], { type: 'application/json' }));
+    optionImages.forEach((file) => {
+      formData.append('optionImages', file);
+    });
+    const response = await api.patch(`/products/${productId}`, formData);
+    if (!response.data.success) {
+      throw new Error(response.data.message || '상품 수정에 실패했습니다.');
+    }
+    return response.data.data;
+  }
+
+  /**
+   * 상품 삭제
+   * @param productId 상품 ID
+   * @returns {Promise<any>}
+   */
+  static async deleteProduct(productId: number): Promise<any> {
+    const response = await api.delete(`/products/${productId}`);
+    if (!response.data.success) {
+      throw new Error(response.data.message || '상품 삭제에 실패했습니다.');
+    }
     return response.data.data;
   }
 }

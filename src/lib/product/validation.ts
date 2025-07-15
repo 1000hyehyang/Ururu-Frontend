@@ -1,8 +1,8 @@
-import type { ProductFormData, ProductOption, Tag } from '@/types/product';
+import type { ProductFormData, ProductOption, ProductEditOption, Tag } from '@/types/product';
 
 export function validateProductForm(
   formData: ProductFormData,
-  optionArray: { items: ProductOption[] },
+  optionArray: { items: ProductEditOption[] },
   selectedTags: Tag[],
 ): string | null {
   if (!formData.name) return '상품명을 입력해주세요.';

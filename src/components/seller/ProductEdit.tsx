@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,36 +14,37 @@ import {
 } from '@/components/ui/select';
 import { FormField } from '@/components/form/FormField';
 import { FORM_STYLES } from '@/constants/form-styles';
-import { PRODUCT_CATEGORY_DATA, CAPACITY_UNITS } from '@/data/seller';
 import { useFormArray } from '@/hooks/seller/useFormArray';
 import { OptionList } from './common/OptionList';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import type {
   Category,
   Tag,
-  CreateProductRequest,
+  UpdateProductRequest,
   ProductFormData,
+  ProductOption,
   ProductEditOption,
-  ProductRegistrationProps,
+  SellerProductOption,
+  SellerProductTag,
 } from '@/types/product';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
-import { useEffect } from 'react';
 import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
 import { ProductService } from '@/services/productService';
 import { SuccessDialog } from '@/components/common/SuccessDialog';
 import { ErrorDialog } from '@/components/common/ErrorDialog';
 import { validateProductForm } from '@/lib/product/validation';
+import { PRODUCT_CATEGORY_DATA, CAPACITY_UNITS } from '@/data/seller';
 
-export function ProductRegistration({ categories, tags }: ProductRegistrationProps) {
+export function ProductEdit({ productId }: { productId: number }) {
   const router = useRouter();
+
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
     categoryMain: '',
     categoryMiddle: '',
     categorySub: '',
-    options: [],
     capacity: '',
     capacityUnit: 'ml',
     specification: '',
@@ -57,6 +58,76 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
     qualityStandard: '',
     customerService: '',
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
+  // 옵션 관리 로직을 useFormArray로 대체
+  const optionArray = useFormArray<ProductEditOption>([]);
+
+  // 상품 데이터 및 메타데이터 로딩
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        // 1. 메타데이터 로딩 (카테고리, 태그)
+        const metadata = await ProductService.getProductMetadata();
+        setCategories(metadata.categories);
+        setTags(metadata.tags);
+        // 2. 상품 데이터 로딩 (API에서 직접 조회)
+        const product = await ProductService.getProduct(productId);
+        setFormData({
+          name: product.name || '',
+          description: product.description || '',
+          categoryMain: product.categories?.[0]?.name || '',
+          categoryMiddle: product.categories?.[1]?.name || '',
+          categorySub: product.categories?.[2]?.name || '',
+          capacity: product.productNotice?.capacity?.replace(/[^0-9.]/g, '') || '',
+          capacityUnit: product.productNotice?.capacity?.replace(/[0-9.]/g, '') || 'ml',
+          specification: product.productNotice?.spec || '',
+          expiryDate: product.productNotice?.expiry || '',
+          usage: product.productNotice?.usage || '',
+          manufacturer: product.productNotice?.manufacturer || '',
+          seller: product.productNotice?.responsibleSeller || '',
+          country: product.productNotice?.countryOfOrigin || '',
+          functionalTest: product.productNotice?.functionalCosmetics ? 'yes' : 'no',
+          precautions: product.productNotice?.caution || '',
+          qualityStandard: product.productNotice?.warranty || '',
+          customerService: product.productNotice?.customerServiceNumber || '',
+        });
+        // 옵션 초기화
+        if (product.productOptions) {
+          optionArray.set(
+            product.productOptions.map((opt: SellerProductOption) => ({
+              id: opt.id, // 숫자 id 그대로 유지
+              name: opt.name,
+              price: opt.price,
+              image: null, // 새로 업로드된 이미지
+              imageUrl: opt.imageUrl, // 원본 URL 그대로 유지 (ImageUploadField에서 처리)
+              fullIngredients: opt.fullIngredients,
+            })),
+          );
+        }
+        // 태그 초기화
+        if (product.productTags) {
+          // 태그 이름으로 매칭
+          const matchedTags = metadata.tags.filter((tag: Tag) =>
+            product.productTags.some((pt: SellerProductTag) => pt.tagCategoryName === tag.label),
+          );
+          setSelectedTags(matchedTags);
+        }
+      } catch (err: any) {
+        setError(err.message || '데이터를 불러오지 못했습니다.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productId]);
 
   const handleInputChange = (field: keyof ProductFormData, value: any) => {
     setFormData((prev) => ({
@@ -66,7 +137,7 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
   };
 
   // 옵션 관리 로직을 useFormArray로 대체
-  const optionArray = useFormArray<ProductEditOption>(formData.options);
+  // (중복 선언 제거)
 
   // 기존 addOption, removeOption, updateOption, handleImageUpload 대체
   const handleOptionChange = (id: string, field: keyof ProductEditOption, value: any) => {
@@ -89,6 +160,11 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
     }
   };
   const handleOptionRemove = (id: string) => {
+    if (optionArray.items.length <= 1) {
+      setOptionError('최소 1개 옵션은 필요합니다');
+      return;
+    }
+
     // id가 "new-{index}" 형태인지 확인
     const newOptionMatch = id.match(/^new-(\d+)$/);
     if (newOptionMatch) {
@@ -108,7 +184,7 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
   };
   const handleAddOption = () => {
     optionArray.add({
-      id: null,
+      id: null, // 새 옵션은 null로 설정
       name: '',
       price: 0,
       image: null,
@@ -119,11 +195,13 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [optionError, setOptionError] = useState<string | null>(null);
   const handleSuccessDialogClose = () => {
     setSubmitSuccess(false);
-    router.push('/seller/products');
+    router.push(`/seller/products/${productId}`);
   };
   const handleErrorDialogClose = () => setSubmitError(null);
+  const handleOptionErrorDialogClose = () => setOptionError(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,14 +250,23 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
       const tagCategoryIds = selectedTags.map((tag) => tag.value);
       // 옵션
       const productOptions = optionArray.items.map((opt) => ({
+        id: opt.id, // 기존 옵션은 숫자 id, 새 옵션은 null
         name: opt.name,
         price: opt.price,
         fullIngredients: opt.fullIngredients,
       }));
-      // 옵션 이미지
-      const optionImages = optionArray.items
-        .map((opt) => opt.image)
-        .filter((img): img is File => !!img);
+
+      // 옵션 이미지 (모든 옵션에 대해 이미지 필요)
+      const optionImages = optionArray.items.map((opt) => {
+        if (opt.image) {
+          // 새로 업로드된 이미지가 있으면 그것을 사용
+          return opt.image;
+        } else {
+          // 기존 이미지가 있거나 새 옵션이면 빈 파일 생성
+          return new File([], 'empty.jpg', { type: 'image/jpeg' });
+        }
+      });
+
       // 상품 공시
       const productNotice = {
         capacity: formData.capacity + (formData.capacityUnit ? formData.capacityUnit : ''),
@@ -194,7 +281,7 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
         warranty: formData.qualityStandard,
         customerServiceNumber: formData.customerService,
       };
-      const product: CreateProductRequest = {
+      const product: UpdateProductRequest = {
         name: formData.name,
         description: formData.description,
         categoryIds,
@@ -202,18 +289,14 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
         productOptions,
         productNotice,
       };
-      await ProductService.createProduct(product, optionImages);
+      await ProductService.updateProduct(productId, product, optionImages);
       setSubmitSuccess(true);
     } catch (err: any) {
-      setSubmitError(err?.message || '상품 등록에 실패했습니다.');
+      setSubmitError(err?.message || '상품 수정에 실패했습니다.');
     } finally {
       setSubmitLoading(false);
     }
   };
-
-  // 카테고리/태그 로딩/에러 상태 관리
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // 카테고리 변경 핸들러
   const handleCategoryMainChange = (value: string) => {
@@ -271,21 +354,9 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
   };
 
   // 태그 비동기 로딩/에러/선택 상태 관리
-  const [tagList, setTagList] = useState<Tag[]>([]);
-  const [tagLoading, setTagLoading] = useState(false);
-  const [tagError, setTagError] = useState<string | null>(null);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  // (중복 선언 제거)
 
-  useEffect(() => {
-    setTagLoading(true);
-    setTagError(null);
-    // 비동기 태그 데이터 로딩 (실제 API 연동 시 ProductService.getProductMetadata() 등 사용)
-    Promise.resolve(tags)
-      .then((data) => setTagList(data))
-      .catch((e) => setTagError('태그를 불러오지 못했습니다.'))
-      .finally(() => setTagLoading(false));
-  }, [tags]);
-
+  // 태그 토글 로직을 ProductRegistration과 동일하게 수정
   const handleTagToggle = (tag: Tag) => {
     setSelectedTags((prev) => {
       if (prev.find((t) => t.value === tag.value)) {
@@ -299,10 +370,32 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
     setSelectedTags((prev) => prev.filter((t) => t.value !== tag.value));
   };
 
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-10 md:px-0">
+        <h1 className="mb-10 text-center text-3xl font-semibold text-text-100">상품 수정</h1>
+        <div className="space-y-4">
+          <LoadingSkeleton className="h-12 w-full" />
+          <LoadingSkeleton className="h-32 w-full" />
+          <LoadingSkeleton className="h-64 w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-10 md:px-0">
+        <h1 className="mb-10 text-center text-3xl font-semibold text-text-100">상품 수정</h1>
+        <div className="text-center text-red-500">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-0">
       {/* 타이틀 */}
-      <h1 className="mb-10 text-center text-3xl font-semibold text-text-100">상품 등록</h1>
+      <h1 className="mb-10 text-center text-3xl font-semibold text-text-100">상품 수정</h1>
       <form onSubmit={handleSubmit} className="space-y-16">
         {/* 상품 기본 정보 */}
         <section>
@@ -647,26 +740,32 @@ export function ProductRegistration({ categories, tags }: ProductRegistrationPro
           </div>
         </section>
 
-        {/* 등록 버튼 */}
+        {/* 수정 버튼 */}
         <div className="pt-8">
           <Button
             type="submit"
             className="h-12 w-full rounded-lg bg-primary-300 text-sm font-medium text-text-on transition hover:opacity-80 focus:ring-primary-300 active:opacity-90"
             disabled={submitLoading}
           >
-            {submitLoading ? '등록 중...' : '등록하기'}
+            {submitLoading ? '수정 중...' : '수정하기'}
           </Button>
           <ErrorDialog
             isOpen={!!submitError}
             onClose={handleErrorDialogClose}
-            title="상품 등록 실패"
+            title="상품 수정 실패"
             message={submitError || ''}
+          />
+          <ErrorDialog
+            isOpen={!!optionError}
+            onClose={handleOptionErrorDialogClose}
+            title="옵션 수정 실패"
+            message={optionError || ''}
           />
           <SuccessDialog
             isOpen={submitSuccess}
             onClose={handleSuccessDialogClose}
-            title="상품 등록 완료"
-            message="상품이 성공적으로 등록되었습니다."
+            title="상품 수정 완료"
+            message="상품이 성공적으로 수정되었습니다."
           />
         </div>
       </form>

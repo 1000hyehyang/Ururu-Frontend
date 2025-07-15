@@ -9,6 +9,7 @@ interface ImageUploadFieldProps {
   accept?: string;
   placeholder?: string;
   uploadedFiles?: File[];
+  existingImageUrl?: string; // 기존 이미지 URL 추가
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemove?: (index: number) => void;
   id: string;
@@ -22,6 +23,7 @@ export function ImageUploadField({
   accept = 'image/*',
   placeholder = '이미지를 업로드하세요',
   uploadedFiles = [],
+  existingImageUrl,
   onUpload,
   onRemove,
   id,
@@ -74,6 +76,35 @@ export function ImageUploadField({
             <span className="mt-2 text-xs text-text-200">{uploadedFiles[0].name}</span>
           </div>
         )}
+
+        {/* 기존 이미지 표시 (새 이미지가 업로드되지 않았을 때만) */}
+        {!multiple &&
+          uploadedFiles.length === 0 &&
+          existingImageUrl &&
+          existingImageUrl !== '/images/default-product-option.jpg' && (
+            <div className="mt-4 flex flex-col items-center">
+              <div
+                className="relative"
+                style={{
+                  maxWidth: isOptionVariant ? 120 : 240,
+                  maxHeight: isOptionVariant ? 90 : 180,
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={existingImageUrl}
+                  alt="기존 이미지"
+                  className="rounded-lg object-contain"
+                  style={{
+                    maxWidth: isOptionVariant ? 120 : 240,
+                    maxHeight: isOptionVariant ? 90 : 180,
+                    width: 'auto',
+                    height: 'auto',
+                  }}
+                />
+              </div>
+            </div>
+          )}
         {/* 파일명/개수 표시 */}
         {uploadedFiles.length > 0 && (
           <div className="mt-2 flex items-center justify-center gap-2">
