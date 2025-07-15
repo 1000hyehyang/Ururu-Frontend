@@ -5,53 +5,82 @@ import { Order } from '@/types/order';
 
 interface ReviewButtonProps {
   item: Order['items'][0];
+  disabled?: boolean;
   className?: string;
 }
 
-export function ReviewButton({ item, className = '' }: ReviewButtonProps) {
+export function ReviewButton({ item, disabled = false, className = '' }: ReviewButtonProps) {
   const buttonStyle =
     'h-8 min-w-[80px] rounded-lg border border-bg-300 bg-bg-100 text-xs text-text-300 shadow-none transition-colors hover:bg-bg-200';
 
   if (item.hasReview) {
-    return <Button className={`${buttonStyle} ${className}`}>리뷰 보기</Button>;
+    return (
+      <Button disabled={disabled} className={`${buttonStyle} ${className}`}>
+        리뷰 보기
+      </Button>
+    );
   }
 
-  return <Button className={`${buttonStyle} ${className}`}>리뷰 작성</Button>;
+  return (
+    <Button disabled={disabled} className={`${buttonStyle} ${className}`}>
+      리뷰 작성
+    </Button>
+  );
 }
 
 interface RefundButtonProps {
-  canRefund: boolean;
-  refundDeadline: Date;
-  deliveryStatus: Order['deliveryStatus'];
+  canRefundOthers: boolean;
+  orderStatus: Order['status'];
   className?: string;
 }
 
-export function RefundButton({
-  canRefund,
-  refundDeadline,
-  deliveryStatus,
-  className = '',
-}: RefundButtonProps) {
-  const isRefundExpired = new Date() > refundDeadline;
-  const isDelivered = deliveryStatus === 'delivered' || deliveryStatus === 'completed';
+export function RefundButton({ canRefundOthers, orderStatus, className = '' }: RefundButtonProps) {
+  const isInProgress = orderStatus === 'in_progress';
+  const isRefundPending = orderStatus === 'refund_pending';
+
+  // OPEN(진행중)이면 "주문 취소" - 항상 가능
+  // 그 외에는 "환불 요청" - canRefundOthers 기준
+  // 환불 대기중이면 "환불 신청됨" - 비활성화
+  let buttonText = '주문 취소';
+  let isDisabled = false;
+
+  if (isRefundPending) {
+    buttonText = '환불 신청됨';
+    isDisabled = true;
+  } else if (!isInProgress) {
+    buttonText = '환불 요청';
+    isDisabled = !canRefundOthers;
+  }
 
   return (
     <Button
-      disabled={!canRefund || isRefundExpired}
+      disabled={isDisabled}
       className={`${FORM_STYLES.button.refundButton} h-10 w-full ${className}`}
     >
-      {isRefundExpired ? '환불 기간 만료' : isDelivered ? '환불하기' : '주문 취소'}
+      {buttonText}
     </Button>
   );
 }
 
 interface DeliveryButtonProps {
   deliveryStatus: Order['deliveryStatus'];
+  orderStatus: Order['status'];
+  trackingNumber?: string;
   className?: string;
 }
 
-export function DeliveryButton({ deliveryStatus, className = '' }: DeliveryButtonProps) {
-  if (deliveryStatus === 'completed') {
+export function DeliveryButton({
+  deliveryStatus,
+  orderStatus,
+  trackingNumber,
+  className = '',
+}: DeliveryButtonProps) {
+  // 공구 진행중이면 배송조회 불가
+  const isInProgress = orderStatus === 'in_progress';
+  const isCompleted = deliveryStatus === 'completed';
+  const isRefundPending = orderStatus === 'refund_pending';
+
+  if (isCompleted) {
     return (
       <Button disabled className={`${FORM_STYLES.button.submit} h-10 w-full ${className}`}>
         배송 완료
@@ -59,8 +88,27 @@ export function DeliveryButton({ deliveryStatus, className = '' }: DeliveryButto
     );
   }
 
+  if (isInProgress) {
+    return (
+      <Button disabled className={`${FORM_STYLES.button.deliveryButton} h-10 w-full ${className}`}>
+        공구 진행중
+      </Button>
+    );
+  }
+
+  if (isRefundPending) {
+    return (
+      <Button disabled className={`${FORM_STYLES.button.deliveryButton} h-10 w-full ${className}`}>
+        환불 대기중
+      </Button>
+    );
+  }
+
   return (
-    <Button className={`${FORM_STYLES.button.deliveryButton} h-10 w-full ${className}`}>
+    <Button
+      className={`${FORM_STYLES.button.deliveryButton} h-10 w-full ${className}`}
+      data-tracking-number={trackingNumber}
+    >
       배송 조회
     </Button>
   );

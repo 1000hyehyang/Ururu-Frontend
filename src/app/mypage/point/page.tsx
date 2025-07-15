@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { MyPageLayout } from '@/components/mypage/MyPageLayout';
 import {
@@ -6,9 +8,11 @@ import {
   PointHistorySection,
   PointEarnMethodAccordion,
 } from '@/components/common';
-import { MOCK_POINT_BALANCE, MOCK_POINT_EARN_METHODS, MOCK_POINT_HISTORY } from '@/data/point';
+import { MOCK_POINT_BALANCE, MOCK_POINT_EARN_METHODS } from '@/data/point';
 import { formatPrice } from '@/lib/format-utils';
 import { AuthGuard } from '@/components/auth/AuthGuard';
+import { usePointHistory } from '@/hooks/usePointHistory';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 function NoticeCard() {
   return <NoticeBanner message="다양한 활동을 통해 포인트를 적립할 수 있어요!" className="mb-4" />;
@@ -38,7 +42,39 @@ function EarnMethods() {
 }
 
 function PointHistoryList() {
-  return <PointHistorySection history={MOCK_POINT_HISTORY} />;
+  const { history, loading, loadingMore, error, hasMore, loadMore } = usePointHistory();
+  const sentinelRef = useInfiniteScroll({
+    hasMore,
+    loading: loadingMore,
+    onLoadMore: loadMore,
+  });
+
+  if (loading) {
+    return <div className="p-4 text-center">포인트 내역을 불러오는 중...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-center text-red-500">{error}</div>;
+  }
+
+  return (
+    <div>
+      <PointHistorySection history={history} />
+
+      {/* 무한 스크롤 감지용 요소 */}
+      <div ref={sentinelRef} className="h-4" />
+
+      {/* 추가 로딩 표시 */}
+      {loadingMore && (
+        <div className="p-4 text-center text-gray-500">더 많은 내역을 불러오는 중...</div>
+      )}
+
+      {/* 더 이상 데이터가 없을 때 */}
+      {!hasMore && history.length > 0 && (
+        <div className="p-4 text-center text-gray-400">모든 포인트 내역을 확인했습니다.</div>
+      )}
+    </div>
+  );
 }
 
 function PointPageContent() {

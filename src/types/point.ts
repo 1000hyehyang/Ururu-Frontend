@@ -23,3 +23,27 @@ export interface PointEarnMethod {
   label: string;
   amount: number;
 }
+
+// API 응답 타입들
+export interface PointTransactionResponse {
+  id: number;
+  type: 'USED' | 'EARNED';
+  source: 'GROUPBUY' | 'REVIEW' | 'INVITE' | 'ADMIN' | 'REFUND';
+  amount: number;
+  reason: string;
+  createdAt: string;
+}
+
+export interface PointTransactionsResponse {
+  transactions: PointTransactionResponse[];
+  page: number;
+  size: number;
+  total: number;
+}
+
+export interface PointTransactionParams {
+  type?: 'all' | 'USED' | 'EARNED';
+  source?: 'all' | 'GROUPBUY' | 'REVIEW' | 'INVITE' | 'ADMIN' | 'REFUND';
+  page?: number;
+  size?: number;
+}

@@ -19,12 +19,6 @@ const nextConfig = {
         hostname: 'i.pinimg.com',
         pathname: '/**',
       },
-      // S3 버킷 도메인 추가
-      {
-        protocol: 'https',
-        hostname: 'ururu-bucket.s3.ap-northeast-2.amazonaws.com',
-        pathname: '/**',
-      },
       {
         protocol: 'https',
         hostname: 'ururu-bucket.s3.ap-northeast-2.amazonaws.com',

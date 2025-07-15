@@ -15,9 +15,8 @@ interface OrderCardProps {
 }
 
 export function OrderCard({ order }: OrderCardProps) {
-  // 리워드 달성 뱃지 노출 조건: 진행중/확정 + progressRate >= 20
-  const showRewardBadge =
-    (order.status === 'in_progress' || order.status === 'confirmed') && order.progressRate >= 20;
+  // 리워드 달성 뱃지 노출 조건 - 환불 대기중만 아니면 표시
+  const showRewardBadge = order.status !== 'refund_pending' && order.progressRate > 0;
 
   // 실패한 주문인지 확인
   const isFailedOrder = order.status === 'failed';
@@ -31,13 +30,10 @@ export function OrderCard({ order }: OrderCardProps) {
       </div>
 
       {/* 환불 대기중인 경우 환불 정보 표시 */}
-      {order.status === 'refund_pending' && order.refundRequestDate && (
+      {order.status === 'refund_pending' && order.refundReason && (
         <div className="mb-4 rounded-lg border border-bg-300 bg-bg-200 p-3">
           <div className="mb-2 flex items-center space-x-2">
             <span className="text-sm font-medium text-text-100">환불 신청</span>
-            <span className="text-xs text-text-200">
-              {order.refundRequestDate.toLocaleDateString('ko-KR')}
-            </span>
           </div>
           <p className="text-sm text-text-200">{order.refundReason}</p>
         </div>
@@ -72,16 +68,20 @@ export function OrderCard({ order }: OrderCardProps) {
                   <p className="text-xs text-text-200">수량: {item.quantity}개</p>
                   <p className="text-xl font-bold text-text-100">{formatPrice(item.price)}원</p>
                 </div>
-                {/* 모바일에서는 리뷰 버튼을 상품 정보 아래에 배치 */}
-                <div className="mt-3 flex items-center lg:hidden">
-                  <ReviewButton item={item} />
-                </div>
+                {/* 모바일에서는 리뷰 버튼을 상품 정보 아래에 배치 - 환불 대기중 제외 */}
+                {order.status !== 'refund_pending' && (
+                  <div className="mt-3 flex items-center lg:hidden">
+                    <ReviewButton item={item} />
+                  </div>
+                )}
               </div>
 
-              {/* 데스크톱에서는 리뷰 버튼을 오른쪽에 배치 */}
-              <div className="hidden items-center lg:flex">
-                <ReviewButton item={item} />
-              </div>
+              {/* 데스크톱에서는 리뷰 버튼을 오른쪽에 배치 - 환불 대기중 제외 */}
+              {order.status !== 'refund_pending' && (
+                <div className="hidden items-center lg:flex">
+                  <ReviewButton item={item} />
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -97,12 +97,12 @@ export function OrderCard({ order }: OrderCardProps) {
         {/* 실패한 주문이 아닌 경우에만 배송/취소 버튼 표시 */}
         {!isFailedOrder && (
           <div className="flex gap-2">
-            <RefundButton
-              canRefund={order.canRefund}
-              refundDeadline={order.refundDeadline}
+            <RefundButton canRefundOthers={order.canRefundOthers} orderStatus={order.status} />
+            <DeliveryButton
               deliveryStatus={order.deliveryStatus}
+              orderStatus={order.status}
+              trackingNumber={order.trackingNumber}
             />
-            <DeliveryButton deliveryStatus={order.deliveryStatus} />
           </div>
         )}
       </div>

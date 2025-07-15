@@ -21,12 +21,13 @@ export interface Order {
   shippingFee: number;
   items: OrderItem[];
   canRefund: boolean;
+  canRefundOthers: boolean; // 기타 사유 환불 가능 여부
   canTrackDelivery: boolean;
+  isGroupBuy: boolean; // 공구 상품 여부
+  trackingNumber?: string; // 운송장번호
   // 추가된 필드들
   deliveryStatus: 'preparing' | 'shipping' | 'delivered' | 'completed';
-  refundDeadline: Date; // 취소 마감일
   // 환불 관련 필드 추가
-  refundRequestDate?: Date; // 환불 신청일
   refundReason?: string; // 환불 사유
   refundType?: 'CHANGE_OF_MIND' | 'DEFECTIVE_PRODUCT' | 'DELIVERY_ISSUE' | 'OTHER';
 }
@@ -39,3 +40,44 @@ export interface OrderStatusSummary {
 }
 
 export type OrderStatusFilter = 'all' | 'in_progress' | 'confirmed' | 'refund_pending';
+
+// API 응답 타입들
+export interface ApiOrderItem {
+  groupbuyOptionId: number;
+  productOptionId: number;
+  status: 'OPEN' | 'SUCCESS' | 'FAIL';
+  rate: number;
+  optionImage: string;
+  productName: string;
+  optionName: string;
+  quantity: number;
+  price: number;
+}
+
+export interface ApiOrder {
+  orderId: string;
+  createdAt: string;
+  trackingNumber?: string;
+  totalAmount: number;
+  canRefundChangeOfMind: boolean;
+  canRefundOthers: boolean;
+  refundType?: 'CHANGE_OF_MIND' | 'DEFECTIVE_PRODUCT' | 'DELIVERY_ISSUE' | 'OTHER';
+  refundReason?: string;
+  orderItems: ApiOrderItem[];
+}
+
+export interface ApiOrdersResponse {
+  inProgress: number;
+  confirmed: number;
+  refundPending: number;
+  orders: ApiOrder[];
+  page: number;
+  size: number;
+  total: number;
+}
+
+export interface ApiOrdersParams {
+  status?: 'all' | 'in_progress' | 'confirmed' | 'refund_pending';
+  page?: number;
+  size?: number;
+}
