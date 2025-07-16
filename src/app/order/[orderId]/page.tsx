@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 import { OrderItem, PointUsage, PaymentSummary, DeliveryAddress } from '@/components/order';
+import { PaymentWindow } from '@/components/payment/PaymentWindow';
 import { AuthGuard } from '@/components/auth/AuthGuard';
 import { LoadingSkeleton } from '@/components/common/LoadingSkeleton';
 import { getShippingAddresses } from '@/services/memberService';
@@ -143,6 +144,18 @@ function OrderPageContent() {
   // 포인트 관련 상태
   const [pointAmount, setPointAmount] = useState<number>(0);
 
+  // 결제 성공 처리 함수
+  const handlePaymentSuccess = (paymentKey: string, orderId: string, amount: number) => {
+    // 결제 완료 시 이탈 경고 제거
+    if ((window as any).orderPageBeforeUnload) {
+      window.removeEventListener('beforeunload', (window as any).orderPageBeforeUnload);
+      (window as any).orderPageBeforeUnload = null;
+    }
+
+    // 결제 성공 시 성공 페이지로 이동
+    router.push(`/payment/success?paymentKey=${paymentKey}&orderId=${orderId}&amount=${amount}`);
+  };
+
   // 페이지 이탈 시 경고 메시지
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -151,6 +164,9 @@ function OrderPageContent() {
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // 결제 완료 시 이벤트 리스너 제거용으로 전역에 저장
+    (window as any).orderPageBeforeUnload = handleBeforeUnload;
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -327,13 +343,44 @@ function OrderPageContent() {
             finalPrice={finalPrice}
           />
 
-          {/* 결제하기 버튼 */}
-          <Button
-            onClick={handlePayment}
-            className="h-12 w-full rounded-lg bg-primary-300 text-sm font-medium text-text-on transition hover:opacity-80 focus:ring-primary-300 active:opacity-90 md:h-14 md:text-base"
-          >
-            결제하기
-          </Button>
+          {/* 결제 */}
+          <PaymentWindow
+            orderId={orderId}
+            usePoints={pointAmount}
+            phone={
+              deliveryType === 'new'
+                ? newAddressData.phone
+                : shippingAddresses?.find((addr) => addr.id.toString() === selectedAddressId)
+                    ?.phone || ''
+            }
+            zonecode={
+              deliveryType === 'new'
+                ? newAddressData.zonecode
+                : shippingAddresses?.find((addr) => addr.id.toString() === selectedAddressId)
+                    ?.zonecode || ''
+            }
+            address1={
+              deliveryType === 'new'
+                ? newAddressData.address1
+                : shippingAddresses?.find((addr) => addr.id.toString() === selectedAddressId)
+                    ?.address1 || ''
+            }
+            address2={
+              deliveryType === 'new'
+                ? newAddressData.address2
+                : shippingAddresses?.find((addr) => addr.id.toString() === selectedAddressId)
+                    ?.address2 || ''
+            }
+            amount={finalPrice}
+            orderName={
+              orderData.orderItems.length > 0
+                ? orderData.orderItems.length === 1
+                  ? orderData.orderItems[0].productName
+                  : `${orderData.orderItems[0].productName} 외 ${orderData.orderItems.length - 1}건`
+                : '주문상품'
+            }
+            onPaymentSuccess={handlePaymentSuccess}
+          />
         </div>
       </div>
     </NoFooterLayout>

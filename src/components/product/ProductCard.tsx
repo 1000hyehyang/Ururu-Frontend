@@ -37,15 +37,17 @@ export const ProductCard = ({ product, rank, className = '' }: ProductCardProps)
   };
 
   // 상품 데이터와 이미지 URL을 콘솔에 출력 (디버깅용)
-  console.log('ProductCard 상품 데이터:', {
-    id: product.id,
-    name: product.name,
-    mainImage: product.mainImage,
-    thumbnails: product.thumbnails,
-    price: product.price,
-    originalPrice: product.originalPrice,
-    discountRate: product.discountRate,
-  });
+  if (process.env.NODE_ENV === 'development') {
+    console.log('ProductCard 상품 데이터:', {
+      id: product.id,
+      name: product.name,
+      mainImage: product.mainImage,
+      thumbnails: product.thumbnails,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      discountRate: product.discountRate,
+    });
+  }
 
   // 이미지 URL이 유효한지 확인
   const isValidImageUrl = product.mainImage && product.mainImage.trim() !== '';

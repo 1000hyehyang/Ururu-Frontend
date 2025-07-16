@@ -36,7 +36,9 @@ function MyPageContent() {
           setBeautyProfileData(beautyProfileResponse);
         } catch (beautyError) {
           // 뷰티프로필이 없는 경우 무시
-          console.log('뷰티프로필이 없습니다.');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('뷰티프로필이 없습니다.');
+          }
         }
 
         setError(null);

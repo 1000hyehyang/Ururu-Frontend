@@ -16,7 +16,9 @@ const AuthCallbackContent = () => {
       const reason = searchParams.get('reason');
       const provider = searchParams.get('provider');
 
-      console.log('Auth callback:', { result, reason, provider });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Auth callback:', { result, reason, provider });
+      }
 
       // 탈퇴한 회원인 경우
       if (result === 'error' && reason === 'withdrawn_member') {

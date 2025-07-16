@@ -25,14 +25,18 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
 
     if (requireAuth && !isAuthenticated) {
       // 인증이 필요한 페이지인데 로그인되지 않은 경우
-      console.log('AuthGuard: 인증 필요 - 로그인 페이지로 리다이렉트');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('AuthGuard: 인증 필요 - 로그인 페이지로 리다이렉트');
+      }
       router.push('/login');
       return;
     }
 
     if (requireSeller && user?.user_type !== 'SELLER') {
       // 판매자 권한이 필요한 페이지인데 판매자가 아닌 경우
-      console.log('AuthGuard: 판매자 권한 필요 - 권한 없음 페이지로 리다이렉트');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('AuthGuard: 판매자 권한 필요 - 권한 없음 페이지로 리다이렉트');
+      }
       router.push('/unauthorized');
       return;
     }
