@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
+import { Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { FullLayout } from '@/components/layout/layouts';
 import { categoryItems } from '@/data/categories';
@@ -82,7 +83,7 @@ function convertToProduct(item: GroupBuyTop3): Product {
   };
 }
 
-export default function CategoryPage() {
+function CategoryPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sub = searchParams.get('sub');
@@ -342,5 +343,13 @@ export default function CategoryPage() {
         )}
       </div>
     </FullLayout>
+  );
+}
+
+export default function CategoryPageWrapper() {
+  return (
+    <Suspense fallback={null}>
+      <CategoryPage />
+    </Suspense>
   );
 }

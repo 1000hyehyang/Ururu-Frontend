@@ -6,6 +6,7 @@ import type {
   GroupBuyCreateRequest,
   GroupBuyCreateApiResponse,
 } from '@/types/groupbuy';
+import { Suspense } from 'react';
 
 export async function fetchGroupBuyTop3(): Promise<GroupBuyTop3Response> {
   const res = await api.get<GroupBuyTop3Response>('/groupbuys/top3');
