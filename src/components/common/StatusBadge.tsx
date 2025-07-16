@@ -1,7 +1,15 @@
 import { cn } from '@/lib/utils';
 
 interface StatusBadgeProps {
-  status: 'in_progress' | 'confirmed' | 'failed' | 'refund_pending' | 'COMPLETED' | 'REJECTED';
+  status:
+    | 'in_progress'
+    | 'confirmed'
+    | 'failed'
+    | 'refund_pending'
+    | 'APPROVED'
+    | 'COMPLETED'
+    | 'REJECTED'
+    | 'FAILED';
   className?: string;
 }
 
@@ -23,6 +31,11 @@ export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
           label: '환불 대기중',
           className: 'bg-bg-200 text-text-200',
         };
+      case 'APPROVED':
+        return {
+          label: '환불 승인',
+          className: 'bg-primary-100 text-primary-200 border border-primary-200',
+        };
       case 'COMPLETED':
         return {
           label: '환불 완료',
@@ -32,6 +45,11 @@ export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
         return {
           label: '환불 거절',
           className: 'bg-bg-200 text-text-300',
+        };
+      case 'FAILED':
+        return {
+          label: '환불 실패',
+          className: 'bg-primary-100 text-primary-200 border border-primary-200',
         };
       default:
         return {

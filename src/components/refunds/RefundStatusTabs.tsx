@@ -19,10 +19,11 @@ export function RefundStatusTabs({ summary, activeFilter, onFilterChange }: Refu
     {
       value: 'all' as const,
       label: '전체',
-      count: summary.completed + summary.rejected,
     },
-    { value: 'COMPLETED' as const, label: '환불 완료', count: summary.completed },
-    { value: 'REJECTED' as const, label: '환불 거절', count: summary.rejected },
+    { value: 'REJECTED' as const, label: '환불 거절' },
+    { value: 'APPROVED' as const, label: '환불 승인' },
+    { value: 'COMPLETED' as const, label: '환불 완료' },
+    { value: 'FAILED' as const, label: '환불 실패' },
   ];
 
   const selectedTab = tabs.find((tab) => tab.value === activeFilter);
@@ -35,9 +36,6 @@ export function RefundStatusTabs({ summary, activeFilter, onFilterChange }: Refu
         className={`flex items-center gap-2 rounded-lg border border-bg-300 bg-bg-100 px-3 py-2 text-sm font-medium text-text-100 transition-colors ${FORM_STYLES.hover.bg200}`}
       >
         <span>{selectedTab?.label || '전체'}</span>
-        <span className="rounded-full bg-bg-300 px-1.5 py-0.5 text-xs text-text-200">
-          {selectedTab?.count || 0}
-        </span>
         <ChevronDown className="h-4 w-4" />
       </button>
 
@@ -53,12 +51,7 @@ export function RefundStatusTabs({ summary, activeFilter, onFilterChange }: Refu
               }}
               className={`block w-full px-4 py-2 text-left text-sm text-text-100 first:rounded-t-lg last:rounded-b-lg ${FORM_STYLES.hover.bg200}`}
             >
-              <div className="flex items-center justify-between">
-                <span>{tab.label}</span>
-                <span className="rounded-full bg-bg-300 px-1.5 py-0.5 text-xs text-text-200">
-                  {tab.count}
-                </span>
-              </div>
+              <span>{tab.label}</span>
             </button>
           ))}
         </div>

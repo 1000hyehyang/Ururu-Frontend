@@ -10,7 +10,7 @@ interface RefundCardProps {
 
 export function RefundCard({ refund }: RefundCardProps) {
   // 공구 실패로 인한 자동 환불인지 확인
-  const isFailedOrderRefund = refund.type === 'OTHER' && refund.reason.includes('공구 실패');
+  const isFailedOrderRefund = refund.type === 'GROUPBUY_FAIL';
 
   return (
     <div className="rounded-lg bg-bg-100 py-6">
@@ -38,9 +38,7 @@ export function RefundCard({ refund }: RefundCardProps) {
           <div className="mb-1 flex items-center space-x-2">
             <span className="text-sm font-medium text-text-100">공구 실패 자동 환불</span>
             {refund.refundedAt && (
-              <span className="text-xs text-text-200">
-                {refund.refundedAt.toLocaleDateString('ko-KR')} 완료
-              </span>
+              <span className="text-xs text-text-200">{formatDate(refund.refundedAt)} 완료</span>
             )}
           </div>
           <p className="text-sm text-text-200">{refund.reason}</p>
@@ -89,7 +87,7 @@ export function RefundCard({ refund }: RefundCardProps) {
           <div className="flex items-center justify-between">
             <span className="text-sm text-text-200">환불 사유</span>
             <span className="text-sm font-medium text-text-100">
-              {isFailedOrderRefund ? '공구 실패' : getRefundTypeLabel(refund.type)}
+              {getRefundTypeLabel(refund.type)}
             </span>
           </div>
           {/* 공구 실패인 경우 추가 안내 */}
@@ -100,12 +98,14 @@ export function RefundCard({ refund }: RefundCardProps) {
               </div>
             </div>
           )}
-          {/* 환불 완료일 (완료된 경우만) */}
-          {refund.status === 'COMPLETED' && refund.refundedAt && (
+          {/* 환불 승인일 (승인/완료/실패된 경우만) */}
+          {(refund.status === 'APPROVED' ||
+            refund.status === 'COMPLETED' ||
+            refund.status === 'FAILED') && (
             <div className="flex items-center justify-between">
-              <span className="text-sm text-text-200">환불 완료일</span>
+              <span className="text-sm text-text-200">환불 승인일</span>
               <span className="text-sm font-medium text-text-100">
-                {formatDate(refund.refundedAt)}
+                {refund.refundedAt ? formatDate(refund.refundedAt) : formatDate(refund.createdAt)}
               </span>
             </div>
           )}

@@ -12,6 +12,16 @@ import {
 // 주문 관련 변환 함수들
 import { ApiOrder, ApiOrderItem, Order, OrderItem } from '@/types/order';
 
+// 환불 관련 변환 함수들
+import {
+  ApiRefund,
+  ApiRefundItem,
+  Refund,
+  RefundItem,
+  RefundType,
+  RefundStatus,
+} from '@/types/refund';
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -139,5 +149,66 @@ export function convertOrder(apiOrder: ApiOrder): Order {
     deliveryStatus: 'preparing', // API에서 제공되지 않으므로 기본값
     refundReason: apiOrder.refundReason,
     refundType: apiOrder.refundType,
+  };
+}
+
+// API 환불 아이템을 UI 타입으로 변환
+export function convertRefundItem(apiItem: ApiRefundItem): RefundItem {
+  return {
+    id: `${apiItem.groupbuyOptionId}-${apiItem.productOptionId}`,
+    productId: apiItem.productOptionId.toString(),
+    productName: apiItem.productName,
+    productImage: apiItem.optionImage,
+    option: apiItem.optionName,
+    quantity: apiItem.quantity,
+    price: apiItem.price,
+    refundAmount: apiItem.price, // API에서 제공되지 않으므로 price와 동일하게 설정
+  };
+}
+
+// API 환불 타입을 UI 타입으로 변환
+function convertRefundType(apiType: string): RefundType {
+  const typeMap: Record<string, RefundType> = {
+    GROUPBUY_FAILED: 'GROUPBUY_FAIL', // API에서는 GROUPBUY_FAILED로 옴
+    CHANGE_OF_MIND: 'CHANGE_OF_MIND',
+    DEFECTIVE_PRODUCT: 'DEFECTIVE_PRODUCT',
+    DELIVERY_ISSUE: 'DELIVERY_ISSUE',
+    OTHER: 'OTHER',
+  };
+
+  return typeMap[apiType] || 'OTHER';
+}
+
+// API 환불 상태를 UI 상태로 변환
+function convertRefundStatus(apiStatus: string): RefundStatus {
+  const statusMap: Record<string, RefundStatus> = {
+    APPROVED: 'APPROVED',
+    COMPLETED: 'COMPLETED',
+    REJECTED: 'REJECTED',
+    FAILED: 'FAILED',
+    PENDING: 'APPROVED', // 대기중은 승인으로 처리
+  };
+  return statusMap[apiStatus] || 'APPROVED';
+}
+
+// API 환불을 UI 타입으로 변환
+export function convertRefund(apiRefund: ApiRefund): Refund {
+  const items = apiRefund.refundItems.map(convertRefundItem);
+
+  return {
+    id: apiRefund.refundId,
+    paymentId: apiRefund.refundId, // API에서 제공되지 않으므로 refundId로 대체
+    refundNumber: apiRefund.refundId, // API에서 제공되지 않으므로 refundId로 대체
+    type: convertRefundType(apiRefund.type),
+    reason: apiRefund.reason,
+    amount: apiRefund.totalAmount,
+    status: convertRefundStatus(apiRefund.status),
+    rejectReason: apiRefund.rejectionReason, // API 필드명 수정
+    refundedAt: apiRefund.refundAt ? new Date(apiRefund.refundAt) : undefined, // API 필드명 수정
+    createdAt: new Date(apiRefund.createdAt),
+    updatedAt: new Date(apiRefund.createdAt), // API에서 제공되지 않으므로 createdAt으로 대체
+    scope: 'INDIVIDUAL_GROUP_BUY', // API에서 제공되지 않으므로 기본값
+    items,
+    estimatedCompletionDate: undefined, // API에서 제공되지 않으므로 기본값
   };
 }

@@ -27,6 +27,21 @@ export const formatDate = (date: Date) => {
     .replace(/\./g, '.');
 };
 
+// 날짜 + 시간 포맷 함수 (YYYY.MM.DD HH:MM 형식)
+export const formatDateTime = (date: Date) => {
+  return date
+    .toLocaleString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
+    .replace(/\./g, '.')
+    .replace(/\s/g, ' ');
+};
+
 // 가격 포맷 함수 (천 단위 콤마)
 export const formatPrice = (price: number) => {
   return new Intl.NumberFormat('ko-KR').format(price);

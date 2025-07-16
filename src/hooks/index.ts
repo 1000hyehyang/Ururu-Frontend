@@ -21,6 +21,7 @@ export { useImageCarousel } from './useImageCarousel';
 export { useAuthGuard } from './useAuthGuard';
 export { usePointHistory } from './usePointHistory';
 export { useOrders } from './useOrders';
+export { useRefunds } from './useRefunds';
 export { useInfiniteScroll } from './useInfiniteScroll';
 export * from './usePostcode';
 
