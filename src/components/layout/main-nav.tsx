@@ -11,9 +11,14 @@ import { categoryItems } from '@/data/categories';
 import { DESKTOP_NAV_ITEMS } from '@/constants/navigation';
 import { NavigationLink } from './navigation-link';
 import { useSafeNavigation } from '@/hooks/useSafeNavigation';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRef } from 'react';
 
 export function MainNav() {
   const { isActive } = useSafeNavigation();
+  const router = useRouter();
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div className="hidden bg-bg-100 desktop:block">
@@ -21,7 +26,10 @@ export function MainNav() {
         <NavigationMenu className="h-12">
           <NavigationMenuList className="space-x-2">
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="font-pretendard font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium">
+              <NavigationMenuTrigger
+                className="font-pretendard font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium"
+                ref={triggerRef}
+              >
                 카테고리
               </NavigationMenuTrigger>
               <NavigationMenuContent className="bg-bg-100">
@@ -37,6 +45,10 @@ export function MainNav() {
                             <div
                               key={subItem.title}
                               className="font-pretendard block cursor-pointer rounded px-3 py-1 text-xs font-normal text-text-200 transition-all hover:bg-bg-200 hover:font-medium hover:text-text-100"
+                              onClick={() => {
+                                router.push(`/category?sub=${encodeURIComponent(subItem.title)}`);
+                                triggerRef.current?.click();
+                              }}
                             >
                               {subItem.title}
                             </div>

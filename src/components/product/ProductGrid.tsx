@@ -20,11 +20,9 @@ export const ProductGrid = ({
       className={`grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 ${className}`}
     >
       {products.map((product, index) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          rank={showRanking ? index + 1 : undefined}
-        />
+        <div key={product.id} id={`product-${product.id}`}>
+          <ProductCard product={product} rank={showRanking ? index + 1 : undefined} />
+        </div>
       ))}
     </div>
   );
