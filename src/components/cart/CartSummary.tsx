@@ -9,6 +9,7 @@ interface CartSummaryProps {
   shippingFee: number;
   totalPrice: number;
   selectedCount: number;
+  isLoading?: boolean;
   onPurchase: () => void;
 }
 
@@ -17,6 +18,7 @@ export function CartSummary({
   shippingFee,
   totalPrice,
   selectedCount,
+  isLoading = false,
   onPurchase,
 }: CartSummaryProps) {
   return (
@@ -57,9 +59,16 @@ export function CartSummary({
       <Button
         className="h-12 w-full rounded-lg bg-primary-300 text-sm font-medium text-text-on transition hover:opacity-80 focus:ring-primary-300 active:opacity-90 md:h-14 md:text-base"
         onClick={onPurchase}
-        disabled={selectedCount === 0}
+        disabled={selectedCount === 0 || isLoading}
       >
-        구매하기 ({selectedCount}개)
+        {isLoading ? (
+          <div className="flex items-center space-x-2">
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-text-on border-t-transparent"></div>
+            <span>주문 생성 중...</span>
+          </div>
+        ) : (
+          `구매하기 (${selectedCount}개)`
+        )}
       </Button>
     </div>
   );

@@ -10,12 +10,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { AddressFormFields } from '@/components/mypage/address/AddressFormFields';
-import { addressListData, mockAddressData } from '@/data/address';
 import { usePostcode } from '@/hooks/usePostcode';
+import type { ShippingAddress } from '@/types/api';
 
 interface DeliveryAddressProps {
   deliveryType: 'existing' | 'new';
   selectedAddressId: string;
+  shippingAddresses: ShippingAddress[] | null;
+  isLoading?: boolean;
   newAddressData: {
     addressName: string;
     isDefault: boolean;
@@ -32,6 +34,8 @@ interface DeliveryAddressProps {
 export function DeliveryAddress({
   deliveryType,
   selectedAddressId,
+  shippingAddresses,
+  isLoading = false,
   newAddressData,
   onDeliveryTypeChange,
   onAddressIdChange,
@@ -86,21 +90,42 @@ export function DeliveryAddress({
           {deliveryType === 'existing' && (
             <div className="mb-6">
               <label className="mb-3 block text-sm font-medium text-text-100">배송지 선택</label>
-              <Select value={selectedAddressId} onValueChange={onAddressIdChange}>
+              <Select
+                value={selectedAddressId}
+                onValueChange={onAddressIdChange}
+                disabled={isLoading}
+              >
                 <SelectTrigger className="h-12 w-full rounded-lg border-bg-300 bg-bg-100 px-4 text-left text-sm text-text-100 placeholder:text-text-300 focus:border-primary-300 focus:ring-2 focus:ring-primary-300">
-                  <SelectValue placeholder="배송지를 선택해주세요" />
+                  <SelectValue
+                    placeholder={isLoading ? '배송지를 불러오는 중...' : '배송지를 선택해주세요'}
+                  />
                 </SelectTrigger>
                 <SelectContent className="z-[80] max-h-60 bg-bg-100">
-                  {addressListData.map((address) => (
-                    <SelectItem
-                      key={address.id}
-                      value={address.id.toString()}
-                      className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
-                    >
-                      {address.addressName}
-                      {address.isDefault ? ' (기본)' : ''}
+                  {isLoading ? (
+                    <SelectItem value="loading" disabled>
+                      <div className="flex items-center space-x-2">
+                        <div className="border-t-primary-400 h-4 w-4 animate-spin rounded-full border-2 border-primary-200"></div>
+                        <span>배송지를 불러오는 중...</span>
+                      </div>
                     </SelectItem>
-                  ))}
+                  ) : shippingAddresses && shippingAddresses.length > 0 ? (
+                    shippingAddresses
+                      .filter((address: ShippingAddress) => address.id != null)
+                      .map((address: ShippingAddress) => (
+                        <SelectItem
+                          key={address.id}
+                          value={address.id.toString()}
+                          className="cursor-pointer text-text-100 hover:bg-primary-100 hover:text-primary-300 focus:bg-primary-100 focus:text-primary-300"
+                        >
+                          {address.label}
+                          {address.is_default ? ' (기본)' : ''}
+                        </SelectItem>
+                      ))
+                  ) : (
+                    <SelectItem value="empty" disabled>
+                      등록된 배송지가 없습니다
+                    </SelectItem>
+                  )}
                 </SelectContent>
               </Select>
             </div>

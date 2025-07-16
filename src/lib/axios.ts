@@ -18,7 +18,6 @@ api.interceptors.response.use(
       return Promise.reject({
         message: '네트워크 연결을 확인해주세요.',
         status: 0,
-        code: 'NETWORK_ERROR',
       });
     }
 

@@ -6,15 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { useUIStore, useAuthStore } from '@/store';
-import { useCartBadge } from '@/hooks/useCartBadge';
 import { useLogout } from '@/hooks/useLogout';
+// import { useCartBadge } from '@/hooks/useCartBadge'; // TODO: API 연동 완료 후 활성화
 
 // 태블릿/모바일 헤더 컴포넌트
 function MobileHeader() {
   const { searchOpen, toggleSearch } = useUIStore();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const { handleLogout } = useLogout();
-  const { cartItemCount } = useCartBadge();
+  // const { cartItemCount } = useCartBadge(); // TODO: API 연동 완료 후 활성화
 
   return (
     <header className="sticky top-0 z-40 bg-bg-100 desktop:hidden" role="banner">
@@ -58,11 +58,12 @@ function MobileHeader() {
             <Link href="/cart" aria-label="장바구니로 이동">
               <Button variant="ghost" size="sm" className="relative p-2" aria-label="장바구니">
                 <ShoppingCart className="h-5 w-5 text-text-200" aria-hidden="true" />
-                {cartItemCount > 0 && (
+                {/* TODO: API 연동 완료 후 뱃지 활성화 */}
+                {/* {cartItemCount > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-300 text-xs font-medium text-text-on">
                     {cartItemCount > 99 ? '99+' : cartItemCount}
                   </span>
-                )}
+                )} */}
               </Button>
             </Link>
           </nav>

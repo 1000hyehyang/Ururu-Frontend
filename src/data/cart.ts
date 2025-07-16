@@ -1,10 +1,20 @@
-import type { CartItem } from '@/types/cart';
+import type { CartItem, CartProduct } from '@/types/cart';
 import { mockProductData } from './mock-product';
+
+// Mock 데이터를 위한 CartProduct 변환
+const mockCartProduct: CartProduct = {
+  id: mockProductData.id,
+  name: mockProductData.name,
+  mainImage: mockProductData.mainImage,
+  price: mockProductData.price,
+  originalPrice: mockProductData.originalPrice,
+  discountRate: mockProductData.discountRate,
+};
 
 export const mockCartData: CartItem[] = [
   {
     id: '1',
-    product: mockProductData,
+    product: mockCartProduct,
     selectedOption: {
       value: 'option1',
       label: '[태닝 시나모롤]03 베어 그레이프 기획',
@@ -15,7 +25,7 @@ export const mockCartData: CartItem[] = [
   {
     id: '2',
     product: {
-      ...mockProductData,
+      ...mockCartProduct,
       id: '2',
     },
     selectedOption: {
@@ -28,7 +38,7 @@ export const mockCartData: CartItem[] = [
   {
     id: '3',
     product: {
-      ...mockProductData,
+      ...mockCartProduct,
       id: '3',
     },
     selectedOption: {
@@ -46,7 +56,7 @@ export const calculateCartSummary = (cartItems: CartItem[]) => {
     return sum + item.product.price * item.quantity;
   }, 0);
 
-  const shippingFee = totalProductPrice >= 50000 ? 0 : 3000;
+  const shippingFee = totalProductPrice >= 0 ? 0 : 3000;
   const totalPrice = totalProductPrice + shippingFee;
 
   return {

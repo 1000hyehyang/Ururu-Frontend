@@ -46,6 +46,60 @@ export interface SocialLoginRequest {
   code: string;
 }
 
+// 장바구니 관련 타입
+export interface ApiCartItem {
+  cartItemId: number;
+  groupbuyOptionId: number;
+  quantity: number;
+  productName: string;
+  optionName: string;
+  optionImage: string;
+  price: number;
+  endsAt: string;
+}
+
+export interface ApiCartResponse {
+  cartItems: ApiCartItem[];
+}
+
+// 장바구니 수량 변경 관련 타입
+export interface ApiUpdateCartQuantityRequest {
+  quantityChange: number;
+}
+
+export interface ApiUpdateCartQuantityResponse {
+  cartItemId: number;
+  quantity: number;
+}
+
+// 장바구니 아이템 삭제 관련 타입
+export interface ApiDeleteCartItemResponse {
+  success: boolean;
+  message: string;
+}
+
+// 장바구니 주문 생성 관련 타입
+export interface ApiCreateOrderRequest {
+  cartItemIds: number[];
+}
+
+export interface ApiCreateOrderItem {
+  groupbuyOptionId: number;
+  quantity: number;
+  productName: string;
+  optionName: string;
+  price: number;
+  optionImage: string;
+}
+
+export interface ApiCreateOrderResponse {
+  orderId: string;
+  orderItems: ApiCreateOrderItem[];
+  totalAmount: number;
+  availablePoints: number;
+  shippingFee: number;
+}
+
 // 배송지 관련 타입
 export interface ShippingAddress {
   id: number;

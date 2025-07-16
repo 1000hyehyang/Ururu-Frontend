@@ -38,12 +38,19 @@ export function PaymentSummary({
               {totalProductPrice.toLocaleString()}원
             </span>
           </div>
+
+          {/* 포인트 사용 (항상 표시) */}
           <div className="flex items-center justify-between">
             <span className="text-sm text-text-200 md:text-base">포인트 사용</span>
-            <span className="whitespace-nowrap text-sm text-primary-300 md:text-base">
-              -{pointAmount.toLocaleString()}원
+            <span
+              className={`whitespace-nowrap text-sm font-medium md:text-base ${
+                pointAmount > 0 ? 'text-primary-300' : 'text-text-200'
+              }`}
+            >
+              -{pointAmount.toLocaleString()}P
             </span>
           </div>
+
           <div className="flex items-center justify-between">
             <span className="text-sm text-text-200 md:text-base">배송비</span>
             <span className="whitespace-nowrap text-sm text-text-100 md:text-base">

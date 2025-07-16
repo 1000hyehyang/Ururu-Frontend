@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormField } from '@/components/form/FormField';
@@ -19,6 +19,43 @@ export function PointUsage({
   onPointAmountChange,
   onUseAllPoints,
 }: PointUsageProps) {
+  const [inputValue, setInputValue] = useState<string>(pointAmount.toString());
+
+  // pointAmount가 변경될 때마다 inputValue 동기화
+  useEffect(() => {
+    setInputValue(pointAmount.toString());
+  }, [pointAmount]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    // 빈 문자열이면 0으로 처리
+    if (value === '') {
+      setInputValue('');
+      onPointAmountChange(0);
+      return;
+    }
+
+    const numericValue = parseInt(value) || 0;
+
+    // 음수 입력 방지
+    if (numericValue < 0) {
+      setInputValue('0');
+      onPointAmountChange(0);
+      return;
+    }
+
+    // 보유 포인트 초과 방지 - 입력 자체를 제한
+    if (numericValue > availablePoint) {
+      setInputValue(availablePoint.toString());
+      onPointAmountChange(availablePoint);
+      return;
+    }
+
+    setInputValue(value);
+    onPointAmountChange(numericValue);
+  };
+
   return (
     <div className="space-y-6">
       {/* 보유 포인트 안내 */}
@@ -36,9 +73,11 @@ export function PointUsage({
           <Input
             type="number"
             placeholder="0P"
-            value={pointAmount}
-            onChange={(e) => onPointAmountChange(Number(e.target.value) || 0)}
-            className={FORM_STYLES.input.base + ' ' + FORM_STYLES.input.focus + ' text-right'}
+            value={inputValue}
+            onChange={handleInputChange}
+            min="0"
+            max={availablePoint}
+            className={`${FORM_STYLES.input.base} ${FORM_STYLES.input.focus} text-right`}
           />
         </FormField>
         <div className="flex items-end">

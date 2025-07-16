@@ -11,12 +11,19 @@ import type { CartItem as CartItemType } from '@/types/cart';
 
 interface CartItemProps {
   item: CartItemType;
+  isUpdating?: boolean;
   onToggleSelect: (itemId: string) => void;
   onUpdateQuantity: (itemId: string, quantity: number) => void;
   onRemove: (itemId: string) => void;
 }
 
-export function CartItem({ item, onToggleSelect, onUpdateQuantity, onRemove }: CartItemProps) {
+export function CartItem({
+  item,
+  isUpdating = false,
+  onToggleSelect,
+  onUpdateQuantity,
+  onRemove,
+}: CartItemProps) {
   const handleQuantityChange = (delta: number) => {
     const newQuantity = item.quantity + delta;
     if (newQuantity >= 1) {
@@ -90,7 +97,11 @@ export function CartItem({ item, onToggleSelect, onUpdateQuantity, onRemove }: C
             {/* 수량 조절 및 총 가격 */}
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               {/* 수량 조절 */}
-              <QuantityControl quantity={item.quantity} onQuantityChange={handleQuantityChange} />
+              <QuantityControl
+                quantity={item.quantity}
+                onQuantityChange={handleQuantityChange}
+                disabled={isUpdating}
+              />
 
               {/* 총 가격 */}
               <div className="flex items-center justify-between sm:justify-end">

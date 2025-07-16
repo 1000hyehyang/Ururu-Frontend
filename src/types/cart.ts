@@ -8,7 +8,7 @@ export type CartProduct = Pick<
 
 export interface CartItem {
   id: string;
-  product: Product;
+  product: CartProduct;
   selectedOption: {
     value: string;
     label: string;
