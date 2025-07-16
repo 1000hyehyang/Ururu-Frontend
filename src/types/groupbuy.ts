@@ -88,3 +88,75 @@ export interface GroupBuyCreateApiResponse {
     createdAt: string;
   };
 }
+
+// 공동구매 상세 조회 API 관련 타입
+export interface GroupBuyProductDetail {
+  id: number;
+  name: string;
+  description: string;
+  categoryIds: string[];
+  tags: string[];
+  productNotice: GroupBuyProductNotice;
+}
+
+export interface GroupBuyOptionDetail {
+  id: number;
+  productOptionId: number;
+  optionName: string;
+  optionImageUrl: string;
+  fullIngredients: string;
+  initialStock: number;
+  currentStock: number;
+  soldQuantity: number;
+  isOutOfStock: boolean;
+  priceOverride: number;
+  salePrice: number;
+}
+
+export interface GroupBuyImageDetail {
+  id: number;
+  imageUrl: string;
+  displayOrder: number;
+}
+
+export interface GroupBuyProductNotice {
+  id: number;
+  capacity: string;
+  spec: string;
+  expiry: string;
+  usage: string;
+  manufacturer: string;
+  responsibleSeller: string;
+  countryOfOrigin: string;
+  functionalCosmetics: boolean;
+  caution: string;
+  warranty: string;
+  customerServiceNumber: string;
+}
+
+export interface GroupBuyDetail {
+  id: number;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  displayFinalPrice: number;
+  startPrice: number;
+  maxDiscountRate: number;
+  discountStages: GroupBuyDiscountStage[];
+  limitQuantityPerMember: number;
+  status: 'OPEN' | 'CLOSED' | 'COMPLETED';
+  endsAt: string;
+  currentOrderCount: number;
+  product: GroupBuyProductDetail;
+  options: GroupBuyOptionDetail[];
+  images: GroupBuyImageDetail[];
+  productNotice: GroupBuyProductNotice;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GroupBuyDetailResponse {
+  success: boolean;
+  message: string;
+  data: GroupBuyDetail;
+}

@@ -33,6 +33,9 @@ export const DEFAULT_PRODUCT_BREADCRUMB: BreadcrumbItem[] = [
   { label: '스킨/토너', href: '/category/skincare/skin-toner' },
 ];
 
+// 브레드크럼 최대 깊이 상수
+const MAX_BREADCRUMB_DEPTH = 2;
+
 // 브레드크럼 생성 유틸리티 함수
 export const generateBreadcrumb = (category: ProductCategory): BreadcrumbItem[] => {
   // 메인 카테고리 확인
@@ -53,4 +56,47 @@ export const generateBreadcrumb = (category: ProductCategory): BreadcrumbItem[] 
 
   // 서브 카테고리가 있으면 반환, 없으면 메인 카테고리 반환
   return subCategory || mainCategory;
+};
+
+// 카테고리 ID 배열로부터 브레드크럼 생성 함수
+export const generateBreadcrumbFromCategoryIds = (categoryIds: string[]): BreadcrumbItem[] => {
+  if (!categoryIds || categoryIds.length === 0) {
+    return DEFAULT_PRODUCT_BREADCRUMB;
+  }
+
+  // 🎯 모든 카테고리가 이름인지 확인 (더 안전한 검증)
+  const isAlreadyName = categoryIds.every(
+    (id) =>
+      typeof id === 'string' &&
+      id.trim().length > 0 &&
+      !id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i), // UUID 제외
+  );
+
+  if (isAlreadyName) {
+    // 이미 카테고리 이름이 온 경우
+
+    const breadcrumb: BreadcrumbItem[] = [];
+
+    const categoriesToShow = categoryIds.slice(0, MAX_BREADCRUMB_DEPTH);
+
+    categoriesToShow.forEach((categoryName, index) => {
+      if (categoryName) {
+        // URL 경로 생성 (이전 카테고리들을 포함한 경로)
+        const pathSegments = categoriesToShow
+          .slice(0, index + 1)
+          .map((cat) => encodeURIComponent(cat.toLowerCase().replace(/\s+/g, '-')));
+        const href = `/category/${pathSegments.join('/')}`;
+
+        breadcrumb.push({
+          label: categoryName,
+          href: href,
+        });
+      }
+    });
+
+    return breadcrumb;
+  }
+
+  // ID인 경우 기본 브레드크럼 반환
+  return DEFAULT_PRODUCT_BREADCRUMB;
 };

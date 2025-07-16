@@ -164,6 +164,7 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
                     key={opt.value}
                     option={opt}
                     price={product.price}
+                    product={product}
                     onRemove={handleRemoveOption}
                     onQuantityChange={handleChangeQuantity}
                   />

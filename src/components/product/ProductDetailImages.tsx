@@ -12,12 +12,14 @@ interface ProductDetailImagesProps {
   product: Product;
   className?: string;
   maxInitialImages?: number;
+  enableHeightLimit?: boolean; // 높이 제한 기능 활성화 옵션 추가
 }
 
 export const ProductDetailImages: React.FC<ProductDetailImagesProps> = ({
   product,
   className = '',
   maxInitialImages = PRODUCT_CONSTANTS.INITIAL_IMAGES.DESKTOP,
+  enableHeightLimit = true, // 기본값을 true로 설정하여 높이 제한 기능 활성화
 }) => {
   const {
     displayedImages,
@@ -29,6 +31,7 @@ export const ProductDetailImages: React.FC<ProductDetailImagesProps> = ({
   } = useProductImages({
     images: product.detailImages,
     maxInitialImages,
+    enableHeightLimit, // 높이 제한 기능 전달
   });
 
   return (
@@ -47,23 +50,26 @@ export const ProductDetailImages: React.FC<ProductDetailImagesProps> = ({
 
       {/* 데스크탑: 조건부 이미지 표시 */}
       <div className="hidden lg:block">
-        {displayedImages.map((imageSrc, index) => (
-          <div key={index} className="relative">
-            <ProductImage
-              src={imageSrc}
-              alt={`${product.name} 상세 이미지 ${index + 1}`}
-              priority={index < 2}
-            />
+        {/* 높이 제한이 활성화된 경우 컨테이너에 max-height 적용 */}
+        <div className={enableHeightLimit && !showAllImages ? 'max-h-[800px] overflow-hidden' : ''}>
+          {displayedImages.map((imageSrc, index) => (
+            <div key={index} className="relative">
+              <ProductImage
+                src={imageSrc}
+                alt={`${product.name} 상세 이미지 ${index + 1}`}
+                priority={index < 2}
+              />
 
-            {/* 첫 번째 이미지에만 블러 효과 적용 */}
-            {index === 0 && hasMoreImages && !showAllImages && (
-              <>
-                {/* 블러 효과 오버레이 */}
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-50 via-slate-50/80 to-transparent" />
-              </>
-            )}
-          </div>
-        ))}
+              {/* 첫 번째 이미지에만 블러 효과 적용 (높이 제한이 활성화된 경우) */}
+              {index === 0 && hasMoreImages && !showAllImages && enableHeightLimit && (
+                <>
+                  {/* 블러 효과 오버레이 */}
+                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-50 via-slate-50/80 to-transparent" />
+                </>
+              )}
+            </div>
+          ))}
+        </div>
 
         {/* 펼치기 버튼 */}
         {hasMoreImages && !showAllImages && (

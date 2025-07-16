@@ -12,7 +12,15 @@ export interface ProductOption {
   name: string;
   price: number;
   image: File | null;
+  imageUrl?: string; // 옵션 이미지 URL
   fullIngredients: string;
+  maxQuantity?: number; // 회원당 최대 구매 수량 제한
+  initialStock?: number; // 초기 재고
+  currentStock?: number; // 현재 재고
+  soldQuantity?: number; // 옵션별 판매량 (API의 soldQuantity)
+  currentOrderCount?: number; // 공동구매 총 판매량 (API의 currentOrderCount)
+  priceOverride?: number; // 공동구매 시작가
+  isOutOfStock?: boolean; // 품절 여부
 }
 
 // 상품 수정용 옵션 타입 (기존 옵션은 숫자 id, 새 옵션은 null)
@@ -28,6 +36,7 @@ export interface ProductEditOption {
 export interface RewardTier {
   participants: number;
   discount: string;
+  discountRate?: number; // 숫자형 할인율 추가
   achieved: boolean;
 }
 
@@ -56,9 +65,22 @@ export interface Product {
   targetParticipants: number;
   remainingDays: number;
   category: ProductCategory;
+  categoryIds?: string[]; // 카테고리 ID 배열 추가
   shippingInfo: ShippingInfo;
   rewardTiers: RewardTier[];
   options: ProductOption[];
+  tags?: string[]; // 상품 태그
+  capacity?: string; // 내용물의 용량 또는 중량
+  specification?: string; // 제품 주요 사양
+  expiryDate?: string; // 사용기한(또는 개봉 후 사용기간)
+  usage?: string; // 사용방법
+  manufacturer?: string; // 화장품제조업자
+  seller?: string; // 화장품책임판매업자
+  country?: string; // 제조국
+  functionalTest?: 'yes' | 'no'; // 기능성 화장품 식품의약품안전처 심사필 여부
+  precautions?: string; // 사용할 때의 주의사항
+  qualityStandard?: string; // 품질보증기준
+  customerService?: string; // 소비자상담 전화번호
 }
 
 export interface Category {

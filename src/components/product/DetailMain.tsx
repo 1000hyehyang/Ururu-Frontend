@@ -6,7 +6,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MobileOrderSection } from './OrderBox';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useImageCarousel, useProductTabs } from '@/hooks';
+import { useImageCarousel, useProductTabs, useProductOptions } from '@/hooks';
 import { ProductTabs } from './ProductTabs';
 import { ProductDetailImages } from './ProductDetailImages';
 import { PRODUCT_DETAIL_TABS } from '@/constants/product-detail';
@@ -20,7 +20,17 @@ interface DetailMainProps {
 
 export const DetailMain = ({ product }: DetailMainProps) => {
   const { activeTab, handleTabChange } = useProductTabs();
+  const { selectedOptions, handleSelectOption } = useProductOptions(product);
   const router = useRouter();
+
+  // 메인 이미지, 썸네일, 옵션 이미지만 포함 (detailImages 제외)
+  const allThumbnails = [
+    product.mainImage, // 메인 이미지 포함
+    ...product.thumbnails.filter((img) => img !== product.mainImage), // 중복 제거
+    ...product.options
+      .filter((option) => option.imageUrl) // 이미지가 있는 옵션만
+      .map((option) => option.imageUrl!),
+  ];
 
   const {
     mainImage,
@@ -32,12 +42,29 @@ export const DetailMain = ({ product }: DetailMainProps) => {
     scrollThumbnails,
     images: safeImages,
   } = useImageCarousel({
-    images: product.thumbnails,
+    images: allThumbnails,
     initialImage: product.mainImage,
   });
 
   const handleGoBack = () => {
     router.back();
+  };
+
+  // 썸네일 클릭 핸들러
+  const handleThumbnailClick = (imageUrl: string, index: number) => {
+    // 메인 이미지 변경 (안전장치 제거하여 직접 설정)
+    setMainImage(imageUrl);
+
+    // 옵션 이미지인 경우 해당 옵션 선택
+    // 메인 이미지(1개) + 썸네일들 이후부터 옵션 이미지 시작
+    const thumbnailCount = 1 + product.thumbnails.filter((img) => img !== product.mainImage).length;
+    const optionIndex = index - thumbnailCount;
+    if (optionIndex >= 0 && optionIndex < product.options.length) {
+      const option = product.options[optionIndex];
+      if (option && !selectedOptions.some((selected) => selected.value === option.id)) {
+        handleSelectOption(option.id);
+      }
+    }
   };
 
   return (
@@ -79,22 +106,40 @@ export const DetailMain = ({ product }: DetailMainProps) => {
             }}
             onScroll={checkScrollButtons}
           >
-            {safeImages.map((thumb, idx) => (
-              <button
-                key={thumb}
-                onClick={() => setMainImage(thumb)}
-                className="min-h-[64px] min-w-[64px] rounded-xl transition-all hover:opacity-80 md:min-h-[80px] md:min-w-[80px] lg:min-h-[120px] lg:min-w-[120px]"
-                aria-label={`썸네일 ${idx + 1}`}
-              >
-                <Image
-                  src={thumb}
-                  alt={`썸네일 ${idx + 1}`}
-                  width={PRODUCT_CONSTANTS.IMAGE.THUMBNAIL_WIDTH}
-                  height={PRODUCT_CONSTANTS.IMAGE.THUMBNAIL_HEIGHT}
-                  className={PRODUCT_STYLES.image.thumbnail}
-                />
-              </button>
-            ))}
+            {safeImages.map((thumb, idx) => {
+              // 메인 이미지(1개) + 썸네일들 이후부터 옵션 이미지 시작
+              const thumbnailCount =
+                1 + product.thumbnails.filter((img) => img !== product.mainImage).length;
+              const isOptionThumbnail = idx >= thumbnailCount;
+              const optionIndex = idx - thumbnailCount;
+              const option = isOptionThumbnail ? product.options[optionIndex] : null;
+
+              // 현재 선택된 이미지인지 확인 (메인 이미지와 비교)
+              const isCurrentImage = thumb === mainImage;
+              // 옵션 선택 상태 확인
+              const isOptionSelected = option
+                ? selectedOptions.some((selected) => selected.value === option.id)
+                : false;
+
+              return (
+                <button
+                  key={thumb}
+                  onClick={() => handleThumbnailClick(thumb, idx)}
+                  className="min-h-[64px] min-w-[64px] overflow-hidden rounded-xl transition-all hover:opacity-80 md:min-h-[80px] md:min-w-[80px] lg:min-h-[120px] lg:min-w-[120px]"
+                  style={{ aspectRatio: '1 / 1' }}
+                  aria-label={isOptionThumbnail ? `${option?.name} 옵션` : `상품 이미지 ${idx + 1}`}
+                >
+                  <Image
+                    src={thumb}
+                    alt={isOptionThumbnail ? `${option?.name} 옵션` : `상품 이미지 ${idx + 1}`}
+                    width={PRODUCT_CONSTANTS.IMAGE.THUMBNAIL_WIDTH}
+                    height={PRODUCT_CONSTANTS.IMAGE.THUMBNAIL_HEIGHT}
+                    className={PRODUCT_STYLES.image.thumbnail}
+                  />
+                  {/* 옵션 선택 표시 제거 - ring-2 테두리로 충분히 구분됨 */}
+                </button>
+              );
+            })}
           </div>
 
           {/* 좌우 스크롤 버튼 (데스크탑만) */}
@@ -138,7 +183,7 @@ export const DetailMain = ({ product }: DetailMainProps) => {
       {activeTab === 0 && <ProductDetailImages product={product} className="mt-6" />}
 
       {/* 구매정보 탭: 상품정보 제공고시/교환환불 안내 */}
-      {activeTab === 1 && <ProductPurchaseInfoSection />}
+      {activeTab === 1 && <ProductPurchaseInfoSection product={product} />}
     </div>
   );
 };

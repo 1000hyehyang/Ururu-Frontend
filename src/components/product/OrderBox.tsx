@@ -4,7 +4,7 @@ import React from 'react';
 import type { Product } from '@/types/product';
 import { Card } from '@/components/ui/card';
 import { useProductOptions, useProductActions } from '@/hooks';
-import { generateBreadcrumb } from '@/constants/product-detail';
+import { generateBreadcrumbFromCategoryIds } from '@/constants/product-detail';
 import { Breadcrumb } from './Breadcrumb';
 import { OptionCard } from './OptionCard';
 import { ProductInfo } from './ProductInfo';
@@ -41,7 +41,10 @@ export const OrderBox = ({ product }: OrderBoxProps) => {
       {/* 데스크탑: 우측 고정 주문박스 */}
       <Card className="hidden w-[489px] flex-col items-start gap-1 rounded-2xl border-0 bg-bg-100 px-8 shadow-none xl:flex">
         {/* 브레드크럼 네비게이션 */}
-        <Breadcrumb items={generateBreadcrumb(product.category)} className="mb-3" />
+        <Breadcrumb
+          items={generateBreadcrumbFromCategoryIds(product.categoryIds || [])}
+          className="mb-3"
+        />
 
         {/* 상품 정보 */}
         <ProductInfo product={product} className="w-full" variant="desktop" />
@@ -61,6 +64,7 @@ export const OrderBox = ({ product }: OrderBoxProps) => {
                 key={opt.value}
                 option={opt}
                 price={product.price}
+                product={product}
                 onRemove={handleRemoveOption}
                 onQuantityChange={handleChangeQuantity}
               />

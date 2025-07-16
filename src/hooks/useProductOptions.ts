@@ -21,14 +21,24 @@ export const useProductOptions = (product: Product) => {
   // 수량 변경
   const handleChangeQuantity = (value: string, delta: number) => {
     setSelectedOptions((prev) =>
-      prev.map((o) =>
-        o.value === value ? { ...o, quantity: Math.max(1, o.quantity + delta) } : o,
-      ),
+      prev.map((o) => {
+        if (o.value === value) {
+          const option = product.options.find((opt) => opt.id === value);
+          const maxQuantity = option?.maxQuantity || 999; // 기본값 999
+          const newQuantity = Math.max(1, Math.min(maxQuantity, o.quantity + delta));
+          return { ...o, quantity: newQuantity };
+        }
+        return o;
+      }),
     );
   };
 
-  // 총 금액 계산
-  const totalPrice = selectedOptions.reduce((sum, o) => sum + product.price * o.quantity, 0);
+  // 총 금액 계산 - 각 옵션의 개별 가격 사용
+  const totalPrice = selectedOptions.reduce((sum, o) => {
+    const option = product.options.find((opt) => opt.id === o.value);
+    const optionPrice = option ? option.price : product.price;
+    return sum + optionPrice * o.quantity;
+  }, 0);
 
   // 총 수량 계산
   const totalCount = selectedOptions.reduce((sum, o) => sum + o.quantity, 0);

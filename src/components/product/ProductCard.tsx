@@ -51,7 +51,7 @@ export const ProductCard = ({ product, rank, className = '' }: ProductCardProps)
   const isValidImageUrl = product.mainImage && product.mainImage.trim() !== '';
 
   return (
-    <Link href={`/product/${product.id}`} className="block">
+    <Link href={`/groupbuys/${product.id}`} className="block">
       <Card className={`${PRODUCT_STYLES.card.container} ${className}`}>
         {/* 랭킹 뱃지 */}
         {rank && (
