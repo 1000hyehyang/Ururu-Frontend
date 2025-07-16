@@ -117,11 +117,15 @@ export function ProductManagement() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'ACTIVE':
-        return <StatusBadge status="in_progress" />;
+        return (
+          <span className="inline-flex items-center rounded-lg bg-primary-100 px-3 py-1.5 text-xs font-medium text-primary-300">
+            공구 등록
+          </span>
+        );
       case 'INACTIVE':
         return (
           <span className="inline-flex items-center rounded-lg bg-bg-200 px-3 py-1.5 text-xs font-medium text-text-200">
-            공구 대기중
+            공구 등록 대기
           </span>
         );
       case 'DELETED':
@@ -189,13 +193,13 @@ export function ProductManagement() {
         <div className="flex flex-1 flex-col items-center">
           <span className="text-2xl font-bold text-text-100 md:text-4xl">{activeCount}</span>
           <span className="mt-1 text-center text-sm font-medium text-text-200 md:text-lg">
-            공구 중
+            공구 등록
           </span>
         </div>
         <div className="flex flex-1 flex-col items-center">
           <span className="text-2xl font-bold text-text-100 md:text-4xl">{inactiveCount}</span>
           <span className="mt-1 text-center text-sm font-medium text-text-200 md:text-lg">
-            공구 대기
+            공구 등록 대기
           </span>
         </div>
       </div>

@@ -102,11 +102,15 @@ export function ProductDetail({ productId }: ProductDetailProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'ACTIVE':
-        return <StatusBadge status="in_progress" />;
+        return (
+          <span className="inline-flex items-center rounded-lg bg-primary-100 px-3 py-1.5 text-xs font-medium text-primary-300">
+            공구 등록
+          </span>
+        );
       case 'INACTIVE':
         return (
           <span className="inline-flex items-center rounded-lg bg-bg-200 px-3 py-1.5 text-xs font-medium text-text-200">
-            공구 대기중
+            공구 등록 대기
           </span>
         );
       default:

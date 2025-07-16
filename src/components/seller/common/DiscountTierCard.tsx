@@ -37,12 +37,19 @@ export function DiscountTierCard({ tier, index, onRemove, onUpdate }: DiscountTi
         <FormField label="최소 참여 인원" required>
           <div className="relative">
             <Input
-              type="number"
-              value={tier.minParticipants}
-              onChange={(e) => onUpdate(tier.id, 'minParticipants', Number(e.target.value))}
-              placeholder="10"
+              type="text"
+              inputMode="numeric"
+              value={tier.minParticipants || ''}
+              onChange={(e) => {
+                // 숫자만 허용하고 앞의 0 제거
+                const value = e.target.value.replace(/[^0-9]/g, '');
+                const numValue = value === '' ? 0 : parseInt(value, 10);
+                // 9,999,999 제한 적용
+                const limitedValue = Math.min(numValue, 9999999);
+                onUpdate(tier.id, 'minParticipants', limitedValue);
+              }}
+              placeholder="100"
               className={FORM_STYLES.input.base + ' pr-12'}
-              min="1"
               required
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-300">명</span>
@@ -51,13 +58,18 @@ export function DiscountTierCard({ tier, index, onRemove, onUpdate }: DiscountTi
         <FormField label="할인율" required>
           <div className="relative">
             <Input
-              type="number"
-              value={tier.discountRate}
-              onChange={(e) => onUpdate(tier.id, 'discountRate', Number(e.target.value))}
+              type="text"
+              inputMode="numeric"
+              value={tier.discountRate || ''}
+              onChange={(e) => {
+                // 숫자만 허용하고 앞의 0 제거, 최대값 100 제한
+                const value = e.target.value.replace(/[^0-9]/g, '');
+                const numValue = value === '' ? 0 : parseInt(value, 10);
+                const limitedValue = Math.min(numValue, 100);
+                onUpdate(tier.id, 'discountRate', limitedValue);
+              }}
               placeholder="10"
               className={FORM_STYLES.input.base + ' pr-8'}
-              min="0"
-              max="100"
               required
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-300">%</span>
