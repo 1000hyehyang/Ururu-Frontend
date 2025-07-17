@@ -1,6 +1,7 @@
 import './globals.css';
 import { metadata, viewport } from '@/lib/metadata';
 import { AuthProvider } from '@/components/auth/AuthProvider';
+import { Toaster } from 'sonner';
 
 export { metadata, viewport };
 
@@ -33,6 +34,7 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>{children}</AuthProvider>
+        <Toaster position="bottom-center" richColors />
       </body>
     </html>
   );

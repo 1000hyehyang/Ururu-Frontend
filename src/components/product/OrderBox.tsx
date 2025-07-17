@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import type { Product } from '@/types/product';
 import { Card } from '@/components/ui/card';
 import { useProductOptions, useProductActions } from '@/hooks';
@@ -35,6 +35,30 @@ export const OrderBox = ({ product }: OrderBoxProps) => {
   } = useProductOptions(product);
 
   const { handleShare, handleAddToCart, handleBuyNow } = useProductActions();
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  const handleAddToCartClick = async () => {
+    if (selectedOptions.length > 0) {
+      setIsAddingToCart(true);
+      try {
+        await handleAddToCart(selectedOptions, product.options);
+      } finally {
+        setIsAddingToCart(false);
+      }
+    }
+  };
+
+  const handleBuyNowClick = async () => {
+    if (selectedOptions.length > 0) {
+      setIsCreatingOrder(true);
+      try {
+        await handleBuyNow(product.id, selectedOptions);
+      } finally {
+        setIsCreatingOrder(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -83,8 +107,10 @@ export const OrderBox = ({ product }: OrderBoxProps) => {
         {/* 액션 버튼 */}
         <ActionButtons
           onShare={handleShare}
-          onAddToCart={handleAddToCart}
-          onBuyNow={handleBuyNow}
+          onAddToCart={handleAddToCartClick}
+          onBuyNow={handleBuyNowClick}
+          isBuyNowLoading={isCreatingOrder}
+          isAddToCartLoading={isAddingToCart}
         />
       </Card>
     </>

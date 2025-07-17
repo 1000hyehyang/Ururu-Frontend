@@ -7,6 +7,8 @@ import {
   ApiDeleteCartItemResponse,
   ApiCreateOrderRequest,
   ApiCreateOrderResponse,
+  ApiAddItemsToCartRequest,
+  ApiAddItemsToCartResponse,
 } from '@/types/api';
 
 /**
@@ -60,5 +62,20 @@ export async function createOrderFromCart(
   const response = await api.post<ApiResponseFormat<ApiCreateOrderResponse>>('/cart/orders', {
     cartItemIds,
   });
+  return response.data;
+}
+
+/**
+ * 여러 옵션을 한 번에 장바구니에 담기
+ * @param items - [{ groupbuyOptionId, quantity }, ...]
+ * @returns 추가된 장바구니 아이템 정보
+ */
+export async function addItemsToCart(
+  items: ApiAddItemsToCartRequest,
+): Promise<ApiResponseFormat<ApiAddItemsToCartResponse>> {
+  const response = await api.post<ApiResponseFormat<ApiAddItemsToCartResponse>>(
+    '/cart/items',
+    items,
+  );
   return response.data;
 }

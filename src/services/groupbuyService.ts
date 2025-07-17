@@ -10,6 +10,7 @@ import type {
   GroupBuyDetail,
   SellerGroupBuyListResponse,
 } from '@/types/groupbuy';
+import type { ApiResponseFormat, ApiCreateOrderResponse } from '@/types/api';
 import { Suspense } from 'react';
 
 // 인증이 필요하지 않은 API 호출을 위한 별도 인스턴스
@@ -79,16 +80,24 @@ export async function createGroupBuy({
 
 // 공동구매 상세 조회 API (인증 불필요)
 export async function getGroupBuyDetail(groupBuyId: number): Promise<GroupBuyDetailResponse> {
-  console.log('Requesting groupbuy detail for ID:', groupBuyId);
-  console.log(
-    'Full URL:',
-    `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/groupbuys/${groupBuyId}`,
-  );
-
   const response = await publicApi.get<GroupBuyDetailResponse>(`/groupbuys/${groupBuyId}`);
-  console.log('Raw API Response:', response);
   return response.data;
 }
+
+/**
+ * 공동구매 주문 생성
+ * @param groupbuyId - 공동구매 ID
+ * @param orderItems - 주문할 아이템 목록
+ * @returns 생성된 주문 정보
+ */
+export async function createGroupBuyOrder(
+  groupbuyId: number,
+  orderItems: Array<{ groupbuyOptionId: number; quantity: number }>,
+): Promise<ApiResponseFormat<ApiCreateOrderResponse>> {
+  const res = await api.post<ApiResponseFormat<ApiCreateOrderResponse>>(
+    `/groupbuys/${groupbuyId}/orders`,
+    { orderItems },
+  );
 
 // 공동구매 상태 변경 API
 export async function updateGroupBuyStatus(
@@ -121,5 +130,6 @@ export async function deleteGroupBuy(
   groupBuyId: number,
 ): Promise<{ success: boolean; message: string }> {
   const res = await api.delete(`/groupbuys/${groupBuyId}`);
+
   return res.data;
 }

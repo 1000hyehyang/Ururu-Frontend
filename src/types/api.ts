@@ -117,3 +117,16 @@ export interface ShippingAddress {
 export interface ShippingAddressResponse {
   addresses: ShippingAddress[];
 }
+
+// 여러 옵션 동시 장바구니 담기 요청/응답 타입
+export type ApiAddItemsToCartRequest = Array<{
+  groupbuyOptionId: number;
+  quantity: number;
+}>;
+
+export interface ApiAddItemsToCartResponse {
+  cartItems: Array<{
+    cartItemId: number;
+    quantity: number;
+  }>;
+}

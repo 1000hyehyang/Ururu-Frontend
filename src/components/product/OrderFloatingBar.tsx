@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Product } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { Share, ChevronDown, ChevronUp } from 'lucide-react';
@@ -25,8 +25,15 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
     handleChangeQuantity,
   } = useProductOptions(product);
 
-  const { handleShare, handlePurchase } = useProductActions();
+  const {
+    handleShare,
+    handlePurchase,
+    handleBuyNow,
+    handleAddToCart: addItemsToCart,
+  } = useProductActions();
   const router = useRouter();
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Drawer 열림/닫힘에 따라 body 스크롤 제어
   useEffect(() => {
@@ -50,18 +57,28 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
     }
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNowClick = async () => {
     if (isDrawerOpen && selectedOptions.length > 0) {
       closeDrawer();
-      alert('바로구매 하러 가볼게요!');
+      setIsCreatingOrder(true);
+      try {
+        await handleBuyNow(product.id, selectedOptions);
+      } finally {
+        setIsCreatingOrder(false);
+      }
     } else {
       openDrawer();
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCartClick = async () => {
     if (isDrawerOpen && selectedOptions.length > 0) {
-      alert('장바구니에 성공적으로 담았습니다!');
+      setIsAddingToCart(true);
+      try {
+        await addItemsToCart(selectedOptions, product.options);
+      } finally {
+        setIsAddingToCart(false);
+      }
     } else {
       openDrawer();
     }
@@ -86,12 +103,21 @@ export function OrderFloatingBar({ product }: OrderFloatingBarProps) {
           <Button
             variant="outline"
             className={PRODUCT_STYLES.button.cart}
-            onClick={handleAddToCart}
+            onClick={handleAddToCartClick}
+            disabled={isAddingToCart}
           >
-            <span className="text-xs font-medium md:text-sm">장바구니</span>
+            <span className="text-xs font-medium md:text-sm">
+              {isAddingToCart ? '담는 중...' : '장바구니'}
+            </span>
           </Button>
-          <Button className={PRODUCT_STYLES.button.buyNow} onClick={handleBuyNow}>
-            <span className="text-xs font-medium md:text-sm">바로구매</span>
+          <Button
+            className={PRODUCT_STYLES.button.buyNow}
+            onClick={handleBuyNowClick}
+            disabled={isCreatingOrder}
+          >
+            <span className="text-xs font-medium md:text-sm">
+              {isCreatingOrder ? '주문 생성 중...' : '바로구매'}
+            </span>
           </Button>
         </div>
       </div>

@@ -9,6 +9,8 @@ interface ActionButtonsProps {
   onBuyNow?: () => void;
   className?: string;
   size?: 'default' | 'large';
+  isBuyNowLoading?: boolean;
+  isAddToCartLoading?: boolean;
 }
 
 export const ActionButtons: FC<ActionButtonsProps> = ({
@@ -17,6 +19,8 @@ export const ActionButtons: FC<ActionButtonsProps> = ({
   onBuyNow,
   className = '',
   size = 'default',
+  isBuyNowLoading = false,
+  isAddToCartLoading = false,
 }) => {
   const isLarge = size === 'large';
   const buttonHeight = isLarge ? 'h-12 md:h-14' : 'h-[51px]';
@@ -36,14 +40,20 @@ export const ActionButtons: FC<ActionButtonsProps> = ({
         variant="outline"
         className={`flex flex-1 ${buttonHeight} items-center gap-2.5 rounded-lg border-primary-300 px-6 text-primary-300 transition hover:bg-primary-100 focus:ring-primary-300 active:bg-primary-100 md:px-10`}
         onClick={onAddToCart}
+        disabled={isAddToCartLoading}
       >
-        <span className={`${textSize} text-primary-300`}>장바구니</span>
+        <span className={`${textSize} text-primary-300`}>
+          {isAddToCartLoading ? '담는 중...' : '장바구니'}
+        </span>
       </Button>
       <Button
         className={`flex flex-1 ${buttonHeight} items-center gap-2.5 rounded-lg bg-primary-300 px-6 text-text-on transition hover:opacity-80 focus:ring-primary-300 active:opacity-90 md:px-10`}
         onClick={onBuyNow}
+        disabled={isBuyNowLoading}
       >
-        <span className={`${textSize} text-text-on`}>바로구매</span>
+        <span className={`${textSize} text-text-on`}>
+          {isBuyNowLoading ? '주문 생성 중...' : '바로구매'}
+        </span>
       </Button>
     </div>
   );
