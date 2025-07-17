@@ -98,6 +98,8 @@ export async function createGroupBuyOrder(
     `/groupbuys/${groupbuyId}/orders`,
     { orderItems },
   );
+  return res.data;
+}
 
 // 공동구매 상태 변경 API
 export async function updateGroupBuyStatus(

@@ -72,7 +72,7 @@ export const useProductActions = () => {
         groupbuyOptionId: Number(opt.value),
         quantity: opt.quantity,
       }));
-      const result = await createGroupBuyOrder({ groupbuyId, orderItems });
+      const result = await createGroupBuyOrder(Number(groupbuyId), orderItems);
       if (result.success) {
         toast.success('주문이 생성되었습니다!');
         // 주문 생성 전 현재 페이지 저장 (만료 시 돌아갈 페이지)
