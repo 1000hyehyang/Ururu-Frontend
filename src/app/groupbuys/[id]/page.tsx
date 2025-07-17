@@ -52,10 +52,10 @@ export default function GroupBuyDetailPage({ params }: GroupBuyDetailPageProps) 
 
     // 할인 단계를 rewardTiers로 변환 (실제 달성 여부만 반영)
     const rewardTiers = groupBuy.discountStages.map((stage) => ({
-      participants: stage.minQuantity,
-      discount: `${stage.discountRate}% 할인`,
-      discountRate: stage.discountRate, // 숫자형 할인율 추가
-      achieved: groupBuy.currentOrderCount >= stage.minQuantity,
+      participants: stage.count,
+      discount: `${stage.rate}% 할인`,
+      discountRate: stage.rate, // 숫자형 할인율 추가
+      achieved: groupBuy.currentOrderCount >= stage.count,
     }));
 
     // productNotice 정보를 Product 타입 필드로 매핑
@@ -86,7 +86,7 @@ export default function GroupBuyDetailPage({ params }: GroupBuyDetailPageProps) 
       discountRate: groupBuy.maxDiscountRate,
       point: 0, // API에 point 정보가 없으므로 0으로 설정
       participants: groupBuy.currentOrderCount,
-      targetParticipants: groupBuy.discountStages[0]?.minQuantity || 0,
+      targetParticipants: groupBuy.discountStages[0]?.count || 0,
       remainingDays,
       category: {
         main: groupBuy.product.categoryIds[0] || 'general',
@@ -121,8 +121,11 @@ export default function GroupBuyDetailPage({ params }: GroupBuyDetailPageProps) 
 
         const response = await getGroupBuyDetail(groupBuyId);
         setGroupBuyData(response.data);
-      } catch (err: any) {
-        setError(err.message || '공동구매 정보를 불러오는데 실패했습니다.');
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : '알수 없는 오류가 발생했습니다';
+        setError(errorMessage || '공동구매 정보를 불러오는데 실패했습니다.');
+        // TODO: 에러 로깅 서비스 연동
+        console.error('공구상세 정보 조회 실패:', err);
       } finally {
         setIsLoading(false);
       }

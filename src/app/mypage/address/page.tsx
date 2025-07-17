@@ -97,7 +97,7 @@ function AddressListPageContent() {
 
         {/* 배송지 리스트 */}
         <div className="flex flex-col gap-4">
-          {addresses.length === 0 ? (
+          {!addresses || addresses.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8">
               <p className="text-center text-text-300">등록된 배송지가 없습니다.</p>
             </div>

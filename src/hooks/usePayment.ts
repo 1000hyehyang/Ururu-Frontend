@@ -23,8 +23,8 @@ export const usePaymentRequest = () => {
       console.log('결제 요청 생성 성공:', response);
 
       return response;
-    } catch (err: any) {
-      const errorMessage = err.message || '결제 요청 생성에 실패했습니다.';
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.';
       setError(errorMessage);
       console.error('결제 요청 생성 실패:', err);
       throw err;
@@ -55,8 +55,8 @@ export const usePaymentSuccess = () => {
       console.log('결제 성공 처리 완료:', response);
 
       return response;
-    } catch (err: any) {
-      const errorMessage = err.message || '결제 성공 처리에 실패했습니다.';
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.';
       setError(errorMessage);
       console.error('결제 성공 처리 실패:', err);
       throw err;
@@ -95,8 +95,8 @@ export const usePaymentConfirm = () => {
       console.log('결제 승인 완료:', response);
 
       return response;
-    } catch (err: any) {
-      const errorMessage = err.message || '결제 승인에 실패했습니다.';
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.';
       setError(errorMessage);
       console.error('결제 승인 실패:', err);
       throw err;
@@ -127,8 +127,8 @@ export const usePaymentStatus = () => {
       console.log('결제 상태 조회 완료:', response);
 
       return response;
-    } catch (err: any) {
-      const errorMessage = err.message || '결제 상태 조회에 실패했습니다.';
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.';
       setError(errorMessage);
       console.error('결제 상태 조회 실패:', err);
       throw err;
